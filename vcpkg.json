@@ -1,0 +1,25 @@
+{
+  "name": "ruin",
+  "version": "1.0.0",
+  "dependencies": [
+    "box2d",
+    "protobuf",
+    "spdlog",
+    {
+      "name": "sdl3",
+      "features": ["alsa", "vulkan"],
+      "platform": "linux"
+    },
+
+    {
+      "name": "sdl3-image",
+      "features": ["jpeg", "png", "tiff", "webp"]
+    },
+    {
+      "name": "sdl3-ttf",
+      "features": ["harfbuzz", "svg"]
+    },
+    "fmt"
+  ],
+  "builtin-baseline": "2e6fcc44573d091af0321f99c89b212997a76f1f"
+}
