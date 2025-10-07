@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 4.0.0)
 project(pong VERSION 1.2)
 set(PROJ pong)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MAKE_PROGRAM_ARGS "--no-print-directory")
 set(VCPKG_VERBOSE OFF)
@@ -48,8 +48,6 @@ protobuf_generate_cpp(
 add_executable(${PROJ}
     src/main.cpp
     src/pong.cpp
-    src/sys/ver.cpp
-    src/sys/debug.cpp
     src/sdl.cpp
     src/input.cpp
     src/event.cpp

@@ -1,6 +1,6 @@
 #include "pong.h"
-#include "sys/debug.h"
-#include "sys/ver.h"
+#include "sys/debug.hpp"
+#include "sys/ver.hpp"
 
 int main(int argc, char *argv[]) {
 

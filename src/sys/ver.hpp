@@ -1,4 +1,5 @@
-#include "ver.h"
+#pragma once
+
 #include "box2d/base.h"
 #include "build.h"
 #include "spdlog/spdlog.h"

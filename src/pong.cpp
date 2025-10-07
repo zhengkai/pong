@@ -8,7 +8,7 @@ static int sizeW = 10;
 static int sizeH = sizeW;
 
 Pong::Pong() {
-	t = new Time(4.0f);
+	t = new Time(10.0f);
 	isRunning = true;
 	input = new Input();
 	spdlog::info("pong start");
@@ -22,8 +22,12 @@ void Pong::run() {
 	}
 	spdlog::info("sdl init done");
 
-	loop();
-	loop();
+	// loop 100 times
+
+	for (int i = 0; i < 100; i++) {
+		loop();
+	}
+
 	// while (isRunning) {
 	// loop();
 	// break;

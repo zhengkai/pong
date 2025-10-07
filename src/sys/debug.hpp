@@ -1,11 +1,31 @@
-#include "debug.h"
+#pragma once
+
 #include <cstring>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/async.h"
+#include "spdlog/async_logger.h"
 
 bool checkDebug(int argc, char *argv[]) {
 
-	auto console = spdlog::stdout_color_mt("console");
+
+    spdlog::init_thread_pool(8192, 1);
+
+    // stdout sink
+    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+
+    // 创建异步 logger
+    spdlog::async_logger logger(
+        "async_stdout",
+        {stdout_sink},
+        spdlog::thread_pool(),
+        spdlog::async_overflow_policy::block  // 队列满时阻塞
+    );
+
+    spdlog::register_logger(std::make_shared<spdlog::async_logger>(logger));
+
+	spdlog::stdout_color_mt("console");
 
 	// 默认日志级别 info
 	spdlog::level::level_enum log_level = spdlog::level::info;

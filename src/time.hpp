@@ -2,43 +2,31 @@
 
 #include "spdlog/spdlog.h"
 #include <chrono>
+#include <cmath>
+
+using namespace std::chrono;
 
 class Time {
 public:
-	using Clock = std::chrono::steady_clock;
 
-	explicit Time(float fps = 60.0f)
-		: ft(1.0f / fps), start(Clock::now()), ac(0.0f) {
-
-		spdlog::info("time start");
+	explicit Time(double fps = 60.0f) : start(steady_clock::now()) {
+		ft = std::chrono::duration<double>(1.0 / fps);
+		spdlog::info("time start, {:.0f} fps, {:.6f} s per frame", fps, ft.count());
 	}
 
 	// 每帧开始时调用
 	void tick() {
-		using namespace std::chrono;
-		// sleep1s();
-		auto now = Clock::now();
-		auto cost = duration<float>(now - start) * 10000;
-
-		spdlog::info("cost = {:.6f}s", cost.count());
-		auto cnt = duration_cast<milliseconds>(cost).count();
-		spdlog::info("cnt = {}", cnt);
-		spdlog::info("cost");
-		std::this_thread::sleep_for(cost);
-	}
-
-	void sleep1s() {
-		using namespace std::chrono_literals; // 支持 1s、500ms 这种字面量
-		std::this_thread::sleep_for(1s);
-	}
-
-	// 获取逻辑帧步长（常量）
-	float deltaTime() const {
-		return ft;
+		auto now = steady_clock::now();
+		auto t0 = duration<double>(now - start);
+		auto ti = std::chrono::floor<seconds>(t0);
+		auto t = t0 - ti;
+		auto idx = static_cast<int>(std::floor(t / ft));
+		auto next = (idx + 1) * ft - t;
+		spdlog::trace("frame = {} {:.6f}s {:.6f}s", idx, t.count(), next.count());
+		std::this_thread::sleep_for(next);
 	}
 
 private:
-	float ft; // 每帧目标时长 (秒)
-	float ac; // 剩余时间累计
-	Clock::time_point start;
+	duration<double> ft; // 每帧目标时长 (秒)
+	steady_clock::time_point start;
 };

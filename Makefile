@@ -6,7 +6,7 @@ default:
 	./run.sh
 
 run:
-	RUIN_DIR=$(RUIN_DIR) ./build/pong
+	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose=trace
 
 debug:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose
