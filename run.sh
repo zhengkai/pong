@@ -8,9 +8,10 @@ if [ -z "$RUIN_DIR" ]; then
 	export RUIN_DIR
 fi
 
-cmake -B build \
-  -DCMAKE_TOOLCHAIN_FILE="/usr/local/src/vcpkg/scripts/buildsystems/vcpkg.cmake" \
-  -DCMAKE_BUILD_TYPE=Release
+cmake -DCMAKE_BUILD_TYPE=debug \
+	-B build \
+	-DCMAKE_TOOLCHAIN_FILE="/usr/local/src/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+	-DCMAKE_BUILD_TYPE=Release
 
 cmake --build build --config Release "-j$(nproc)"
 

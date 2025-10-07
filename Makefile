@@ -20,6 +20,9 @@ ver:
 pong:
 	./build/pong --pong
 
+gdb:
+	gdb ./build/pong
+
 vc:
 	vcpkg install
 

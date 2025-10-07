@@ -10,6 +10,18 @@ set(VCPKG_VERBOSE OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if (CMAKE_BUILD_TYPE STREQUAL "debug")
+    target_compile_options(MyGame PRIVATE
+        -Wall -Wextra -Werror
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+    )
+    target_link_options(MyGame PRIVATE
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+    )
+endif()
+
 if (MSVC)
     add_compile_options(/utf-8)
 endif()
