@@ -1,8 +1,11 @@
 #include "pong.h"
+#include "event.h"
 #include "input.h"
 #include "sdl.h"
 #include "spdlog/spdlog.h"
+#include <SDL3/SDL_events.h>
 #include <cstring>
+#include <thread>
 
 static int sizeW = 10;
 static int sizeH = sizeW;
@@ -22,22 +25,23 @@ void Pong::run() {
 	}
 	spdlog::info("sdl init done");
 
-	// loop 100 times
+	std::thread t(&Pong::sdlBg, this);
+	t.detach();
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 10; i++) {
 		loop();
 	}
-
-	// while (isRunning) {
-	// loop();
-	// break;
-	// }
+	isRunning = false;
 }
 
 Pong::~Pong() {
 	if (t) {
 		delete t;
 		t = nullptr;
+	}
+	if (s) {
+		delete s;
+		s = nullptr;
 	}
 	if (input) {
 		delete input;
@@ -47,4 +51,22 @@ Pong::~Pong() {
 
 void Pong::loop() {
 	t->tick();
+}
+
+void Pong::sdlBg() {
+
+	spdlog::info("sdl bg start");
+
+	int timeout_ms = 10;
+
+	SDL_Event event;
+	while (isRunning) {
+		SDL_WaitEventTimeout(&event, timeout_ms);
+		SDLEventLog(event.type);
+		if (event.type == SDL_EVENT_QUIT) {
+			break;
+		}
+		s->handleInput(&event);
+	}
+	isRunning = false;
 }

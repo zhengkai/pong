@@ -1,4 +1,5 @@
 #include "sdl.h"
+#include "SDL3/SDL_events.h"
 #include "input.h"
 #include <SDL3/SDL.h>
 
@@ -10,8 +11,8 @@ static SDL_AppResult SDL_Fail() {
 	return SDL_APP_FAILURE;
 }
 
-sdl::sdl(Input *input) {
-	this->input = input;
+sdl::sdl(Input *input) : input(input), window(nullptr), r(nullptr) {
+	input = input;
 }
 
 bool sdl::init() {
@@ -61,6 +62,7 @@ void sdl::handleInput(SDL_Event *e) {
 }
 
 sdl::~sdl() {
+	input = nullptr;
 	if (r) {
 		SDL_DestroyRenderer(r);
 		r = nullptr;
