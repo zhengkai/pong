@@ -51,6 +51,7 @@ add_executable(${PROJ}
     src/sdl.cpp
     src/input.cpp
     src/event.cpp
+    src/render/text.cpp
     ${PROTO_SRC}
     ${PROTO_HDR}
 )

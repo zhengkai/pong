@@ -15,7 +15,7 @@ private:
 public:
 	Pong();
 	~Pong();
-	void loop();
+	void loop(int cnt);
 	void run();
 
 private:

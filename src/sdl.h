@@ -3,10 +3,12 @@
 #include "SDL3/SDL_events.h"
 #include "SDL3/SDL_render.h"
 #include "input.h"
+#include "render/text.h"
 
 class sdl {
 private:
 	Input *input;
+	Text *text;
 	// SDL_Texture *bg;
 	SDL_Window *window;
 
@@ -18,4 +20,6 @@ public:
 	~sdl();
 	bool init();
 	void handleInput(SDL_Event *e);
+	void counter(int i);
+	void render();
 };

@@ -25,8 +25,10 @@ void Pong::run() {
 	std::thread t(&Pong::sdlBg, this);
 	t.detach();
 
+	int i = 0;
 	while (!stop) {
-		loop();
+		i++;
+		loop(i);
 	}
 	stop = true;
 	spdlog::info("Pong::run stop");
@@ -48,11 +50,15 @@ Pong::~Pong() {
 	}
 }
 
-void Pong::loop() {
+void Pong::loop(int cnt) {
 	t->tick();
 	if (input->stop) {
 		stop = true;
+		return;
 	}
+
+	s->render();
+	s->counter(cnt);
 }
 
 void Pong::sdlBg() {

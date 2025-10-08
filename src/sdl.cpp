@@ -1,6 +1,7 @@
 #include "sdl.h"
 #include "SDL3/SDL_events.h"
 #include "input.h"
+#include "render/text.h"
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
 
@@ -46,7 +47,27 @@ bool sdl::init() {
 
 	SDL_RenderPresent(r);
 
+	text = new Text();
+	if (text->init(r)) {
+		spdlog::info("text inited");
+	} else {
+		spdlog::error("Failed to init text");
+		return false;
+	}
+
 	return true;
+}
+
+void sdl::counter(int i) {
+	text->rMono32(std::to_string(i),
+		static_cast<float>(winW) - 16,
+		16,
+		Text::Align::RIGHT);
+}
+
+void sdl::render() {
+	SDL_SetRenderDrawColor(r, 32, 132, 32, 255);
+	SDL_RenderClear(r);
 }
 
 void sdl::handleInput(SDL_Event *e) {
@@ -67,6 +88,10 @@ void sdl::handleInput(SDL_Event *e) {
 sdl::~sdl() {
 	spdlog::info("sdl::~sdl");
 	input = nullptr;
+	if (text) {
+		delete text;
+		text = nullptr;
+	}
 	if (r) {
 		SDL_DestroyRenderer(r);
 		r = nullptr;
