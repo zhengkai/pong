@@ -3,16 +3,19 @@
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL_events.h>
 
-Input::Input() {
-	Input::stop = false;
+Input::Input() : stop(false), x(0), y(0) {
 }
 
 Input::~Input() {
+	spdlog::info("Input::~Input");
 }
 
 void Input::key(SDL_KeyboardEvent *e) {
 	if (e->key == SDLK_ESCAPE) {
-		Input::stop = true;
+		spdlog::info("esc key");
+		stop = true;
+		spdlog::info("esc key done");
+		return;
 	}
 }
 
@@ -28,9 +31,8 @@ void Input::gamepadButton(SDL_GamepadButtonEvent *e, bool down) {
 	}
 }
 
-Input *Input::Clone() const {
-	Input *n = new Input();
-	n->x = x;
-	n->y = y;
-	return n;
+void Input::Reset() {
+	stop = false;
+	x = 0;
+	y = 0;
 }

@@ -1,6 +1,7 @@
 #include "sdl.h"
 #include "SDL3/SDL_events.h"
 #include "input.h"
+#include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
 
 static int winW = 1000;
@@ -11,8 +12,8 @@ static SDL_AppResult SDL_Fail() {
 	return SDL_APP_FAILURE;
 }
 
-sdl::sdl(Input *input) : input(input), window(nullptr), r(nullptr) {
-	input = input;
+sdl::sdl(Input *in) : input(in), window(nullptr), r(nullptr) {
+	spdlog::info("ptr = {}", static_cast<void *>(input));
 }
 
 bool sdl::init() {
@@ -54,14 +55,17 @@ void sdl::handleInput(SDL_Event *e) {
 
 	switch (e->type) {
 	case SDL_EVENT_KEY_DOWN:
+		spdlog::info("ptr = {}", static_cast<void *>(input));
 		input->key(&e->key);
 		break;
 	default:
 		break;
 	}
+	// spdlog::info("sdl::handleInput done");
 }
 
 sdl::~sdl() {
+	spdlog::info("sdl::~sdl");
 	input = nullptr;
 	if (r) {
 		SDL_DestroyRenderer(r);

@@ -7,7 +7,7 @@
 class Pong {
 
 private:
-	bool isRunning;
+	bool stop;
 	Input *input;
 	Time *t;
 	sdl *s;

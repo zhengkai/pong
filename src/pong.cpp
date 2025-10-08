@@ -10,16 +10,13 @@
 static int sizeW = 10;
 static int sizeH = sizeW;
 
-Pong::Pong() {
+Pong::Pong() : stop(false), input(new Input()), s(new sdl(input)) {
 	t = new Time(10.0f);
-	isRunning = true;
-	input = new Input();
 	spdlog::info("pong start");
 }
 
 void Pong::run() {
-	sdl s(input);
-	if (!s.init()) {
+	if (!s->init()) {
 		spdlog::info("sdl init failed");
 		return;
 	}
@@ -28,10 +25,12 @@ void Pong::run() {
 	std::thread t(&Pong::sdlBg, this);
 	t.detach();
 
-	for (int i = 0; i < 10; i++) {
+	while (!stop) {
 		loop();
 	}
-	isRunning = false;
+	stop = true;
+	spdlog::info("Pong::run stop");
+	// std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 Pong::~Pong() {
@@ -51,22 +50,26 @@ Pong::~Pong() {
 
 void Pong::loop() {
 	t->tick();
+	if (input->stop) {
+		stop = true;
+	}
 }
 
 void Pong::sdlBg() {
 
 	spdlog::info("sdl bg start");
 
-	int timeout_ms = 10;
+	int timeout_ms = 100;
 
 	SDL_Event event;
-	while (isRunning) {
+	while (!stop) {
 		SDL_WaitEventTimeout(&event, timeout_ms);
 		SDLEventLog(event.type);
 		if (event.type == SDL_EVENT_QUIT) {
 			break;
 		}
+		// spdlog::info("sdlBg handleInput");
 		s->handleInput(&event);
 	}
-	isRunning = false;
+	stop = true;
 }
