@@ -4,11 +4,13 @@
 #include "SDL3/SDL_render.h"
 #include "input.h"
 #include "render/text.h"
+#include "render/grid.h"
 
 class sdl {
 private:
 	Input *input;
 	Text *text;
+	Grid *grid;
 	// SDL_Texture *bg;
 	SDL_Window *window;
 
@@ -23,4 +25,5 @@ public:
 	void counter(int i);
 	void renderStart();
 	void renderEnd();
+	void renderGrid();
 };

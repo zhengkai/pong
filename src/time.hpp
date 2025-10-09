@@ -22,7 +22,7 @@ public:
 		auto t = t0 - ti;
 		auto idx = static_cast<int>(std::floor(t / ft));
 		auto next = (idx + 1) * ft - t;
-		spdlog::trace("frame = {} {:.6f}s {:.6f}s", idx, t.count(), next.count());
+		spdlog::trace("frame = {} {:.6f}s, cost {:6.3f}ms", idx, t.count(), 1000 * (ft - next).count());
 		std::this_thread::sleep_for(next);
 	}
 

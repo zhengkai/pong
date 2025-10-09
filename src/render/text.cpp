@@ -29,7 +29,7 @@ void Text::rMono32(std::string text, int x, int y, Align align) {
 
 void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
 
-	SDL_Color color = {255, 255, 255, 255};
+	SDL_Color color = {200, 230, 255, 255};
 
 	// 使用字体渲染文本为 Surface
 	SDL_Surface *surface = TTF_RenderText_Solid(font, text.c_str(), 0, color);
