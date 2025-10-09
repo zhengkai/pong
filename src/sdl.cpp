@@ -5,7 +5,7 @@
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
 
-static int winW = 1000;
+static int winW = 1200;
 static int winH = winW;
 
 static SDL_AppResult SDL_Fail() {
@@ -36,7 +36,7 @@ bool sdl::init() {
 	SDL_HideCursor();
 	SDL_SetWindowMouseGrab(window, true);
 
-	SDL_Renderer *r = SDL_CreateRenderer(window, NULL);
+	r = SDL_CreateRenderer(window, NULL);
 	if (!r) {
 		SDL_Fail();
 		return false;
@@ -65,9 +65,12 @@ void sdl::counter(int i) {
 		Text::Align::RIGHT);
 }
 
-void sdl::render() {
-	SDL_SetRenderDrawColor(r, 32, 132, 32, 255);
+void sdl::renderStart() {
+	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
 	SDL_RenderClear(r);
+}
+void sdl::renderEnd() {
+	// SDL_RenderPresent(r);
 }
 
 void sdl::handleInput(SDL_Event *e) {

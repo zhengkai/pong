@@ -21,5 +21,6 @@ public:
 	bool init();
 	void handleInput(SDL_Event *e);
 	void counter(int i);
-	void render();
+	void renderStart();
+	void renderEnd();
 };
