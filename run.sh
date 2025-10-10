@@ -11,7 +11,8 @@ fi
 export CC=clang
 export CXX=clang++
 
-cmake -DCMAKE_BUILD_TYPE=debug \
+# cmake -DCMAKE_BUILD_TYPE=debug \
+cmake \
 	-B build \
 	-DCMAKE_TOOLCHAIN_FILE="/usr/local/src/vcpkg/scripts/buildsystems/vcpkg.cmake" \
 	-DCMAKE_BUILD_TYPE=Release

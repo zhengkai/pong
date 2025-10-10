@@ -57,6 +57,25 @@ add_executable(${PROJ}
     ${PROTO_HDR}
 )
 
+target_precompile_headers(${PROJ} PRIVATE
+	<SDL3/SDL.h>
+	<SDL3/SDL_events.h>
+	<SDL3_image/SDL_image.h>
+	<SDL3_ttf/SDL_ttf.h>
+	<chrono>
+	<cmath>
+	<cstdio>
+	<cstring>
+	<fmt/format.h>
+	<google/protobuf/stubs/common.h>
+	<random>
+	<spdlog/sinks/stdout_color_sinks.h>
+	<spdlog/spdlog.h>
+	<string>
+	<thread>
+	<vector>
+)
+
 target_link_libraries(${PROJ} PRIVATE
     box2d::box2d
     fmt::fmt
