@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "event.h"
 #include "input.h"
+#include "physics/physics.h"
 #include "sdl.h"
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL_events.h>
@@ -10,7 +11,8 @@
 static int sizeW = 10;
 static int sizeH = sizeW;
 
-Pong::Pong() : stop(false), input(new Input()), s(new sdl(input)) {
+Pong::Pong()
+	: stop(false), input(new Input()), s(new sdl(input)), p(new Physics()) {
 	t = new Time(10.0f);
 	spdlog::info("pong start");
 }
@@ -48,6 +50,10 @@ Pong::~Pong() {
 		delete input;
 		input = nullptr;
 	}
+	if (p) {
+		delete p;
+		p = nullptr;
+	}
 }
 
 void Pong::loop(int cnt) {
@@ -64,7 +70,6 @@ void Pong::loop(int cnt) {
 }
 
 void Pong::sdlBg() {
-
 	spdlog::info("sdl bg start");
 
 	int timeout_ms = 100;

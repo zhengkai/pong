@@ -3,7 +3,7 @@
 constexpr int cfgWinW = 1280;
 constexpr int cfgWinH = 1024;
 
-constexpr int cfgGridW = 21;
-constexpr int cfgGridH = 17;
+constexpr int cfgGridW = 20;
+constexpr int cfgGridH = 16;
 
 constexpr int cfgGridSize = (cfgWinW / cfgGridW < cfgWinH / cfgGridH) ? cfgWinW / cfgGridW : cfgWinH / cfgGridH;

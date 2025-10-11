@@ -53,6 +53,7 @@ add_executable(${PROJ}
     src/event.cpp
     src/render/text.cpp
     src/render/grid.cpp
+	src/physics/physics.cpp
     ${PROTO_SRC}
     ${PROTO_HDR}
 )

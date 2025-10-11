@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input.h"
+#include "physics/physics.h"
 #include "sdl.h"
 #include "time.hpp"
 
@@ -11,6 +12,7 @@ private:
 	Input *input;
 	Time *t;
 	sdl *s;
+	Physics *p;
 
 public:
 	Pong();
