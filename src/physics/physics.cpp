@@ -9,6 +9,7 @@ Physics::Physics() {
 	worldDef.gravity = b2Vec2{0, 0};
 	world = b2CreateWorld(&worldDef);
 
+	createDot();
 	createWall();
 	createBall();
 }
@@ -24,8 +25,12 @@ void Physics::update() {
 	Layout &layout = Layout::instance();
 
 	layout.ball = b2Body_GetPosition(ball);
-	// layout.ball = b2Body_GetLinearVelocity(ball);
-	spdlog::info("ball pos = ({:.6f},{:.6f})", layout.ball.x, layout.ball.y);
+	b2Vec2 v = b2Body_GetLinearVelocity(ball);
+	spdlog::info("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
+		layout.ball.x,
+		layout.ball.y,
+		v.x,
+		v.y);
 }
 
 void Physics::createBall() {
@@ -47,7 +52,8 @@ void Physics::createBall() {
 	b2ShapeId ballShape = b2CreateCircleShape(ball, &ballShapeDef, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);
 
-	b2Body_SetLinearVelocity(ball, b2Vec2{2.0f, 1.0f});
+	b2Body_SetBullet(ball, true);
+	b2Body_SetLinearVelocity(ball, b2Vec2{1.5f, 32.0f});
 }
 
 void Physics::createWall() {
@@ -57,7 +63,7 @@ void Physics::createWall() {
 	b2BodyId wall = b2CreateBody(world, &bd);
 
 	float left = 0.0f, right = static_cast<float>(cfgGridW);
-	float top = 0.0f, bottom = static_cast<float>(cfgGridW);
+	float top = 0.0f, bottom = static_cast<float>(cfgGridH);
 
 	// 定义 shape
 	b2ShapeDef shapeDef = b2DefaultShapeDef();
@@ -91,3 +97,50 @@ void Physics::createWall() {
 	b2ShapeId wallRight = b2CreateSegmentShape(wall, &shapeDef, &seg);
 	b2Shape_SetRestitution(wallRight, 1.0f);
 }
+
+void Physics::createDot() {
+
+	spdlog::info("dot");
+
+	b2BodyDef bd = b2DefaultBodyDef();
+	bd.position = b2Vec2{10.0f, 12.0f};
+	bd.type = b2_staticBody;
+
+	dot = b2CreateBody(world, &bd);
+	spdlog::info("dot 1");
+
+	b2Polygon box = b2MakeBox(1.5f, 1.5f);
+	spdlog::info("dot 2");
+
+	b2ShapeDef sd = b2DefaultShapeDef();
+	spdlog::info("dot 3");
+	sd.material = b2DefaultSurfaceMaterial();
+	sd.material.friction = 0.0f; // 无摩擦
+	sd.density = 1.0f;
+	spdlog::info("dot 4");
+
+	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
+	b2Shape_SetRestitution(si, 1.0f);
+
+	spdlog::info("dot done");
+}
+
+// void Physics::createDot() {
+//
+// 	b2BodyDef ballBodyDef = b2DefaultBodyDef();
+// 	ballBodyDef.type = b2_staticBody;
+// 	ballBodyDef.position = b2Vec2{8.0f, 8.0f};
+// 	dot = b2CreateBody(world, &ballBodyDef);
+//
+// 	b2ShapeDef ballShapeDef = b2DefaultShapeDef();
+// 	ballShapeDef.material = b2DefaultSurfaceMaterial();
+// 	ballShapeDef.material.friction = 0.0f; // 无摩擦
+// 	ballShapeDef.density = 1.0f;
+//
+// 	b2Circle circle = {0};
+// 	circle.center = b2Vec2{0.0f, 0.0f};
+// 	circle.radius = cfgBallRadius * 3;
+//
+// 	b2ShapeId ballShape = b2CreateCircleShape(dot, &ballShapeDef, &circle);
+// 	b2Shape_SetRestitution(dot, 1.0f);
+// }

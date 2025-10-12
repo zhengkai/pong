@@ -11,6 +11,7 @@ private:
 	b2WorldId world;
 	b2BodyId ground;
 	b2BodyId ball;
+	b2BodyId dot;
 
 public:
 	Physics();
@@ -21,4 +22,5 @@ public:
 private:
 	void createBall();
 	void createWall();
+	void createDot();
 };

@@ -73,8 +73,8 @@ void sdl::renderBall() {
 	Layout &layout = Layout::instance();
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (layout.ball.x - 0.5) * layout.gridSize / 2;
-	rect.y = layout.startY + (layout.ball.y - 0.5) * layout.gridSize / 2;
+	rect.x = layout.startX + (layout.ball.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (layout.ball.y - 0.5) * layout.gridSize;
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 
