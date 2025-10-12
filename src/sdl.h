@@ -3,8 +3,8 @@
 #include "SDL3/SDL_events.h"
 #include "SDL3/SDL_render.h"
 #include "input.h"
-#include "render/text.h"
 #include "render/grid.h"
+#include "render/text.h"
 
 class sdl {
 private:
@@ -26,4 +26,5 @@ public:
 	void renderStart();
 	void renderEnd();
 	void renderGrid();
+	void renderBall();
 };

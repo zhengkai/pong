@@ -1,5 +1,6 @@
 #include "physics.h"
 #include "../config.hpp"
+#include "../render/layout.hpp"
 #include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
@@ -18,12 +19,13 @@ Physics::~Physics() {
 
 void Physics::update() {
 
-	b2World_Step(world, cfgFPSDeltaTime, 1);
+	b2World_Step(world, cfgFPSDeltaTime, 8);
 
-	ballPos = b2Body_GetPosition(ball);
+	Layout &layout = Layout::instance();
 
-	b2Vec2 vel = b2Body_GetLinearVelocity(ball);
-	spdlog::info("ball pos = ({:.6f},{:.6f})", ballPos.x, ballPos.y);
+	layout.ball = b2Body_GetPosition(ball);
+	// layout.ball = b2Body_GetLinearVelocity(ball);
+	spdlog::info("ball pos = ({:.6f},{:.6f})", layout.ball.x, layout.ball.y);
 }
 
 void Physics::createBall() {

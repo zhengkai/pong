@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL3/SDL_render.h"
+#include "layout.hpp"
 #include <vector>
 
 class Grid {
@@ -11,9 +12,9 @@ private:
 	float gridSize = 0;
 
 public:
-	Grid(SDL_Renderer *r);
+	Grid(SDL_Renderer *r, Layout *layout);
 	~Grid();
 	void draw(const std::vector<bool> &li);
-	void calcGrid();
+	void calcGrid(Layout *layout);
 	void drawRand();
 };

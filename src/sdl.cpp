@@ -52,9 +52,7 @@ bool sdl::init() {
 
 	SDL_RenderPresent(r);
 
-	Layout *layout = new Layout();
-
-	grid = new Grid(r, layout);
+	grid = new Grid(r);
 
 	text = new Text();
 	if (text->init(r)) {
@@ -71,10 +69,25 @@ void sdl::counter(int i) {
 	text->rMono32(std::to_string(i), winW - 16, 16, Text::Align::RIGHT);
 }
 
+void sdl::renderBall() {
+	Layout &layout = Layout::instance();
+
+	SDL_FRect rect;
+	rect.x = layout.startX + (layout.ball.x - 0.5) * layout.gridSize / 2;
+	rect.y = layout.startY + (layout.ball.y - 0.5) * layout.gridSize / 2;
+	rect.w = layout.gridSize;
+	rect.h = layout.gridSize;
+
+	spdlog::info("ball = {} {} {}", rect.x, rect.y, rect.w);
+	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	SDL_RenderFillRect(r, &rect);
+}
+
 void sdl::renderStart() {
 	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
 	SDL_RenderClear(r);
 }
+
 void sdl::renderEnd() {
 	// SDL_RenderPresent(r);
 }
@@ -88,7 +101,8 @@ void sdl::renderGrid() {
 	std::bernoulli_distribution dist(0.5);
 
 	for (size_t i = 0; i < li.size(); ++i) {
-		li[i] = dist(gen);
+		// li[i] = dist(gen);
+		li[i] = false;
 	}
 
 	grid->draw(li);

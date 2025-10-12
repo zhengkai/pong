@@ -66,6 +66,7 @@ void Pong::loop(int cnt) {
 	p->update();
 
 	s->renderStart();
+	s->renderBall();
 	s->renderGrid();
 	s->counter(cnt);
 	SDL_RenderPresent(s->r);
