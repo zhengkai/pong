@@ -12,8 +12,8 @@ static int sizeW = 10;
 static int sizeH = sizeW;
 
 Pong::Pong()
-	: stop(false), input(new Input()), s(new sdl(input)), p(new Physics()) {
-	t = new Time(10.0f);
+	: stop(false), input(new Input()), s(new sdl(input)), p(new Physics()),
+	  t(new Time()) {
 	spdlog::info("pong start");
 }
 
@@ -62,6 +62,8 @@ void Pong::loop(int cnt) {
 		stop = true;
 		return;
 	}
+
+	p->update();
 
 	s->renderStart();
 	s->renderGrid();

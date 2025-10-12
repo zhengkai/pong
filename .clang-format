@@ -38,7 +38,7 @@ AlignConsecutiveShortCaseStatements:
   AcrossComments:  false
   AlignCaseColons: false
 AlignEscapedNewlines: Right
-AlignOperands:   Align
+AlignOperands:   false
 AlignTrailingComments:
   Kind:            Always
   OverEmptyLines:  0

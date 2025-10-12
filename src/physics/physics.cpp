@@ -1,5 +1,6 @@
 #include "physics.h"
 #include "../config.hpp"
+#include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
 Physics::Physics() {
@@ -8,13 +9,43 @@ Physics::Physics() {
 	world = b2CreateWorld(&worldDef);
 
 	createWall();
+	createBall();
 }
 
 Physics::~Physics() {
 	b2DestroyWorld(world);
 }
 
-void Physics::update(float dt) {
+void Physics::update() {
+
+	b2World_Step(world, cfgFPSDeltaTime, 1);
+
+	ballPos = b2Body_GetPosition(ball);
+
+	b2Vec2 vel = b2Body_GetLinearVelocity(ball);
+	spdlog::info("ball pos = ({:.6f},{:.6f})", ballPos.x, ballPos.y);
+}
+
+void Physics::createBall() {
+
+	b2BodyDef ballBodyDef = b2DefaultBodyDef();
+	ballBodyDef.type = b2_dynamicBody;
+	ballBodyDef.position = b2Vec2{3.0f, 3.0f};
+	ball = b2CreateBody(world, &ballBodyDef);
+
+	b2ShapeDef ballShapeDef = b2DefaultShapeDef();
+	ballShapeDef.material = b2DefaultSurfaceMaterial();
+	ballShapeDef.material.friction = 0.0f; // 无摩擦
+	ballShapeDef.density = 1.0f;
+
+	b2Circle circle = {0};
+	circle.center = b2Vec2{0.0f, 0.0f};
+	circle.radius = cfgBallRadius;
+
+	b2ShapeId ballShape = b2CreateCircleShape(ball, &ballShapeDef, &circle);
+	b2Shape_SetRestitution(ballShape, 1.0f);
+
+	b2Body_SetLinearVelocity(ball, b2Vec2{2.0f, 1.0f});
 }
 
 void Physics::createWall() {

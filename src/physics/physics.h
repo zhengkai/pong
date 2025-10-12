@@ -4,6 +4,9 @@
 
 class Physics {
 
+public:
+	b2Vec2 ballPos;
+
 private:
 	b2WorldId world;
 	b2BodyId ground;
@@ -13,8 +16,9 @@ public:
 	Physics();
 	~Physics();
 
-	void update(float deltaTime);
+	void update();
 
 private:
+	void createBall();
 	void createWall();
 };

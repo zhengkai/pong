@@ -2,12 +2,13 @@
 #include "SDL3/SDL_events.h"
 #include "config.hpp"
 #include "input.h"
-#include "render/text.h"
 #include "render/grid.h"
+#include "render/layout.hpp"
+#include "render/text.h"
 #include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
-#include <vector>
 #include <random>
+#include <vector>
 
 static float winW = static_cast<float>(cfgWinW);
 static float winH = static_cast<float>(cfgWinH);
@@ -51,7 +52,9 @@ bool sdl::init() {
 
 	SDL_RenderPresent(r);
 
-	grid = new Grid(r);
+	Layout *layout = new Layout();
+
+	grid = new Grid(r, layout);
 
 	text = new Text();
 	if (text->init(r)) {
@@ -78,11 +81,11 @@ void sdl::renderEnd() {
 
 void sdl::renderGrid() {
 
-    std::vector<bool> li(cfgGridW * cfgGridH);
+	std::vector<bool> li(cfgGridW * cfgGridH);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::bernoulli_distribution dist(0.5);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::bernoulli_distribution dist(0.5);
 
 	for (size_t i = 0; i < li.size(); ++i) {
 		li[i] = dist(gen);
