@@ -15,7 +15,8 @@ public:
 private:
 	b2WorldId world;
 	b2BodyId ground;
-	b2BodyId ball;
+	b2BodyId ballA;
+	b2BodyId ballB;
 	b2BodyId dot;
 	PhysicsDep d;
 
@@ -26,7 +27,7 @@ public:
 	void update();
 
 private:
-	void createBall();
+	b2BodyId createBall(float x, float y);
 	void createWall();
 	void createDot();
 };

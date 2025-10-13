@@ -1,6 +1,5 @@
 #include "physics.h"
 #include "../config.hpp"
-#include "../render/layout.hpp"
 #include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
@@ -11,7 +10,8 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 
 	createDot();
 	createWall();
-	createBall();
+	ballA = createBall(3.0f, 5.0f);
+	// ballB = createBall(6.0f, 6.0f);
 }
 
 Physics::~Physics() {
@@ -22,23 +22,22 @@ void Physics::update() {
 
 	b2World_Step(world, cfgFPSDeltaTime, 8);
 
-	Layout &layout = Layout::instance();
-
-	d.entity->ballA = b2Body_GetPosition(ball);
-	b2Vec2 v = b2Body_GetLinearVelocity(ball);
+	d.entity->ballA = b2Body_GetPosition(ballA);
+	b2Vec2 v = b2Body_GetLinearVelocity(ballA);
 	spdlog::info("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
 		d.entity->ballA.x,
 		d.entity->ballA.y,
 		v.x,
 		v.y);
+	// d.entity->ballB = b2Body_GetPosition(ballB);
 }
 
-void Physics::createBall() {
+b2BodyId Physics::createBall(float x, float y) {
 
 	b2BodyDef ballBodyDef = b2DefaultBodyDef();
 	ballBodyDef.type = b2_dynamicBody;
-	ballBodyDef.position = b2Vec2{3.0f, 3.0f};
-	ball = b2CreateBody(world, &ballBodyDef);
+	ballBodyDef.position = b2Vec2{x, y};
+	b2BodyId ball = b2CreateBody(world, &ballBodyDef);
 
 	b2ShapeDef ballShapeDef = b2DefaultShapeDef();
 	ballShapeDef.material = b2DefaultSurfaceMaterial();
@@ -54,6 +53,8 @@ void Physics::createBall() {
 
 	b2Body_SetBullet(ball, true);
 	b2Body_SetLinearVelocity(ball, b2Vec2{1.5f, 32.0f});
+
+	return ball;
 }
 
 void Physics::createWall() {

@@ -34,4 +34,5 @@ public:
 	void renderEnd();
 	void renderGrid();
 	void renderBall();
+	void renderBallB();
 };

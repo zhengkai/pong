@@ -107,6 +107,21 @@ void sdl::renderBall() {
 	SDL_RenderFillRect(r, &dot);
 }
 
+void sdl::renderBallB() {
+	Layout &layout = Layout::instance();
+
+	SDL_FRect rect;
+	rect.x = layout.startX + (d.entity->ballB.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (d.entity->ballB.y - 0.5) * layout.gridSize;
+	rect.w = layout.gridSize;
+	rect.h = layout.gridSize;
+
+	spdlog::info("ball = {} {} {}", rect.x, rect.y, rect.w);
+	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	// SDL_RenderFillRect(r, &rect);
+	SDL_RenderTexture(r, ballTex, nullptr, &rect);
+}
+
 void sdl::renderStart() {
 	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
 	SDL_RenderClear(r);
