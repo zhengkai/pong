@@ -18,7 +18,8 @@ static SDL_AppResult SDL_Fail() {
 	return SDL_APP_FAILURE;
 }
 
-sdl::sdl(Input *in) : input(in), window(nullptr), r(nullptr) {
+sdl::sdl(sdlDep dep, Input *in)
+	: input(in), window(nullptr), r(nullptr), d(std::move(dep)) {
 	spdlog::info("ptr = {}", static_cast<void *>(input));
 }
 
@@ -86,8 +87,8 @@ void sdl::renderBall() {
 	Layout &layout = Layout::instance();
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (layout.ball.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (layout.ball.y - 0.5) * layout.gridSize;
+	rect.x = layout.startX + (d.entity->ballA.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (d.entity->ballA.y - 0.5) * layout.gridSize;
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 

@@ -9,7 +9,6 @@ public:
 	float startX = 0.0f;
 	float startY = 0.0f;
 	float gridSize = 0;
-	b2Vec2 ball;
 
 public:
 	static Layout &instance() {

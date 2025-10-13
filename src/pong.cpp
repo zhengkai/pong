@@ -11,9 +11,22 @@
 static int sizeW = 10;
 static int sizeH = sizeW;
 
-Pong::Pong()
-	: stop(false), input(new Input()), s(new sdl(input)), p(new Physics()),
-	  t(new Time()) {
+Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
+
+	d = {
+		.entity = std::make_shared<context::Entity>(),
+	};
+
+	p = new Physics({
+		.entity = d.entity,
+	});
+
+	s = new sdl(
+		{
+			.entity = d.entity,
+		},
+		input);
+
 	spdlog::info("pong start");
 }
 

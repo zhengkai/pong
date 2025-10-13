@@ -4,7 +4,7 @@
 #include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
-Physics::Physics() {
+Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
 	world = b2CreateWorld(&worldDef);
@@ -24,11 +24,11 @@ void Physics::update() {
 
 	Layout &layout = Layout::instance();
 
-	layout.ball = b2Body_GetPosition(ball);
+	d.entity->ballA = b2Body_GetPosition(ball);
 	b2Vec2 v = b2Body_GetLinearVelocity(ball);
 	spdlog::info("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
-		layout.ball.x,
-		layout.ball.y,
+		d.entity->ballA.x,
+		d.entity->ballA.y,
 		v.x,
 		v.y);
 }
@@ -45,10 +45,10 @@ void Physics::createBall() {
 	ballShapeDef.material.friction = 0.0f; // 无摩擦
 	ballShapeDef.density = 1.0f;
 
-	b2Circle circle = {0};
-	circle.center = b2Vec2{0.0f, 0.0f};
-	circle.radius = cfgBallRadius;
-
+	b2Circle circle = {
+		.center = {0.0f, 0.0f},
+		.radius = cfgBallRadius,
+	};
 	b2ShapeId ballShape = b2CreateCircleShape(ball, &ballShapeDef, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);
 

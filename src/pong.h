@@ -1,13 +1,19 @@
 #pragma once
 
+#include "context/entity.h"
 #include "input.h"
 #include "physics/physics.h"
 #include "sdl.h"
 #include "time.hpp"
 
+struct PongDeps {
+	std::shared_ptr<context::Entity> entity;
+};
+
 class Pong {
 
 private:
+	PongDeps d;
 	bool stop;
 	Input *input;
 	Time *t;
