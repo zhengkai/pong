@@ -41,7 +41,7 @@ static void doShowVer() {
 	spdlog::info("build time = {}", BUILD_TIMESTAMP);
 }
 
-bool showVer(int argc, char *argv[]) {
+inline bool showVer(int argc, char *argv[]) {
 	for (int i = 1; i < argc; ++i) {
 		if (std::strcmp(argv[i], "--version") == 0) {
 			doShowVer();

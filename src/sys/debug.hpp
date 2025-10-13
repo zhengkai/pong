@@ -1,29 +1,23 @@
 #pragma once
 
 #include <cstring>
+#include <spdlog/async.h>
+#include <spdlog/async_logger.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/async.h"
-#include "spdlog/async_logger.h"
 
-bool checkDebug(int argc, char *argv[]) {
+inline bool checkDebug(int argc, char *argv[]) {
 
+	spdlog::init_thread_pool(8192, 1);
 
-    spdlog::init_thread_pool(8192, 1);
+	auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 
-    // stdout sink
-    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+	spdlog::async_logger logger("async_stdout",
+		{stdout_sink},
+		spdlog::thread_pool(),
+		spdlog::async_overflow_policy::block);
 
-    // 创建异步 logger
-    spdlog::async_logger logger(
-        "async_stdout",
-        {stdout_sink},
-        spdlog::thread_pool(),
-        spdlog::async_overflow_policy::block  // 队列满时阻塞
-    );
-
-    spdlog::register_logger(std::make_shared<spdlog::async_logger>(logger));
+	spdlog::register_logger(std::make_shared<spdlog::async_logger>(logger));
 
 	spdlog::stdout_color_mt("console");
 
