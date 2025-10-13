@@ -103,7 +103,13 @@ void sdl::renderBall() {
 	dot.w = 3.0f * layout.gridSize;
 	dot.h = 3.0f * layout.gridSize;
 	spdlog::info(" dot = {} {} {}", dot.x, dot.y, rect.w);
-	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	if (d.entity->hit == 1) {
+		SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
+	} else if (d.entity->hit == 2) {
+		SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
+	} else {
+		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	}
 	SDL_RenderFillRect(r, &dot);
 }
 

@@ -11,7 +11,9 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	createDot();
 	createWall();
 	ballA = createBall(3.0f, 5.0f);
-	// ballB = createBall(6.0f, 6.0f);
+	b2Body_SetUserData(ballA, (void *)7);
+	ballB = createBall(6.0f, 6.0f);
+	b2Body_SetUserData(ballB, (void *)8);
 }
 
 Physics::~Physics() {
@@ -21,6 +23,32 @@ Physics::~Physics() {
 void Physics::update() {
 
 	b2World_Step(world, cfgFPSDeltaTime, 8);
+	b2ContactEvents ce = b2World_GetContactEvents(world);
+
+	d.entity->hit = 0;
+	if (ce.beginCount > 0) {
+		for (int i = 0; i < ce.beginCount; i++) {
+			b2ContactBeginTouchEvent event = ce.beginEvents[i];
+			void *dA = b2Body_GetUserData(b2Shape_GetBody(event.shapeIdA));
+			void *dB = b2Body_GetUserData(b2Shape_GetBody(event.shapeIdB));
+			if (dA != (void *)9 && dB != (void *)9) {
+				continue;
+			}
+			if (dA == (void *)7 || dB == (void *)7) {
+				d.entity->hit = 1;
+				break;
+			}
+			if (dA == (void *)8 || dB == (void *)8) {
+				d.entity->hit = 2;
+				break;
+			}
+		}
+		if (d.entity->hit > 0) {
+			spdlog::info("hit {}", d.entity->hit);
+			// std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
+		// b2DestroyWorld(world);
+	}
 
 	d.entity->ballA = b2Body_GetPosition(ballA);
 	b2Vec2 v = b2Body_GetLinearVelocity(ballA);
@@ -29,7 +57,7 @@ void Physics::update() {
 		d.entity->ballA.y,
 		v.x,
 		v.y);
-	// d.entity->ballB = b2Body_GetPosition(ballB);
+	d.entity->ballB = b2Body_GetPosition(ballB);
 }
 
 b2BodyId Physics::createBall(float x, float y) {
@@ -51,8 +79,10 @@ b2BodyId Physics::createBall(float x, float y) {
 	b2ShapeId ballShape = b2CreateCircleShape(ball, &ballShapeDef, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);
 
+	b2Body_EnableContactEvents(ball, true);
+
 	b2Body_SetBullet(ball, true);
-	b2Body_SetLinearVelocity(ball, b2Vec2{1.5f, 32.0f});
+	b2Body_SetLinearVelocity(ball, b2Vec2{11.5f, 32.0f});
 
 	return ball;
 }
@@ -106,6 +136,8 @@ void Physics::createDot() {
 	bd.type = b2_staticBody;
 
 	dot = b2CreateBody(world, &bd);
+
+	b2Body_SetUserData(dot, (void *)9);
 
 	b2Polygon box = b2MakeBox(1.5f, 1.5f);
 

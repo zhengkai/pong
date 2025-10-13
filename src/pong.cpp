@@ -80,7 +80,7 @@ void Pong::loop(int cnt) {
 
 	s->renderStart();
 	s->renderBall();
-	// s->renderBallB();
+	s->renderBallB();
 	s->renderGrid();
 	s->counter(cnt);
 	SDL_RenderPresent(s->r);
