@@ -6,7 +6,7 @@
 
 Physics::Physics() {
 	b2WorldDef worldDef = b2DefaultWorldDef();
-	worldDef.gravity = b2Vec2{0, 0};
+	worldDef.gravity = b2Vec2{0.0f, 0.0f};
 	world = b2CreateWorld(&worldDef);
 
 	createDot();
@@ -100,29 +100,21 @@ void Physics::createWall() {
 
 void Physics::createDot() {
 
-	spdlog::info("dot");
-
 	b2BodyDef bd = b2DefaultBodyDef();
 	bd.position = b2Vec2{10.0f, 12.0f};
 	bd.type = b2_staticBody;
 
 	dot = b2CreateBody(world, &bd);
-	spdlog::info("dot 1");
 
 	b2Polygon box = b2MakeBox(1.5f, 1.5f);
-	spdlog::info("dot 2");
 
 	b2ShapeDef sd = b2DefaultShapeDef();
-	spdlog::info("dot 3");
 	sd.material = b2DefaultSurfaceMaterial();
 	sd.material.friction = 0.0f; // 无摩擦
 	sd.density = 1.0f;
-	spdlog::info("dot 4");
 
 	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
 	b2Shape_SetRestitution(si, 1.0f);
-
-	spdlog::info("dot done");
 }
 
 // void Physics::createDot() {

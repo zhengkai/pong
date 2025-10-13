@@ -52,6 +52,19 @@ bool sdl::init() {
 
 	SDL_RenderPresent(r);
 
+	SDL_Surface *surf = IMG_Load("/www/pong/static/circle.webp");
+	if (!surf) {
+		spdlog::error("Failed to load ball image");
+		return false;
+	}
+	ballTex = SDL_CreateTextureFromSurface(r, surf);
+	SDL_DestroySurface(surf);
+
+	if (!ballTex) {
+		spdlog::error("ball SDL_CreateTextureFromSurface failed");
+		return false;
+	}
+
 	grid = new Grid(r);
 
 	text = new Text();
@@ -79,8 +92,18 @@ void sdl::renderBall() {
 	rect.h = layout.gridSize;
 
 	spdlog::info("ball = {} {} {}", rect.x, rect.y, rect.w);
+	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	// SDL_RenderFillRect(r, &rect);
+	SDL_RenderTexture(r, ballTex, nullptr, &rect);
+
+	SDL_FRect dot;
+	dot.x = layout.startX + (10.0f - 3.0f / 2.0f) * layout.gridSize;
+	dot.y = layout.startY + (12.0f - 3.0f / 2.0f) * layout.gridSize;
+	dot.w = 3.0f * layout.gridSize;
+	dot.h = 3.0f * layout.gridSize;
+	spdlog::info(" dot = {} {} {}", dot.x, dot.y, rect.w);
 	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	SDL_RenderFillRect(r, &rect);
+	SDL_RenderFillRect(r, &dot);
 }
 
 void sdl::renderStart() {

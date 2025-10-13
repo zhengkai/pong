@@ -13,6 +13,7 @@ private:
 	Grid *grid;
 	// SDL_Texture *bg;
 	SDL_Window *window;
+	SDL_Texture *ballTex;
 
 public:
 	SDL_Renderer *r;
