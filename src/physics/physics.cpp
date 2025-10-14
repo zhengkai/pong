@@ -3,6 +3,15 @@
 #include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
+// defualt shape def
+static b2ShapeDef dsd = [] {
+	b2ShapeDef sd = b2DefaultShapeDef();
+	sd.material = b2DefaultSurfaceMaterial();
+	sd.material.friction = 0.0f;
+	sd.density = 1.0f;
+	return sd;
+}();
+
 Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
@@ -11,7 +20,7 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	// createDot();
 	createBrick();
 	createWall();
-	ballA = createBall(5.0f, 5.0f);
+	ballA = createBall(7.0f, 5.0f);
 	// b2Body_SetUserData(ballA, (void *)7);
 	// ballB = createBall(6.0f, 6.0f);
 	// b2Body_SetUserData(ballB, (void *)8);
@@ -66,16 +75,11 @@ b2BodyId Physics::createBall(float x, float y) {
 	ballBodyDef.position = b2Vec2{x, y};
 	b2BodyId ball = b2CreateBody(world, &ballBodyDef);
 
-	b2ShapeDef ballShapeDef = b2DefaultShapeDef();
-	ballShapeDef.material = b2DefaultSurfaceMaterial();
-	ballShapeDef.material.friction = 0.0f; // 无摩擦
-	ballShapeDef.density = 1.0f;
-
 	b2Circle circle = {
 		.center = {0.0f, 0.0f},
 		.radius = cfgBallRadius,
 	};
-	b2ShapeId ballShape = b2CreateCircleShape(ball, &ballShapeDef, &circle);
+	b2ShapeId ballShape = b2CreateCircleShape(ball, &dsd, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);
 
 	b2Body_EnableContactEvents(ball, true);
@@ -95,36 +99,30 @@ void Physics::createWall() {
 	float left = 0.0f, right = static_cast<float>(cfgGridW);
 	float top = 0.0f, bottom = static_cast<float>(cfgGridH);
 
-	// 定义 shape
-	b2ShapeDef shapeDef = b2DefaultShapeDef();
-	shapeDef.material = b2DefaultSurfaceMaterial();
-	shapeDef.material.friction = 0.0f; // 无摩擦
-	shapeDef.density = 0.0f;
-
 	b2Segment seg;
 
 	// 上边界
 	seg.point1 = b2Vec2{left, top};
 	seg.point2 = b2Vec2{right, top};
-	b2ShapeId wallTop = b2CreateSegmentShape(wall, &shapeDef, &seg);
+	b2ShapeId wallTop = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallTop, 1.0f);
 
 	// 下边界
 	seg.point1 = b2Vec2{left, bottom};
 	seg.point2 = b2Vec2{right, bottom};
-	b2ShapeId wallBottom = b2CreateSegmentShape(wall, &shapeDef, &seg);
+	b2ShapeId wallBottom = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallBottom, 1.0f);
 
 	// 左边界
 	seg.point1 = b2Vec2{left, bottom};
 	seg.point2 = b2Vec2{left, top};
-	b2ShapeId wallLeft = b2CreateSegmentShape(wall, &shapeDef, &seg);
+	b2ShapeId wallLeft = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallLeft, 1.0f);
 
 	// 右边界
 	seg.point1 = b2Vec2{right, bottom};
 	seg.point2 = b2Vec2{right, top};
-	b2ShapeId wallRight = b2CreateSegmentShape(wall, &shapeDef, &seg);
+	b2ShapeId wallRight = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallRight, 1.0f);
 }
 
@@ -147,12 +145,7 @@ void Physics::createBrick() {
 			b2Body_Disable(dot);
 		}
 
-		b2ShapeDef sd = b2DefaultShapeDef();
-		sd.material = b2DefaultSurfaceMaterial();
-		sd.material.friction = 0.0f;
-		sd.density = 1.0f;
-
-		b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
+		b2ShapeId si = b2CreatePolygonShape(dot, &dsd, &box);
 		b2Shape_SetRestitution(si, 1.0f);
 	}
 }
@@ -169,12 +162,7 @@ void Physics::createDot() {
 
 	b2Polygon box = b2MakeBox(1.5f, 1.5f);
 
-	b2ShapeDef sd = b2DefaultShapeDef();
-	sd.material = b2DefaultSurfaceMaterial();
-	sd.material.friction = 0.0f;
-	sd.density = 1.0f;
-
-	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
+	b2ShapeId si = b2CreatePolygonShape(dot, &dsd, &box);
 	b2Shape_SetRestitution(si, 1.0f);
 }
 
