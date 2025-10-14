@@ -96,6 +96,9 @@ void sdl::renderBrick() {
 	rect.h = layout.gridSize;
 
 	for (const auto &b : d.entity->brick) {
+		if (b.region == 0) {
+			continue;
+		}
 		rect.x = layout.startX + static_cast<float>(b.x) * layout.gridSize;
 		rect.y = layout.startY + static_cast<float>(b.y) * layout.gridSize;
 		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);

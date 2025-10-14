@@ -31,4 +31,5 @@ private:
 	void createWall();
 	void createDot();
 	void createBrick();
+	bool contactCheck(b2ShapeId *shapeId);
 };

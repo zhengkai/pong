@@ -12,7 +12,7 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	createBrick();
 	createWall();
 	ballA = createBall(3.0f, 5.0f);
-	b2Body_SetUserData(ballA, (void *)7);
+	// b2Body_SetUserData(ballA, (void *)7);
 	// ballB = createBall(6.0f, 6.0f);
 	// b2Body_SetUserData(ballB, (void *)8);
 }
@@ -21,34 +21,32 @@ Physics::~Physics() {
 	b2DestroyWorld(world);
 }
 
+bool Physics::contactCheck(b2ShapeId *shapeId) {
+
+	auto body = b2Shape_GetBody(*shapeId);
+	void *ud = b2Body_GetUserData(body);
+	if (ud == nullptr) {
+		return false;
+	}
+
+	context::Brick *b = (context::Brick *)ud;
+	b->region = 0;
+	b2Body_Disable(body);
+	spdlog::info("contactCheck {}", b->id);
+	return true;
+}
+
 void Physics::update() {
 
 	b2World_Step(world, cfgFPSDeltaTime, 8);
 	b2ContactEvents ce = b2World_GetContactEvents(world);
 
-	d.entity->hit = 0;
 	if (ce.beginCount > 0) {
 		for (int i = 0; i < ce.beginCount; i++) {
 			b2ContactBeginTouchEvent event = ce.beginEvents[i];
-			void *dA = b2Body_GetUserData(b2Shape_GetBody(event.shapeIdA));
-			void *dB = b2Body_GetUserData(b2Shape_GetBody(event.shapeIdB));
-			if (dA != (void *)9 && dB != (void *)9) {
-				continue;
-			}
-			if (dA == (void *)7 || dB == (void *)7) {
-				d.entity->hit = 1;
-				break;
-			}
-			if (dA == (void *)8 || dB == (void *)8) {
-				d.entity->hit = 2;
-				break;
-			}
+			contactCheck(&event.shapeIdA) || contactCheck(&event.shapeIdB);
 		}
-		if (d.entity->hit > 0) {
-			spdlog::trace("hit {}", d.entity->hit);
-			// std::this_thread::sleep_for(std::chrono::seconds(1));
-		}
-		// b2DestroyWorld(world);
+		// std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
 	d.entity->ballA = b2Body_GetPosition(ballA);
@@ -132,6 +130,8 @@ void Physics::createWall() {
 
 void Physics::createBrick() {
 
+	b2Polygon box = b2MakeBox(0.5f, 0.5f);
+
 	for (const auto &b : d.entity->brick) {
 		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
 
@@ -142,9 +142,7 @@ void Physics::createBrick() {
 
 		dot = b2CreateBody(world, &bd);
 
-		b2Body_SetUserData(dot, (void *)9);
-
-		b2Polygon box = b2MakeBox(0.5f, 0.5f);
+		b2Body_SetUserData(dot, (void *)&b);
 
 		b2ShapeDef sd = b2DefaultShapeDef();
 		sd.material = b2DefaultSurfaceMaterial();
@@ -164,7 +162,7 @@ void Physics::createDot() {
 
 	dot = b2CreateBody(world, &bd);
 
-	b2Body_SetUserData(dot, (void *)9);
+	// b2Body_SetUserData(dot, (void *)9);
 
 	b2Polygon box = b2MakeBox(1.5f, 1.5f);
 
