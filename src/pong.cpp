@@ -1,4 +1,5 @@
 #include "pong.h"
+#include "config.hpp"
 #include "event.h"
 #include "input.h"
 #include "physics/physics.h"
@@ -16,6 +17,7 @@ Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 	d = {
 		.entity = std::make_shared<context::Entity>(),
 	};
+	// init();
 
 	p = new Physics({
 		.entity = d.entity,
@@ -69,6 +71,21 @@ Pong::~Pong() {
 	}
 }
 
+void Pong::init() {
+	int id = 0;
+	for (int x = 0; x < cfgGridW; x++) {
+		for (int y = 0; y < cfgGridH; y++) {
+			d.entity->brick.push_back({
+				.id = id,
+				.x = x,
+				.y = y,
+				.region = x < cfgGridW / 2 ? 1 : 2,
+			});
+			id++;
+		}
+	}
+}
+
 void Pong::loop(int cnt) {
 	t->tick();
 	if (input->stop) {
@@ -80,7 +97,7 @@ void Pong::loop(int cnt) {
 
 	s->renderStart();
 	s->renderBall();
-	s->renderBallB();
+	// s->renderBallB();
 	s->renderGrid();
 	s->counter(cnt);
 	SDL_RenderPresent(s->r);

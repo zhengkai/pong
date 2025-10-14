@@ -21,6 +21,10 @@ static SDL_AppResult SDL_Fail() {
 sdl::sdl(sdlDep dep, Input *in)
 	: input(in), window(nullptr), r(nullptr), d(std::move(dep)) {
 	spdlog::info("ptr = {}", static_cast<void *>(input));
+
+	for (const auto &b : d.entity->brick) {
+		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
+	}
 }
 
 bool sdl::init() {
@@ -92,25 +96,24 @@ void sdl::renderBall() {
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 
-	spdlog::info("ball = {} {} {}", rect.x, rect.y, rect.w);
+	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 	// SDL_RenderFillRect(r, &rect);
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
 
-	SDL_FRect dot;
-	dot.x = layout.startX + (10.0f - 3.0f / 2.0f) * layout.gridSize;
-	dot.y = layout.startY + (12.0f - 3.0f / 2.0f) * layout.gridSize;
-	dot.w = 3.0f * layout.gridSize;
-	dot.h = 3.0f * layout.gridSize;
-	spdlog::info(" dot = {} {} {}", dot.x, dot.y, rect.w);
-	if (d.entity->hit == 1) {
-		SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
-	} else if (d.entity->hit == 2) {
-		SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
-	} else {
-		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	}
-	SDL_RenderFillRect(r, &dot);
+	//	SDL_FRect dot;
+	//	dot.x = layout.startX + (10.0f - 3.0f / 2.0f) * layout.gridSize;
+	//	dot.y = layout.startY + (12.0f - 3.0f / 2.0f) * layout.gridSize;
+	//	dot.w = 3.0f * layout.gridSize;
+	//	dot.h = 3.0f * layout.gridSize;
+	//	if (d.entity->hit == 1) {
+	//		SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
+	//	} else if (d.entity->hit == 2) {
+	//		SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
+	//	} else {
+	//		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	//	}
+	//	SDL_RenderFillRect(r, &dot);
 }
 
 void sdl::renderBallB() {
@@ -122,7 +125,7 @@ void sdl::renderBallB() {
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 
-	spdlog::info("ball = {} {} {}", rect.x, rect.y, rect.w);
+	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 	// SDL_RenderFillRect(r, &rect);
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);

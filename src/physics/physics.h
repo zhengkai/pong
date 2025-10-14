@@ -30,4 +30,5 @@ private:
 	b2BodyId createBall(float x, float y);
 	void createWall();
 	void createDot();
+	void createBrick();
 };

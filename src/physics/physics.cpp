@@ -8,12 +8,13 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
 	world = b2CreateWorld(&worldDef);
 
-	createDot();
+	// createDot();
+	createBrick();
 	createWall();
 	ballA = createBall(3.0f, 5.0f);
 	b2Body_SetUserData(ballA, (void *)7);
-	ballB = createBall(6.0f, 6.0f);
-	b2Body_SetUserData(ballB, (void *)8);
+	// ballB = createBall(6.0f, 6.0f);
+	// b2Body_SetUserData(ballB, (void *)8);
 }
 
 Physics::~Physics() {
@@ -44,7 +45,7 @@ void Physics::update() {
 			}
 		}
 		if (d.entity->hit > 0) {
-			spdlog::info("hit {}", d.entity->hit);
+			spdlog::trace("hit {}", d.entity->hit);
 			// std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 		// b2DestroyWorld(world);
@@ -52,7 +53,7 @@ void Physics::update() {
 
 	d.entity->ballA = b2Body_GetPosition(ballA);
 	b2Vec2 v = b2Body_GetLinearVelocity(ballA);
-	spdlog::info("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
+	spdlog::trace("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
 		d.entity->ballA.x,
 		d.entity->ballA.y,
 		v.x,
@@ -129,6 +130,33 @@ void Physics::createWall() {
 	b2Shape_SetRestitution(wallRight, 1.0f);
 }
 
+void Physics::createBrick() {
+
+	for (const auto &b : d.entity->brick) {
+		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
+	}
+
+	/*
+	b2BodyDef bd = b2DefaultBodyDef();
+	bd.position = b2Vec2{10.0f, 12.0f};
+	bd.type = b2_staticBody;
+
+	dot = b2CreateBody(world, &bd);
+
+	b2Body_SetUserData(dot, (void *)9);
+
+	b2Polygon box = b2MakeBox(1.5f, 1.5f);
+
+	b2ShapeDef sd = b2DefaultShapeDef();
+	sd.material = b2DefaultSurfaceMaterial();
+	sd.material.friction = 0.0f;
+	sd.density = 1.0f;
+
+	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
+	b2Shape_SetRestitution(si, 1.0f);
+	 */
+}
+
 void Physics::createDot() {
 
 	b2BodyDef bd = b2DefaultBodyDef();
@@ -143,7 +171,7 @@ void Physics::createDot() {
 
 	b2ShapeDef sd = b2DefaultShapeDef();
 	sd.material = b2DefaultSurfaceMaterial();
-	sd.material.friction = 0.0f; // 无摩擦
+	sd.material.friction = 0.0f;
 	sd.density = 1.0f;
 
 	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);

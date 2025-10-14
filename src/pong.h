@@ -25,6 +25,7 @@ public:
 	~Pong();
 	void loop(int cnt);
 	void run();
+	void init();
 
 private:
 	void sdlBg();
