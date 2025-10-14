@@ -35,4 +35,5 @@ public:
 	void renderGrid();
 	void renderBall();
 	void renderBallB();
+	void renderBrick();
 };

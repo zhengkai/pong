@@ -134,27 +134,26 @@ void Physics::createBrick() {
 
 	for (const auto &b : d.entity->brick) {
 		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
+
+		b2BodyDef bd = b2DefaultBodyDef();
+		bd.position = b2Vec2{
+			static_cast<float>(b.x) + 0.5f, static_cast<float>(b.y) + 0.5f};
+		bd.type = b2_staticBody;
+
+		dot = b2CreateBody(world, &bd);
+
+		b2Body_SetUserData(dot, (void *)9);
+
+		b2Polygon box = b2MakeBox(0.5f, 0.5f);
+
+		b2ShapeDef sd = b2DefaultShapeDef();
+		sd.material = b2DefaultSurfaceMaterial();
+		sd.material.friction = 0.0f;
+		sd.density = 1.0f;
+
+		b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
+		b2Shape_SetRestitution(si, 1.0f);
 	}
-
-	/*
-	b2BodyDef bd = b2DefaultBodyDef();
-	bd.position = b2Vec2{10.0f, 12.0f};
-	bd.type = b2_staticBody;
-
-	dot = b2CreateBody(world, &bd);
-
-	b2Body_SetUserData(dot, (void *)9);
-
-	b2Polygon box = b2MakeBox(1.5f, 1.5f);
-
-	b2ShapeDef sd = b2DefaultShapeDef();
-	sd.material = b2DefaultSurfaceMaterial();
-	sd.material.friction = 0.0f;
-	sd.density = 1.0f;
-
-	b2ShapeId si = b2CreatePolygonShape(dot, &sd, &box);
-	b2Shape_SetRestitution(si, 1.0f);
-	 */
 }
 
 void Physics::createDot() {

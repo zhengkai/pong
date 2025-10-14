@@ -14,10 +14,7 @@ static int sizeH = sizeW;
 
 Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 
-	d = {
-		.entity = std::make_shared<context::Entity>(),
-	};
-	// init();
+	init();
 
 	p = new Physics({
 		.entity = d.entity,
@@ -72,14 +69,19 @@ Pong::~Pong() {
 }
 
 void Pong::init() {
+
+	d = {
+		.entity = std::make_shared<context::Entity>(),
+	};
+
 	int id = 0;
-	for (int x = 0; x < cfgGridW; x++) {
-		for (int y = 0; y < cfgGridH; y++) {
+	for (int x = 0; x < 2; x++) {
+		for (int y = 0; y < 2; y++) {
 			d.entity->brick.push_back({
 				.id = id,
 				.x = x,
 				.y = y,
-				.region = x < cfgGridW / 2 ? 1 : 2,
+				.region = 1,
 			});
 			id++;
 		}
@@ -96,6 +98,7 @@ void Pong::loop(int cnt) {
 	p->update();
 
 	s->renderStart();
+	s->renderBrick();
 	s->renderBall();
 	// s->renderBallB();
 	s->renderGrid();

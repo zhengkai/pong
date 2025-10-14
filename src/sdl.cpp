@@ -87,6 +87,22 @@ void sdl::counter(int i) {
 	text->rMono32(std::to_string(i), winW - 16, 16, Text::Align::RIGHT);
 }
 
+void sdl::renderBrick() {
+
+	Layout &layout = Layout::instance();
+
+	SDL_FRect rect;
+	rect.w = layout.gridSize;
+	rect.h = layout.gridSize;
+
+	for (const auto &b : d.entity->brick) {
+		rect.x = layout.startX + static_cast<float>(b.x) * layout.gridSize;
+		rect.y = layout.startY + static_cast<float>(b.y) * layout.gridSize;
+		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+		SDL_RenderFillRect(r, &rect);
+	}
+}
+
 void sdl::renderBall() {
 	Layout &layout = Layout::instance();
 
