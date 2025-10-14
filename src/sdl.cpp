@@ -23,7 +23,7 @@ sdl::sdl(sdlDep dep, Input *in)
 	spdlog::info("ptr = {}", static_cast<void *>(input));
 
 	for (const auto &b : d.entity->brick) {
-		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
+		spdlog::trace("brick {} {} {} {}", b.id, b.x, b.y, b.region);
 	}
 }
 

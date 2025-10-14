@@ -11,7 +11,7 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	// createDot();
 	createBrick();
 	createWall();
-	ballA = createBall(3.0f, 5.0f);
+	ballA = createBall(5.0f, 5.0f);
 	// b2Body_SetUserData(ballA, (void *)7);
 	// ballB = createBall(6.0f, 6.0f);
 	// b2Body_SetUserData(ballB, (void *)8);
@@ -32,7 +32,7 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 	context::Brick *b = (context::Brick *)ud;
 	b->region = 0;
 	b2Body_Disable(body);
-	spdlog::info("contactCheck {}", b->id);
+	// spdlog::trace("contactCheck {}", b->id);
 	return true;
 }
 
@@ -56,7 +56,7 @@ void Physics::update() {
 		d.entity->ballA.y,
 		v.x,
 		v.y);
-	d.entity->ballB = b2Body_GetPosition(ballB);
+	// d.entity->ballB = b2Body_GetPosition(ballB);
 }
 
 b2BodyId Physics::createBall(float x, float y) {
@@ -133,7 +133,6 @@ void Physics::createBrick() {
 	b2Polygon box = b2MakeBox(0.5f, 0.5f);
 
 	for (const auto &b : d.entity->brick) {
-		spdlog::info("brick {} {} {} {}", b.id, b.x, b.y, b.region);
 
 		b2BodyDef bd = b2DefaultBodyDef();
 		bd.position = b2Vec2{
@@ -143,6 +142,10 @@ void Physics::createBrick() {
 		dot = b2CreateBody(world, &bd);
 
 		b2Body_SetUserData(dot, (void *)&b);
+
+		if (b.region == 0) {
+			b2Body_Disable(dot);
+		}
 
 		b2ShapeDef sd = b2DefaultShapeDef();
 		sd.material = b2DefaultSurfaceMaterial();

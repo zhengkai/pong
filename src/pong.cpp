@@ -75,13 +75,13 @@ void Pong::init() {
 	};
 
 	int id = 0;
-	for (int x = 0; x < 2; x++) {
-		for (int y = 0; y < 2; y++) {
+	for (int x = 0; x < cfgGridW; x++) {
+		for (int y = 0; y < cfgGridH; y++) {
 			d.entity->brick.push_back({
 				.id = id,
 				.x = x,
 				.y = y,
-				.region = 1,
+				.region = x < cfgGridW / 2 ? 1 : 0,
 			});
 			id++;
 		}
