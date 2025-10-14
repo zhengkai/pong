@@ -4,6 +4,8 @@
 
 int main(int argc, char *argv[]) {
 
+	std::srand(std::time(nullptr));
+
 	if (showVer(argc, argv)) {
 		return 0;
 	}

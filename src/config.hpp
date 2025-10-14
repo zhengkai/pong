@@ -8,8 +8,8 @@ constexpr float cfgBallRadius = 0.5f;
 constexpr int cfgWinW = 2000;
 constexpr int cfgWinH = 1600;
 
-constexpr int cfgGridW = 10;
-constexpr int cfgGridH = 8;
+constexpr int cfgGridW = 20;
+constexpr int cfgGridH = 16;
 
 constexpr int cfgGridSize = (cfgWinW / cfgGridW < cfgWinH / cfgGridH)
 	? cfgWinW / cfgGridW

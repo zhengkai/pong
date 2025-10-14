@@ -19,9 +19,11 @@ private:
 	b2BodyId ballB;
 	b2BodyId dot;
 	PhysicsDep d;
+	int region;
+	std::vector<b2BodyId> brick;
 
 public:
-	Physics(PhysicsDep dep);
+	Physics(PhysicsDep dep, int region);
 	~Physics();
 
 	void update();

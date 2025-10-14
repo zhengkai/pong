@@ -12,7 +12,8 @@ static b2ShapeDef dsd = [] {
 	return sd;
 }();
 
-Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
+Physics::Physics(PhysicsDep dep, int region)
+	: d(std::move(dep)), region(region) {
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
 	world = b2CreateWorld(&worldDef);
@@ -20,7 +21,12 @@ Physics::Physics(PhysicsDep dep) : d(std::move(dep)) {
 	// createDot();
 	createBrick();
 	createWall();
-	ballA = createBall(7.0f, 5.0f);
+
+	float y = static_cast<float>(std::rand()) / RAND_MAX *
+		static_cast<float>(cfgGridH);
+
+	ballA =
+		createBall(region == 1 ? static_cast<float>(cfgGridW - 2) : 2.0f, y);
 	// b2Body_SetUserData(ballA, (void *)7);
 	// ballB = createBall(6.0f, 6.0f);
 	// b2Body_SetUserData(ballB, (void *)8);
@@ -39,13 +45,23 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 	}
 
 	context::Brick *b = (context::Brick *)ud;
-	b->region = 0;
-	b2Body_Disable(body);
+	b->region = region;
 	// spdlog::trace("contactCheck {}", b->id);
 	return true;
 }
 
 void Physics::update() {
+
+	for (const auto &b : d.entity->brick) {
+
+		b2BodyId bb = brick[b.id];
+
+		if (b.region == region) {
+			b2Body_Disable(bb);
+		} else {
+			b2Body_Enable(bb);
+		}
+	}
 
 	b2World_Step(world, cfgFPSDeltaTime, 8);
 	b2ContactEvents ce = b2World_GetContactEvents(world);
@@ -58,11 +74,16 @@ void Physics::update() {
 		// std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
-	d.entity->ballA = b2Body_GetPosition(ballA);
+	b2Vec2 p = b2Body_GetPosition(ballA);
+	if (region == 1) {
+		d.entity->ballA = p;
+	} else {
+		d.entity->ballB = p;
+	}
 	b2Vec2 v = b2Body_GetLinearVelocity(ballA);
 	spdlog::trace("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
-		d.entity->ballA.x,
-		d.entity->ballA.y,
+		p.x,
+		p.y,
 		v.x,
 		v.y);
 	// d.entity->ballB = b2Body_GetPosition(ballB);
@@ -137,15 +158,17 @@ void Physics::createBrick() {
 			static_cast<float>(b.x) + 0.5f, static_cast<float>(b.y) + 0.5f};
 		bd.type = b2_staticBody;
 
-		dot = b2CreateBody(world, &bd);
+		b2BodyId bb = b2CreateBody(world, &bd);
 
-		b2Body_SetUserData(dot, (void *)&b);
+		brick.push_back(bb);
+
+		b2Body_SetUserData(bb, (void *)&b);
 
 		if (b.region == 0) {
-			b2Body_Disable(dot);
+			b2Body_Disable(bb);
 		}
 
-		b2ShapeId si = b2CreatePolygonShape(dot, &dsd, &box);
+		b2ShapeId si = b2CreatePolygonShape(bb, &dsd, &box);
 		b2Shape_SetRestitution(si, 1.0f);
 	}
 }

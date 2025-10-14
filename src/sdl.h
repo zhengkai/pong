@@ -6,6 +6,7 @@
 #include "input.h"
 #include "render/grid.h"
 #include "render/text.h"
+#include <box2d/box2d.h>
 
 struct sdlDep {
 	std::shared_ptr<context::Entity> entity;
@@ -33,7 +34,7 @@ public:
 	void renderStart();
 	void renderEnd();
 	void renderGrid();
-	void renderBall();
+	void renderBall(b2Vec2 b);
 	void renderBallB();
 	void renderBrick();
 };

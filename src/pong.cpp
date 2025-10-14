@@ -16,9 +16,17 @@ Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 
 	init();
 
-	p = new Physics({
-		.entity = d.entity,
-	});
+	pA = new Physics(
+		{
+			.entity = d.entity,
+		},
+		1);
+
+	pB = new Physics(
+		{
+			.entity = d.entity,
+		},
+		2);
 
 	s = new sdl(
 		{
@@ -62,9 +70,13 @@ Pong::~Pong() {
 		delete input;
 		input = nullptr;
 	}
-	if (p) {
-		delete p;
-		p = nullptr;
+	if (pA) {
+		delete pA;
+		pA = nullptr;
+	}
+	if (pB) {
+		delete pB;
+		pB = nullptr;
 	}
 }
 
@@ -81,7 +93,7 @@ void Pong::init() {
 				.id = id,
 				.x = x,
 				.y = y,
-				.region = x < cfgGridW / 2 ? 1 : 0,
+				.region = (x < (cfgGridW / 2)) ? 2 : 1,
 			});
 			id++;
 		}
@@ -95,11 +107,14 @@ void Pong::loop(int cnt) {
 		return;
 	}
 
-	p->update();
+	pA->update();
+	pB->update();
 
 	s->renderStart();
 	s->renderBrick();
-	s->renderBall();
+
+	s->renderBall(d.entity->ballA);
+	s->renderBall(d.entity->ballB);
 	// s->renderBallB();
 	s->renderGrid();
 	s->counter(cnt);

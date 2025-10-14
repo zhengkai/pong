@@ -96,43 +96,34 @@ void sdl::renderBrick() {
 	rect.h = layout.gridSize;
 
 	for (const auto &b : d.entity->brick) {
-		if (b.region == 0) {
-			continue;
-		}
 		rect.x = layout.startX + static_cast<float>(b.x) * layout.gridSize;
 		rect.y = layout.startY + static_cast<float>(b.y) * layout.gridSize;
-		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+		switch (b.region) {
+		case 1:
+			SDL_SetRenderDrawColor(r, 100, 0, 100, 255);
+			break;
+		case 2:
+			SDL_SetRenderDrawColor(r, 0, 100, 100, 255);
+			break;
+		default:
+			SDL_SetRenderDrawColor(r, 100, 100, 0, 255);
+			break;
+		}
 		SDL_RenderFillRect(r, &rect);
 	}
 }
 
-void sdl::renderBall() {
+void sdl::renderBall(b2Vec2 b) {
 	Layout &layout = Layout::instance();
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (d.entity->ballA.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (d.entity->ballA.y - 0.5) * layout.gridSize;
+	rect.x = layout.startX + (b.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (b.y - 0.5) * layout.gridSize;
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
-	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	// SDL_RenderFillRect(r, &rect);
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
-
-	//	SDL_FRect dot;
-	//	dot.x = layout.startX + (10.0f - 3.0f / 2.0f) * layout.gridSize;
-	//	dot.y = layout.startY + (12.0f - 3.0f / 2.0f) * layout.gridSize;
-	//	dot.w = 3.0f * layout.gridSize;
-	//	dot.h = 3.0f * layout.gridSize;
-	//	if (d.entity->hit == 1) {
-	//		SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
-	//	} else if (d.entity->hit == 2) {
-	//		SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
-	//	} else {
-	//		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	//	}
-	//	SDL_RenderFillRect(r, &dot);
 }
 
 void sdl::renderBallB() {

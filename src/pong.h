@@ -18,7 +18,8 @@ private:
 	Input *input;
 	Time *t;
 	sdl *s;
-	Physics *p;
+	Physics *pA;
+	Physics *pB;
 
 public:
 	Pong();
