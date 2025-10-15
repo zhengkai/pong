@@ -34,7 +34,6 @@ public:
 	void renderStart();
 	void renderEnd();
 	void renderGrid();
-	void renderBall(b2Vec2 b);
-	void renderBallB();
+	void renderBall(context::Ball b);
 	void renderBrick();
 };

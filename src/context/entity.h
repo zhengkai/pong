@@ -11,11 +11,17 @@ struct Brick {
 	int region = 0;
 };
 
+struct Ball {
+	int region = 0;
+	b2Vec2 pos;
+	b2Vec2 speed;
+};
+
+inline std::vector<Ball> BallList;
+
 class Entity {
 
 public:
-	b2Vec2 ballA;
-	b2Vec2 ballB;
 	int hit = 0;
 	std::vector<Brick> brick;
 

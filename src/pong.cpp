@@ -2,9 +2,10 @@
 #include "config.hpp"
 #include "event.h"
 #include "input.h"
-#include "physics/physics.h"
+#include "region.hpp"
 #include "sdl.h"
 #include "spdlog/spdlog.h"
+#include "util/ball.hpp"
 #include <SDL3/SDL_events.h>
 #include <cstring>
 #include <thread>
@@ -15,18 +16,6 @@ static int sizeH = sizeW;
 Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 
 	init();
-
-	pA = new Physics(
-		{
-			.entity = d.entity,
-		},
-		1);
-
-	pB = new Physics(
-		{
-			.entity = d.entity,
-		},
-		2);
 
 	s = new sdl(
 		{
@@ -70,26 +59,21 @@ Pong::~Pong() {
 		delete input;
 		input = nullptr;
 	}
-	if (pA) {
-		delete pA;
-		pA = nullptr;
-	}
-	if (pB) {
-		delete pB;
-		pB = nullptr;
-	}
 }
 
 void Pong::init() {
 
+	auto e = std::make_shared<context::Entity>();
+
 	d = {
-		.entity = std::make_shared<context::Entity>(),
+		.entity = e,
 	};
 
 	int id = 0;
+	// e->brick.reserve(cfgGridW * cfgGridH);
 	for (int x = 0; x < cfgGridW; x++) {
 		for (int y = 0; y < cfgGridH; y++) {
-			d.entity->brick.push_back({
+			e->brick.push_back({
 				.id = id,
 				.x = x,
 				.y = y,
@@ -97,6 +81,12 @@ void Pong::init() {
 			});
 			id++;
 		}
+	}
+
+	context::BallList = util::generateBall(cfgGridWF, cfgGridHF, 1, 3);
+	// region.reserve(context::BallList.size());
+	for (auto &b : context::BallList) {
+		region.push_back(std::make_unique<Region>(e, b));
 	}
 }
 
@@ -107,14 +97,18 @@ void Pong::loop(int cnt) {
 		return;
 	}
 
-	pA->update();
-	pB->update();
+	for (auto &r : region) {
+		r->update();
+	}
 
 	s->renderStart();
 	s->renderBrick();
 
-	s->renderBall(d.entity->ballA);
-	s->renderBall(d.entity->ballB);
+	for (auto &b : context::BallList) {
+		s->renderBall(b);
+	}
+
+	// s->renderBall(d.entity->ballA);
 	// s->renderBallB();
 	s->renderGrid();
 	s->counter(cnt);

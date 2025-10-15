@@ -2,7 +2,7 @@
 
 #include "context/entity.h"
 #include "input.h"
-#include "physics/physics.h"
+#include "region.hpp"
 #include "sdl.h"
 #include "time.hpp"
 
@@ -18,8 +18,7 @@ private:
 	Input *input;
 	Time *t;
 	sdl *s;
-	Physics *pA;
-	Physics *pB;
+	std::vector<std::unique_ptr<Region>> region;
 
 public:
 	Pong();

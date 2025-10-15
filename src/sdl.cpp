@@ -113,31 +113,16 @@ void sdl::renderBrick() {
 	}
 }
 
-void sdl::renderBall(b2Vec2 b) {
+void sdl::renderBall(context::Ball b) {
 	Layout &layout = Layout::instance();
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (b.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (b.y - 0.5) * layout.gridSize;
+	rect.x = layout.startX + (b.pos.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (b.pos.y - 0.5) * layout.gridSize;
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
-	SDL_RenderTexture(r, ballTex, nullptr, &rect);
-}
-
-void sdl::renderBallB() {
-	Layout &layout = Layout::instance();
-
-	SDL_FRect rect;
-	rect.x = layout.startX + (d.entity->ballB.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (d.entity->ballB.y - 0.5) * layout.gridSize;
-	rect.w = layout.gridSize;
-	rect.h = layout.gridSize;
-
-	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
-	// SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	// SDL_RenderFillRect(r, &rect);
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
 }
 
