@@ -13,19 +13,21 @@ struct PongDeps {
 class Pong {
 
 private:
+	std::thread bgThread;
 	PongDeps d;
-	bool stop;
 	Input *input;
 	Time *t;
 	sdl *s;
 	std::vector<std::unique_ptr<Region>> region;
+	int serial;
 
 public:
+	bool stop;
 	Pong();
 	~Pong();
-	void loop(int cnt);
+	void loop();
 	void run();
-	void init();
+	bool init();
 
 private:
 	void sdlBg();

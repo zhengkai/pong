@@ -11,39 +11,13 @@
 #include <thread>
 
 Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
-
-	init();
-
-	s = new sdl(
-		{
-			.entity = d.entity,
-		},
-		input);
-
-	spdlog::info("pong start");
-}
-
-void Pong::run() {
-	if (!s->init()) {
-		spdlog::info("sdl init failed");
-		return;
-	}
-	spdlog::info("sdl init done");
-
-	std::thread t(&Pong::sdlBg, this);
-	t.detach();
-
-	int i = 0;
-	while (!stop) {
-		i++;
-		loop(i);
-	}
-	stop = true;
-	spdlog::info("Pong::run stop");
-	// std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 Pong::~Pong() {
+	stop = true;
+	if (bgThread.joinable()) {
+		bgThread.join();
+	}
 	if (t) {
 		delete t;
 		t = nullptr;
@@ -58,7 +32,7 @@ Pong::~Pong() {
 	}
 }
 
-void Pong::init() {
+bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 
@@ -90,10 +64,34 @@ void Pong::init() {
 	for (auto &b : context::BallList) {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
+
+	s = new sdl(
+		{
+			.entity = d.entity,
+		},
+		input);
+
+	spdlog::info("pong start");
+
+	if (!s->init()) {
+		spdlog::info("sdl init failed");
+		return false;
+	}
+	spdlog::info("sdl init done");
+
+	bgThread = std::thread(&Pong::sdlBg, this);
+	bgThread.detach();
+	return true;
 }
 
-void Pong::loop(int cnt) {
+void Pong::loop() {
+
+	serial++;
+
+#ifndef __EMSCRIPTEN__
 	t->tick();
+#endif
+
 	if (input->stop) {
 		stop = true;
 		return;
@@ -119,7 +117,7 @@ void Pong::loop(int cnt) {
 	// s->renderBall(d.entity->ballA);
 	// s->renderBallB();
 	s->renderGrid();
-	s->counter(cnt);
+	s->counter(serial);
 	SDL_RenderPresent(s->r);
 }
 
