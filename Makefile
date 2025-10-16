@@ -14,6 +14,9 @@ debug:
 trace:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose=trace
 
+wasm:
+	RUIN_DIR=$(RUIN_DIR) ./wasm.sh
+
 ver:
 	./build/pong --version
 

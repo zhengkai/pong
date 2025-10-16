@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 4.0.0)
 project(pong VERSION 1.2)
 set(PROJ pong)
 
+if(EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -sUSE_SDL=3 -sUSE_SDL_IMAGE=3 -sUSE_SDL_TTF=3 -sALLOW_MEMORY_GROWTH=1")
+endif()
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MAKE_PROGRAM_ARGS "--no-print-directory")
@@ -10,7 +15,7 @@ set(VCPKG_VERBOSE OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if (CMAKE_BUILD_TYPE STREQUAL "debug")
+if (NOT EMSCRIPTEN AND CMAKE_BUILD_TYPE STREQUAL "debug")
     target_compile_options(MyGame PRIVATE
         -Wall -Wextra -Werror
         -fsanitize=address,undefined
@@ -76,17 +81,27 @@ target_precompile_headers(${PROJ} PRIVATE
 	<thread>
 	<vector>
 )
-
-target_link_libraries(${PROJ} PRIVATE
-    box2d::box2d
-    fmt::fmt
-    protobuf::libprotobuf
-    SDL3::SDL3
-    SDL3_image::SDL3_image
-    SDL3_ttf::SDL3_ttf
-    spdlog::spdlog
-    ${Protobuf_LIBRARIES}
-)
+if(EMSCRIPTEN)
+    target_link_libraries(${PROJ} PRIVATE
+        box2d::box2d
+        fmt::fmt
+        spdlog::spdlog
+        "-sUSE_SDL=3"
+        "-sUSE_SDL_IMAGE=3"
+        "-sUSE_SDL_TTF=3"
+    )
+else()
+	target_link_libraries(${PROJ} PRIVATE
+	    box2d::box2d
+	    fmt::fmt
+	    protobuf::libprotobuf
+	    SDL3::SDL3
+	    SDL3_image::SDL3_image
+	    SDL3_ttf::SDL3_ttf
+	    spdlog::spdlog
+	    ${Protobuf_LIBRARIES}
+	)
+endif()
 
 target_include_directories(${PROJ} PUBLIC
 	${CMAKE_CURRENT_BINARY_DIR}

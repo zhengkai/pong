@@ -8,7 +8,8 @@
 namespace util {
 
 inline b2Vec2 randomSpeedDirection(float speed) {
-	float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * 3.1415926535f;
+	float angle = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
+		2.0f * std::numbers::pi_v<float>;
 	float x = std::cos(angle) * speed;
 	float y = std::sin(angle) * speed;
 	return b2Vec2(x, y);
