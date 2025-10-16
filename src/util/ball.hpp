@@ -14,9 +14,9 @@ inline b2Vec2 randomSpeedDirection(float speed) {
 	return b2Vec2(x, y);
 }
 
-inline std::vector<context::Ball> generateBall(
+inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 	float w, float h, int count, float minDistance) {
-	std::vector<context::Ball> li;
+	std::vector<std::shared_ptr<context::Ball>> li;
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> xDist(0.0f, w - 2.0f);
@@ -38,8 +38,8 @@ inline std::vector<context::Ball> generateBall(
 
 			// 检查与已有球的距离
 			for (const auto &ball : li) {
-				float dx = pos.x - ball.pos.x;
-				float dy = pos.y - ball.pos.y;
+				float dx = pos.x - ball->pos.x;
+				float dy = pos.y - ball->pos.y;
 				float distance = std::sqrt(dx * dx + dy * dy);
 
 				if (distance < minDistance) {
@@ -50,11 +50,11 @@ inline std::vector<context::Ball> generateBall(
 		}
 
 		if (validPosition) {
-			li.push_back({
+			li.push_back(std::make_shared<context::Ball>(context::Ball{
 				.region = region,
 				.pos = pos,
 				.speed = randomSpeedDirection(cfgSpeed),
-			}); // 速度为0
+			})); // 速度为0
 
 			// spdlog::info("new ball {} pos {} {}", region, pos.x, pos.y);
 		}

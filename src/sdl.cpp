@@ -100,25 +100,43 @@ void sdl::renderBrick() {
 		rect.y = layout.startY + static_cast<float>(b.y) * layout.gridSize;
 		switch (b.region) {
 		case 1:
-			SDL_SetRenderDrawColor(r, 100, 0, 100, 255);
+			SDL_SetRenderDrawColor(r, 255, 0, 0, 180);
 			break;
 		case 2:
-			SDL_SetRenderDrawColor(r, 0, 100, 100, 255);
+			SDL_SetRenderDrawColor(r, 255, 127, 0, 180);
+			break;
+		case 3:
+			SDL_SetRenderDrawColor(r, 255, 255, 0, 180);
+			break;
+		case 4:
+			SDL_SetRenderDrawColor(r, 0, 255, 0, 180);
+			break;
+		case 5:
+			SDL_SetRenderDrawColor(r, 0, 206, 209, 180);
+			break;
+		case 6:
+			SDL_SetRenderDrawColor(r, 0, 0, 255, 180);
+			break;
+		case 7:
+			SDL_SetRenderDrawColor(r, 75, 0, 130, 180);
+			break;
+		case 8:
+			SDL_SetRenderDrawColor(r, 148, 0, 211, 180);
 			break;
 		default:
-			SDL_SetRenderDrawColor(r, 100, 100, 0, 255);
+			SDL_SetRenderDrawColor(r, 255, 20, 147, 180);
 			break;
 		}
 		SDL_RenderFillRect(r, &rect);
 	}
 }
 
-void sdl::renderBall(context::Ball b) {
+void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 	Layout &layout = Layout::instance();
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (b.pos.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (b.pos.y - 0.5) * layout.gridSize;
+	rect.x = layout.startX + (b->pos.x - 0.5) * layout.gridSize;
+	rect.y = layout.startY + (b->pos.y - 0.5) * layout.gridSize;
 	rect.w = layout.gridSize;
 	rect.h = layout.gridSize;
 

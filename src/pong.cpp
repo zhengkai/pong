@@ -10,9 +10,6 @@
 #include <cstring>
 #include <thread>
 
-static int sizeW = 10;
-static int sizeH = sizeW;
-
 Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 
 	init();
@@ -71,20 +68,25 @@ void Pong::init() {
 
 	int id = 0;
 	// e->brick.reserve(cfgGridW * cfgGridH);
+
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::uniform_int_distribution<int> dist(0, cfgRegionNum - 1);
+
 	for (int x = 0; x < cfgGridW; x++) {
 		for (int y = 0; y < cfgGridH; y++) {
 			e->brick.push_back({
 				.id = id,
 				.x = x,
 				.y = y,
-				.region = (x < (cfgGridW / 2)) ? 2 : 1,
+				.region = dist(g),
 			});
 			id++;
 		}
 	}
 
-	context::BallList = util::generateBall(cfgGridWF, cfgGridHF, 1, 3);
-	// region.reserve(context::BallList.size());
+	context::BallList =
+		util::generateBall(cfgGridWF, cfgGridHF, cfgRegionNum, 3);
 	for (auto &b : context::BallList) {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
@@ -97,8 +99,14 @@ void Pong::loop(int cnt) {
 		return;
 	}
 
-	for (auto &r : region) {
-		r->update();
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	for (int i = 0; i < cfgPhyLoop; i++) {
+		std::shuffle(region.begin(), region.end(), g);
+		for (auto &r : region) {
+			r->update();
+		}
 	}
 
 	s->renderStart();

@@ -12,8 +12,8 @@ static b2ShapeDef dsd = [] {
 	return sd;
 }();
 
-Physics::Physics(PhysicsDep dep, context::Ball b)
-	: d(std::move(dep)), region(b.region), ball(b) {
+Physics::Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b)
+	: d(std::move(dep)), region(b->region), ball(b) {
 
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
@@ -22,12 +22,12 @@ Physics::Physics(PhysicsDep dep, context::Ball b)
 	createBrick();
 	createWall();
 
-	ballBody = createBall(b);
-	spdlog::info("phy init {} {} {}", b.region, b.pos.x, b.pos.y);
+	ballBody = createBall();
+	spdlog::info("phy init {} {} {}", b->region, b->pos.x, b->pos.y);
 }
 
 Physics::~Physics() {
-	spdlog::info("phy destory {}", region);
+	spdlog::trace("phy destory {}", region);
 	b2DestroyWorld(world);
 }
 
@@ -69,38 +69,52 @@ void Physics::update() {
 
 	b2Vec2 p = b2Body_GetPosition(ballBody);
 
-	ball.pos = p;
+	ball->pos = p;
 
 	b2Vec2 v = b2Body_GetLinearVelocity(ballBody);
-	spdlog::trace("ball pos = ({:10.6f},{:10.6f}), ({:10.6f},{:10.6f})",
+
+	if (std::abs(v.x) < 0.01f) {
+		v.x *= 100.0f;
+	} else if (std::abs(v.y) < 0.01f) {
+		v.y *= 100.0f;
+	}
+
+	float speed = std::sqrt(v.x * v.x + v.y * v.y);
+
+	if (speed != cfgSpeed) {
+		b2Body_SetLinearVelocity(
+			ballBody, b2Vec2{v.x / speed * cfgSpeed, v.y / speed * cfgSpeed});
+	}
+
+	spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
+		region,
 		p.x,
 		p.y,
-		v.x,
-		v.y);
+		speed);
 }
 
-b2BodyId Physics::createBall(context::Ball b) {
+b2BodyId Physics::createBall() {
 
 	b2BodyDef ballBodyDef = b2DefaultBodyDef();
 	ballBodyDef.type = b2_dynamicBody;
-	ballBodyDef.position = b.pos;
-	b2BodyId ball = b2CreateBody(world, &ballBodyDef);
+	ballBodyDef.position = ball->pos;
+	b2BodyId bb = b2CreateBody(world, &ballBodyDef);
 
 	b2Circle circle = {
 		.center = {0.0f, 0.0f},
 		.radius = cfgBallRadius,
 	};
-	b2ShapeId ballShape = b2CreateCircleShape(ball, &dsd, &circle);
+	b2ShapeId ballShape = b2CreateCircleShape(bb, &dsd, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);
 
-	b2Body_EnableContactEvents(ball, true);
+	b2Body_EnableContactEvents(bb, true);
 
-	b2Body_SetBullet(ball, true);
-	b2Body_SetLinearVelocity(ball, b.speed);
+	b2Body_SetBullet(bb, true);
+	b2Body_SetLinearVelocity(bb, ball->speed);
 
-	spdlog::info("ball speed {} {}", b.speed.x, b.speed.y);
+	spdlog::info("ball speed {} {}", ball->speed.x, ball->speed.y);
 
-	return ball;
+	return bb;
 }
 
 void Physics::createWall() {

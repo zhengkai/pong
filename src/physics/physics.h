@@ -16,20 +16,20 @@ private:
 	b2WorldId world;
 	b2BodyId ground;
 	b2BodyId ballBody;
-	context::Ball ball;
+	std::shared_ptr<context::Ball> ball;
 	b2BodyId dot;
 	PhysicsDep d;
 	int region;
 	std::vector<b2BodyId> brick;
 
 public:
-	Physics(PhysicsDep dep, context::Ball b);
+	Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b);
 	~Physics();
 
 	void update();
 
 private:
-	b2BodyId createBall(context::Ball b);
+	b2BodyId createBall();
 	void createWall();
 	void createBrick();
 	bool contactCheck(b2ShapeId *shapeId);

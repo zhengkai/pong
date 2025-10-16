@@ -34,6 +34,6 @@ public:
 	void renderStart();
 	void renderEnd();
 	void renderGrid();
-	void renderBall(context::Ball b);
+	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();
 };

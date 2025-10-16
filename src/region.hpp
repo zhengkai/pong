@@ -8,20 +8,20 @@ struct Region {
 private:
 	int id;
 	std::unique_ptr<Physics> phy;
-	context::Ball ball;
+	std::shared_ptr<context::Ball> ball;
 
 public:
-	Region(std::shared_ptr<context::Entity> e, context::Ball ball)
-		: ball(ball), id(ball.region) {
+	Region(std::shared_ptr<context::Entity> e, std::shared_ptr<context::Ball> b)
+		: ball(b), id(b->region) {
 
 		phy = std::make_unique<Physics>(
 			PhysicsDep{
 				.entity = e,
 			},
-			ball);
+			b);
 	}
 	~Region() {
-		spdlog::info("region destory {}", id);
+		spdlog::trace("region destory {}", id);
 	}
 	void update() {
 		phy->update();

@@ -17,7 +17,7 @@ struct Ball {
 	b2Vec2 speed;
 };
 
-inline std::vector<Ball> BallList;
+inline std::vector<std::shared_ptr<Ball>> BallList;
 
 class Entity {
 
