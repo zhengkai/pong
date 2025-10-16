@@ -18,7 +18,8 @@ export CXX=clang++
 # cmake -DCMAKE_BUILD_TYPE=debug \
 emcmake cmake \
 	-B build-wasm \
-	-DCMAKE_TOOLCHAIN_FILE="/usr/local/src/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+	-DCMAKE_TOOLCHAIN_FILE="/www/repo/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
+	-DCMAKE_PREFIX_PATH="/usr/local/src/vcpkg/installed/wasm32-emscripten" \
 	-DCMAKE_BUILD_TYPE=Release
 
 emmake cmake --build build-wasm --config Release "-j$(nproc)"
