@@ -12,14 +12,24 @@ if [ -f /www/repo/emsdk/emsdk_env.sh ]; then
 	source /www/repo/emsdk/emsdk_env.sh
 fi
 
-export CC=clang
-export CXX=clang++
+VCPKG_DIR="/usr/local/src/vcpkg"
+VCPKG_WASM_DIR="${VCPKG_DIR}/installed/wasm32-emscripten"
+VCPKG_SHARE_DIR="${VCPKG_WASM_DIR}/share"
 
-# cmake -DCMAKE_BUILD_TYPE=debug \
 emcmake cmake \
 	-B build-wasm \
-	-DCMAKE_TOOLCHAIN_FILE="/www/repo/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
-	-DCMAKE_PREFIX_PATH="/usr/local/src/vcpkg/installed/wasm32-emscripten" \
+	-DCMAKE_TOOLCHAIN_FILE=/usr/local/src/vcpkg/scripts/buildsystems/vcpkg.cmake \
+	-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/www/repo/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
+	-DCMAKE_CROSSCOMPILING_EMULATOR=/www/repo/emsdk/node/22.16.0_64bit/bin/node \
+	-DVCPKG_TARGET_TRIPLET=wasm32-emscripten \
+	-DFreetype_DIR="${VCPKG_SHARE_DIR}/freetype" \
+	-Dfmt_DIR="${VCPKG_SHARE_DIR}/fmt" \
+	-Dspdlog_DIR="${VCPKG_SHARE_DIR}/spdlog" \
+	-Dbox2d_DIR="${VCPKG_SHARE_DIR}/box2d" \
+    -DSDL3_DIR="${VCPKG_SHARE_DIR}/sdl3" \
+    -DSDL3_ttf_DIR="${VCPKG_SHARE_DIR}/sdl3_ttf" \
+    -DSDL3_image_DIR="${VCPKG_SHARE_DIR}/SDL3_image" \
 	-DCMAKE_BUILD_TYPE=Release
 
-emmake cmake --build build-wasm --config Release "-j$(nproc)"
+emmake cmake \
+	--build build-wasm --config Release "-j$(nproc)"

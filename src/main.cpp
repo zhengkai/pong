@@ -6,12 +6,12 @@
 
 static Pong *thePong = nullptr;
 
-void wasmLoop(Pong *p) {
-	while (p->stop) {
+void wasmLoop() {
+	while (thePong->stop) {
 		emscripten_cancel_main_loop();
 		return;
 	}
-	p->loop();
+	thePong->loop();
 }
 #endif
 

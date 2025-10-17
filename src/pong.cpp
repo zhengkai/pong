@@ -9,15 +9,20 @@
 #include <SDL3/SDL_events.h>
 #include <cstring>
 #include <thread>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 }
 
 Pong::~Pong() {
 	stop = true;
+#ifndef __EMSCRIPTEN__
 	if (bgThread.joinable()) {
 		bgThread.join();
 	}
+#endif
 	if (t) {
 		delete t;
 		t = nullptr;
@@ -79,8 +84,12 @@ bool Pong::init() {
 	}
 	spdlog::info("sdl init done");
 
+#ifdef __EMSCRIPTEN__
+	startBg();
+#else
 	bgThread = std::thread(&Pong::sdlBg, this);
 	bgThread.detach();
+#endif
 	return true;
 }
 
@@ -124,11 +133,9 @@ void Pong::loop() {
 void Pong::sdlBg() {
 	spdlog::info("sdl bg start");
 
-	int timeout_ms = 100;
-
 	SDL_Event event;
 	while (!stop) {
-		SDL_WaitEventTimeout(&event, timeout_ms);
+		SDL_WaitEventTimeout(&event, 0);
 		SDLEventLog(event.type);
 		if (event.type == SDL_EVENT_QUIT) {
 			break;
@@ -136,5 +143,39 @@ void Pong::sdlBg() {
 		// spdlog::info("sdlBg handleInput");
 		s->handleInput(&event);
 	}
+	stop = true;
+}
+
+void Pong::sdlBgStep() {
+#ifdef __EMSCRIPTEN__
+	if (stop) {
+		return;
+	}
+
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event)) {
+		SDLEventLog(event.type);
+		if (event.type == SDL_EVENT_QUIT) {
+			stop = true;
+			break;
+		}
+		s->handleInput(&event);
+	}
+
+	// 递归调用自己，在浏览器下一帧继续执行
+	emscripten_async_call(
+		[](void *arg) { static_cast<Pong *>(arg)->sdlBgStep(); }, this, 0);
+#endif
+}
+
+void Pong::startBg() {
+	stop = false;
+#ifdef __EMSCRIPTEN__
+	sdlBgStep(); // 启动异步循环
+#endif
+}
+
+void Pong::stopBg() {
 	stop = true;
 }

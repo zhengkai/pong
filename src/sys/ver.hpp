@@ -9,8 +9,6 @@
 #include <cstdio>
 #include <cstring>
 
-#include <google/protobuf/stubs/common.h>
-
 static void doShowVer() {
 	spdlog::info("SDL       = {}.{}.{}",
 		SDL_MAJOR_VERSION,
@@ -27,12 +25,6 @@ static void doShowVer() {
 
 	b2Version v = b2GetVersion();
 	spdlog::info("Box2D     = {}.{}.{}", v.major, v.minor, v.revision);
-
-	spdlog::info("protobuf  = {}.{}.{}{}\n",
-		GOOGLE_PROTOBUF_VERSION / 1000000,
-		GOOGLE_PROTOBUF_VERSION / 1000 % 1000,
-		GOOGLE_PROTOBUF_VERSION % 1000,
-		GOOGLE_PROTOBUF_VERSION_SUFFIX);
 
 	spdlog::info("git = {}({}{})",
 		GIT_BRANCH,

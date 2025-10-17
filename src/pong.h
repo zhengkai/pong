@@ -31,4 +31,8 @@ public:
 
 private:
 	void sdlBg();
+
+	void sdlBgStep();
+	void startBg();
+	void stopBg();
 };

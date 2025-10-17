@@ -35,20 +35,11 @@ include(cmake/build-info.cmake)
 
 find_package(box2d CONFIG REQUIRED QUIET)
 find_package(fmt CONFIG REQUIRED QUIET)
-find_package(Protobuf CONFIG REQUIRED QUIET)
 find_package(spdlog CONFIG REQUIRED QUIET)
 
 find_package(SDL3 CONFIG REQUIRED)
 find_package(SDL3_ttf CONFIG REQUIRED)
 find_package(SDL3_image CONFIG REQUIRED)
-
-set(PROTO_FILE ${CMAKE_CURRENT_SOURCE_DIR}/proto/map.proto)
-
-protobuf_generate_cpp(
-    PROTO_SRC
-    PROTO_HDR
-    ${PROTO_FILE}
-)
 
 add_executable(${PROJ}
     src/main.cpp
@@ -59,8 +50,6 @@ add_executable(${PROJ}
     src/render/text.cpp
     src/render/grid.cpp
     src/physics/physics.cpp
-    ${PROTO_SRC}
-    ${PROTO_HDR}
 )
 
 target_precompile_headers(${PROJ} PRIVATE
@@ -73,7 +62,6 @@ target_precompile_headers(${PROJ} PRIVATE
     <cstdio>
     <cstring>
     <fmt/format.h>
-    <google/protobuf/stubs/common.h>
     <random>
     <spdlog/sinks/stdout_color_sinks.h>
     <spdlog/spdlog.h>
@@ -82,15 +70,19 @@ target_precompile_headers(${PROJ} PRIVATE
     <vector>
 )
 
+if(EMSCRIPTEN)
+    target_link_options(${PROJ} PRIVATE
+		"-sASSERTIONS=1"
+	)
+endif()
+
 target_link_libraries(${PROJ} PRIVATE
     box2d::box2d
     fmt::fmt
-    protobuf::libprotobuf
     SDL3::SDL3-static
     SDL3_image::SDL3_image-static
     SDL3_ttf::SDL3_ttf-static
     spdlog::spdlog
-    ${Protobuf_LIBRARIES}
 )
 
 target_include_directories(${PROJ} PUBLIC

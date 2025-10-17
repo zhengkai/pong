@@ -2,7 +2,9 @@
 
 #include "../config.hpp"
 #include "../context/entity.h"
+#include <algorithm>
 #include <box2d/box2d.h>
+#include <numbers>
 #include <spdlog/spdlog.h>
 
 namespace util {
