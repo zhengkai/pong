@@ -8,7 +8,6 @@ private:
 	SDL_Renderer *r;
 	float startX = 0;
 	float startY = 0;
-	float gridSize = 0;
 
 public:
 	Grid(SDL_Renderer *r);

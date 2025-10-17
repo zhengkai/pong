@@ -46,7 +46,9 @@ void Grid::calcGrid() {
 
 	layout.startX = std::floor((cfgWinW - (layout.gridSize * cfgGridW)) / 2);
 	layout.startY = std::floor((cfgWinH - (layout.gridSize * cfgGridH)) / 2);
-	spdlog::info("w {}*{}={}", layout.gridSize, cfgGridW, gridSize * cfgGridW);
-	spdlog::info("h {}*{}={}", layout.gridSize, cfgGridH, gridSize * cfgGridH);
+	spdlog::info(
+		"w {}*{}={}", layout.gridSize, cfgGridW, layout.gridSize * cfgGridW);
+	spdlog::info(
+		"h {}*{}={}", layout.gridSize, cfgGridH, layout.gridSize * cfgGridH);
 	spdlog::info("startX = {}, startY = {}", layout.startX, layout.startY);
 }

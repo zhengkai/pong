@@ -23,7 +23,7 @@ Physics::Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b)
 	createWall();
 
 	ballBody = createBall();
-	spdlog::info("phy init {} {} {}", b->region, b->pos.x, b->pos.y);
+	// spdlog::info("phy init {} {} {}", b->region, b->pos.x, b->pos.y);
 }
 
 Physics::~Physics() {
@@ -112,7 +112,7 @@ b2BodyId Physics::createBall() {
 	b2Body_SetBullet(bb, true);
 	b2Body_SetLinearVelocity(bb, ball->speed);
 
-	spdlog::info("ball speed {} {}", ball->speed.x, ball->speed.y);
+	// spdlog::info("ball speed {} {}", ball->speed.x, ball->speed.y);
 
 	return bb;
 }
@@ -175,5 +175,5 @@ void Physics::createBrick() {
 		b2ShapeId si = b2CreatePolygonShape(bb, &dsd, &box);
 		b2Shape_SetRestitution(si, 1.0f);
 	}
-	spdlog::info("Physics:: brick done {}", brick.size());
+	// spdlog::info("Physics:: brick done {}", brick.size());
 }
