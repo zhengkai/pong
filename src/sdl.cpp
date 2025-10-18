@@ -36,9 +36,10 @@ bool sdl::init() {
 	}
 
 	window = SDL_CreateWindow("Pong Test",
-		cfgWinW,
-		cfgWinH,
-		SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+		cfgWinW / 2,
+		cfgWinH / 2,
+		SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE |
+			SDL_WINDOW_HIGH_PIXEL_DENSITY);
 	if (!window) {
 		SDL_Fail();
 		return false;
@@ -75,6 +76,10 @@ bool sdl::init() {
 		return false;
 	}
 
+	int drawableWidth, drawableHeight;
+	SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
+	spdlog::error("output size {} {}", drawableWidth, drawableHeight);
+
 	grid = new Grid(r);
 
 	text = new Text();
@@ -108,28 +113,28 @@ void sdl::renderBrick() {
 			SDL_SetRenderDrawColor(r, 255, 0, 0, 180);
 			break;
 		case 2:
-			SDL_SetRenderDrawColor(r, 255, 127, 0, 180);
+			SDL_SetRenderDrawColor(r, 0, 0, 255, 180);
 			break;
 		case 3:
-			SDL_SetRenderDrawColor(r, 255, 255, 0, 180);
+			SDL_SetRenderDrawColor(r, 75, 0, 130, 180);
 			break;
 		case 4:
-			SDL_SetRenderDrawColor(r, 0, 255, 0, 180);
+			SDL_SetRenderDrawColor(r, 148, 0, 211, 180);
 			break;
 		case 5:
 			SDL_SetRenderDrawColor(r, 0, 206, 209, 180);
 			break;
 		case 6:
-			SDL_SetRenderDrawColor(r, 0, 0, 255, 180);
+			SDL_SetRenderDrawColor(r, 255, 255, 0, 180);
 			break;
 		case 7:
-			SDL_SetRenderDrawColor(r, 75, 0, 130, 180);
+			SDL_SetRenderDrawColor(r, 255, 20, 147, 180);
 			break;
 		case 8:
-			SDL_SetRenderDrawColor(r, 148, 0, 211, 180);
+			SDL_SetRenderDrawColor(r, 255, 127, 0, 180);
 			break;
 		default:
-			SDL_SetRenderDrawColor(r, 255, 20, 147, 180);
+			SDL_SetRenderDrawColor(r, 0, 255, 0, 180);
 			break;
 		}
 		SDL_RenderFillRect(r, &rect);

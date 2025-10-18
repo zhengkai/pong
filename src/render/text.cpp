@@ -1,6 +1,6 @@
 #include "text.h"
 #include "../util/path.hpp"
-#include <SDL3_ttf/SDL_ttf.h>
+// #include <SDL3_ttf/SDL_ttf.h>
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -9,6 +9,7 @@ Text::Text() {
 
 bool Text::init(SDL_Renderer *r) {
 
+	/*
 	this->r = r;
 
 	if (not TTF_Init()) {
@@ -21,6 +22,7 @@ bool Text::init(SDL_Renderer *r) {
 		error("init fMono32 fail: {}");
 		return false;
 	}
+	 */
 
 	return true;
 }
@@ -31,6 +33,7 @@ void Text::rMono32(std::string text, int x, int y, Align align) {
 
 void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
 
+	/*
 	SDL_Color color = {200, 230, 255, 255};
 
 	// 使用字体渲染文本为 Surface
@@ -74,6 +77,7 @@ void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
 	SDL_RectToFRect(&dstRect, &d);
 	SDL_RenderTexture(r, texture, nullptr, &d);
 	SDL_DestroyTexture(texture);
+	 */
 }
 
 void Text::error(const char *msg) {

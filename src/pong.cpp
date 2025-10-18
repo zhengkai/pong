@@ -6,6 +6,7 @@
 #include "sdl.h"
 #include "util/ball.hpp"
 #include <SDL3/SDL_events.h>
+#include <algorithm>
 #include <cstring>
 #include <spdlog/spdlog.h>
 #ifdef __EMSCRIPTEN__

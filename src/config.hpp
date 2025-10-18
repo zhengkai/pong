@@ -5,7 +5,7 @@ constexpr float cfgFPSDeltaTime = 1.0f / cfgFPS;
 
 constexpr float cfgBallRadius = 0.5f;
 
-constexpr int cfgRegionNum = 8;
+constexpr int cfgRegionNum = 6;
 constexpr int cfgPhyLoop = 1;
 
 constexpr int cfgWinW = 2000;
