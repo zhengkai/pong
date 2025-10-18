@@ -15,7 +15,7 @@ inline b2Vec2 randomSpeedDirection(float speed) {
 	float x = std::cos(angle) * speed;
 	float y = std::sin(angle) * speed;
 	return b2Vec2(x, y);
-}
+};
 
 inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 	float w, float h, int count, float minDistance) {

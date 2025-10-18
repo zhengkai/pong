@@ -1,6 +1,6 @@
 #include "event.h"
-#include "spdlog/spdlog.h"
 #include <SDL3/SDL_events.h>
+#include <spdlog/spdlog.h>
 #include <string>
 
 void SDLEventLog(Uint32 t) {

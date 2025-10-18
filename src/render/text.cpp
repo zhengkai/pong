@@ -1,6 +1,8 @@
 #include "text.h"
-#include "spdlog/spdlog.h"
+#include "../util/path.hpp"
+#include <SDL3_ttf/SDL_ttf.h>
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 Text::Text() {
 }
@@ -14,7 +16,7 @@ bool Text::init(SDL_Renderer *r) {
 		return false;
 	}
 
-	fMono32 = TTF_OpenFont("/www/pong/static/JetBrainsMono-Regular.otf", 32);
+	fMono32 = TTF_OpenFont(util::file("JetBrainsMono-Regular.otf").c_str(), 32);
 	if (!fMono32) {
 		error("init fMono32 fail: {}");
 		return false;

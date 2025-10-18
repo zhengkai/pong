@@ -66,7 +66,6 @@ target_precompile_headers(${PROJ} PRIVATE
     <spdlog/sinks/stdout_color_sinks.h>
     <spdlog/spdlog.h>
     <string>
-    <thread>
     <vector>
 )
 
@@ -74,6 +73,8 @@ if(EMSCRIPTEN)
     target_link_options(${PROJ} PRIVATE
 		"-sASSERTIONS=1"
 	)
+
+    set_target_properties(${PROJ} PROPERTIES SUFFIX ".html")
 endif()
 
 target_link_libraries(${PROJ} PRIVATE

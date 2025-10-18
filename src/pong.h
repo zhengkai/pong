@@ -13,7 +13,6 @@ struct PongDeps {
 class Pong {
 
 private:
-	std::thread bgThread;
 	PongDeps d;
 	Input *input;
 	Time *t;
@@ -31,6 +30,7 @@ public:
 
 private:
 	void sdlBg();
+	void loopEvent();
 
 	void sdlBgStep();
 	void startBg();

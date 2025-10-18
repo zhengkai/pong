@@ -2,12 +2,12 @@
 
 #include "box2d/base.h"
 #include "build.h"
-#include "spdlog/spdlog.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <cstdio>
 #include <cstring>
+#include <spdlog/spdlog.h>
 
 static void doShowVer() {
 	spdlog::info("SDL       = {}.{}.{}",

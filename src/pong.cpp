@@ -4,11 +4,10 @@
 #include "input.h"
 #include "region.hpp"
 #include "sdl.h"
-#include "spdlog/spdlog.h"
 #include "util/ball.hpp"
 #include <SDL3/SDL_events.h>
 #include <cstring>
-#include <thread>
+#include <spdlog/spdlog.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -18,11 +17,6 @@ Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
 
 Pong::~Pong() {
 	stop = true;
-#ifndef __EMSCRIPTEN__
-	if (bgThread.joinable()) {
-		bgThread.join();
-	}
-#endif
 	if (t) {
 		delete t;
 		t = nullptr;
@@ -84,12 +78,6 @@ bool Pong::init() {
 	}
 	spdlog::info("sdl init done");
 
-#ifdef __EMSCRIPTEN__
-	startBg();
-#else
-	bgThread = std::thread(&Pong::sdlBg, this);
-	bgThread.detach();
-#endif
 	return true;
 }
 
@@ -100,6 +88,8 @@ void Pong::loop() {
 #ifndef __EMSCRIPTEN__
 	t->tick();
 #endif
+
+	loopEvent();
 
 	if (input->stop) {
 		stop = true;
@@ -128,6 +118,22 @@ void Pong::loop() {
 	s->renderGrid();
 	s->counter(serial);
 	SDL_RenderPresent(s->r);
+}
+
+void Pong::loopEvent() {
+	if (stop) {
+		return;
+	}
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		SDLEventLog(e.type);
+		if (e.type == SDL_EVENT_QUIT) {
+			stop = true;
+			break;
+		}
+		// spdlog::info("sdlBg handleInput");
+		s->handleInput(&e);
+	}
 }
 
 void Pong::sdlBg() {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "config.hpp"
-#include "spdlog/spdlog.h"
 #include <chrono>
 #include <cmath>
+#include <spdlog/spdlog.h>
 
 using namespace std::chrono;
 

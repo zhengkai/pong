@@ -1,8 +1,8 @@
 #include "grid.h"
 #include "../config.hpp"
 #include "layout.hpp"
-#include "spdlog/spdlog.h"
 #include <cmath>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 Grid::Grid(SDL_Renderer *r) : r(r) {

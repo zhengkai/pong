@@ -1,7 +1,7 @@
 #include "input.h"
 #include "event.h"
-#include "spdlog/spdlog.h"
 #include <SDL3/SDL_events.h>
+#include <spdlog/spdlog.h>
 
 Input::Input() : stop(false), x(0), y(0) {
 }

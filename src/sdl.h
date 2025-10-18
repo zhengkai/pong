@@ -1,11 +1,11 @@
 #pragma once
 
-#include "SDL3/SDL_events.h"
-#include "SDL3/SDL_render.h"
 #include "context/entity.h"
 #include "input.h"
 #include "render/grid.h"
 #include "render/text.h"
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_render.h>
 #include <box2d/box2d.h>
 
 struct sdlDep {

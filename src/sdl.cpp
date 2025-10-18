@@ -1,13 +1,14 @@
 #include "sdl.h"
-#include "SDL3/SDL_events.h"
 #include "config.hpp"
 #include "input.h"
 #include "render/grid.h"
 #include "render/layout.hpp"
 #include "render/text.h"
-#include "spdlog/spdlog.h"
+#include "util/path.hpp"
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
 #include <random>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 static float winW = static_cast<float>(cfgWinW);
@@ -56,10 +57,13 @@ bool sdl::init() {
 	SDL_RenderClear(r);
 
 	SDL_RenderPresent(r);
+	auto img = util::file("circle.webp");
+	spdlog::info("img {}", img);
 
-	SDL_Surface *surf = IMG_Load("/www/pong/static/circle.webp");
+	SDL_Surface *surf = IMG_Load(img.c_str());
 	if (!surf) {
 		spdlog::error("Failed to load ball image");
+		SDL_Fail();
 		return false;
 	}
 	ballTex = SDL_CreateTextureFromSurface(r, surf);
@@ -67,6 +71,7 @@ bool sdl::init() {
 
 	if (!ballTex) {
 		spdlog::error("ball SDL_CreateTextureFromSurface failed");
+		SDL_Fail();
 		return false;
 	}
 
