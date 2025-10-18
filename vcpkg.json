@@ -10,7 +10,6 @@
       "features": ["alsa", "vulkan"],
       "platform": "linux"
     },
-
     {
       "name": "sdl3-image",
       "features": ["jpeg", "png", "tiff", "webp"]

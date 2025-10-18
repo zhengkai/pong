@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../context/entity.h"
+#include "context/entity.h"
 #include <box2d/box2d.h>
 
 struct PhysicsDep {

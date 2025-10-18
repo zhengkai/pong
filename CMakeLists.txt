@@ -49,10 +49,11 @@ add_executable(${PROJ}
     src/event.cpp
     src/render/text.cpp
     src/render/grid.cpp
-    src/physics/physics.cpp
+    src/physics.cpp
 )
 
 target_precompile_headers(${PROJ} PRIVATE
+	<box2d/box2d.h>
     <SDL3/SDL.h>
     <SDL3/SDL_events.h>
     <SDL3_image/SDL_image.h>
@@ -70,6 +71,11 @@ target_precompile_headers(${PROJ} PRIVATE
 )
 
 if(EMSCRIPTEN)
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -matomics -mbulk-memory")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread -matomics -mbulk-memory")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread -matomics -mbulk-memory")
+
     target_link_options(${PROJ} PRIVATE
 		"-sASSERTIONS=1"
 	)

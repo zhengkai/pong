@@ -1,5 +1,5 @@
 #include "physics.h"
-#include "../config.hpp"
+#include "config.hpp"
 #include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
 
