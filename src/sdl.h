@@ -1,8 +1,8 @@
 #pragma once
 
 #include "context/entity.h"
+#include "context/window.h"
 #include "input.h"
-#include "render/grid.h"
 #include "render/text.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
@@ -10,13 +10,13 @@
 
 struct sdlDep {
 	std::shared_ptr<context::Entity> entity;
+	std::shared_ptr<context::Window> window;
 };
 
 class sdl {
 private:
 	Input *input;
 	Text *text;
-	Grid *grid;
 	// SDL_Texture *bg;
 	SDL_Window *window;
 	SDL_Texture *ballTex;
@@ -33,7 +33,6 @@ public:
 	void counter(int i);
 	void renderStart();
 	void renderEnd();
-	void renderGrid();
 	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();
 };

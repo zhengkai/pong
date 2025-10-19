@@ -1,54 +1,21 @@
 #include "grid.h"
 #include "../config.hpp"
-#include "layout.hpp"
+#include "../context/window.h"
 #include <cmath>
 #include <spdlog/spdlog.h>
-#include <vector>
 
-Grid::Grid(SDL_Renderer *r) : r(r) {
-	calcGrid();
-}
+void calcGrid(float winW, float winH, std::shared_ptr<context::Window> w) {
 
-Grid::~Grid() {
-	r = nullptr;
-}
+	float gs =
+		std::floor(winW / cfgGridWF < winH / cfgGridHF ? winW / cfgGridWF
+													   : winH / cfgGridHF);
 
-void Grid::draw(const std::vector<bool> &li) {
+	w->gridSize = gs;
+	spdlog::info("gridSize = {}", gs);
 
-	Layout &layout = Layout::instance();
-	int index = 0;
-	for (auto cell : li) {
-		if (cell) {
-			int x = index % cfgGridW;
-			int y = index / cfgGridW;
-
-			SDL_FRect rect;
-			rect.x = layout.startX + x * layout.gridSize;
-			rect.y = layout.startY + y * layout.gridSize;
-			rect.w = layout.gridSize;
-			rect.h = layout.gridSize;
-			SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-			SDL_RenderFillRect(r, &rect);
-		}
-		++index;
-	}
-}
-
-void Grid::calcGrid() {
-
-	Layout &layout = Layout::instance();
-
-	layout.gridSize =
-		std::floor(static_cast<float>(cfgWinW / cfgGridW < cfgWinH / cfgGridH)
-				? cfgWinW / cfgGridW
-				: cfgWinH / cfgGridH);
-	spdlog::info("gridSize = {}", layout.gridSize);
-
-	layout.startX = std::floor((cfgWinW - (layout.gridSize * cfgGridW)) / 2);
-	layout.startY = std::floor((cfgWinH - (layout.gridSize * cfgGridH)) / 2);
-	spdlog::info(
-		"w {}*{}={}", layout.gridSize, cfgGridW, layout.gridSize * cfgGridW);
-	spdlog::info(
-		"h {}*{}={}", layout.gridSize, cfgGridH, layout.gridSize * cfgGridH);
-	spdlog::info("startX = {}, startY = {}", layout.startX, layout.startY);
+	w->startX = std::floor((cfgWinW - (gs * cfgGridW)) / 2);
+	w->startY = std::floor((cfgWinH - (gs * cfgGridH)) / 2);
+	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
+	spdlog::info("h {}*{}={}", gs, cfgGridH, gs * cfgGridH);
+	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
 }

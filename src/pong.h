@@ -8,6 +8,7 @@
 
 struct PongDeps {
 	std::shared_ptr<context::Entity> entity;
+	std::shared_ptr<context::Window> window;
 };
 
 class Pong {

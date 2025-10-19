@@ -2,14 +2,11 @@
 #include "config.hpp"
 #include "input.h"
 #include "render/grid.h"
-#include "render/layout.hpp"
 #include "render/text.h"
 #include "util/path.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
-#include <random>
 #include <spdlog/spdlog.h>
-#include <vector>
 
 static float winW = static_cast<float>(cfgWinW);
 static float winH = static_cast<float>(cfgWinH);
@@ -80,7 +77,8 @@ bool sdl::init() {
 	SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
 	spdlog::error("output size {} {}", drawableWidth, drawableHeight);
 
-	grid = new Grid(r);
+	calcGrid(
+		static_cast<float>(cfgWinW), static_cast<float>(cfgWinH), d.window);
 
 	text = new Text();
 	if (text->init(r)) {
@@ -99,15 +97,15 @@ void sdl::counter(int i) {
 
 void sdl::renderBrick() {
 
-	Layout &layout = Layout::instance();
+	auto w = d.window;
 
 	SDL_FRect rect;
-	rect.w = layout.gridSize;
-	rect.h = layout.gridSize;
+	rect.w = w->gridSize;
+	rect.h = w->gridSize;
 
 	for (const auto &b : d.entity->brick) {
-		rect.x = layout.startX + static_cast<float>(b.x) * layout.gridSize;
-		rect.y = layout.startY + static_cast<float>(b.y) * layout.gridSize;
+		rect.x = w->startX + static_cast<float>(b.x) * w->gridSize;
+		rect.y = w->startY + static_cast<float>(b.y) * w->gridSize;
 		switch (b.region) {
 		case 1:
 			SDL_SetRenderDrawColor(r, 255, 0, 0, 180);
@@ -142,13 +140,14 @@ void sdl::renderBrick() {
 }
 
 void sdl::renderBall(std::shared_ptr<context::Ball> b) {
-	Layout &layout = Layout::instance();
+
+	auto w = d.window;
 
 	SDL_FRect rect;
-	rect.x = layout.startX + (b->pos.x - 0.5) * layout.gridSize;
-	rect.y = layout.startY + (b->pos.y - 0.5) * layout.gridSize;
-	rect.w = layout.gridSize;
-	rect.h = layout.gridSize;
+	rect.x = w->startX + (b->pos.x - 0.5) * w->gridSize;
+	rect.y = w->startY + (b->pos.y - 0.5) * w->gridSize;
+	rect.w = w->gridSize;
+	rect.h = w->gridSize;
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
@@ -161,22 +160,6 @@ void sdl::renderStart() {
 
 void sdl::renderEnd() {
 	// SDL_RenderPresent(r);
-}
-
-void sdl::renderGrid() {
-
-	std::vector<bool> li(cfgGridW * cfgGridH);
-
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::bernoulli_distribution dist(0.5);
-
-	for (size_t i = 0; i < li.size(); ++i) {
-		// li[i] = dist(gen);
-		li[i] = false;
-	}
-
-	grid->draw(li);
 }
 
 void sdl::handleInput(SDL_Event *e) {
@@ -200,10 +183,6 @@ sdl::~sdl() {
 	if (text) {
 		delete text;
 		text = nullptr;
-	}
-	if (grid) {
-		delete grid;
-		grid = nullptr;
 	}
 	if (r) {
 		SDL_DestroyRenderer(r);

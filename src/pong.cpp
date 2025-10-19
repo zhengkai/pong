@@ -35,9 +35,11 @@ Pong::~Pong() {
 bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
+	auto w = std::make_shared<context::Window>();
 
 	d = {
 		.entity = e,
+		.window = w,
 	};
 
 	int id = 0;
@@ -67,7 +69,8 @@ bool Pong::init() {
 
 	s = new sdl(
 		{
-			.entity = d.entity,
+			.entity = e,
+			.window = w,
 		},
 		input);
 
@@ -116,7 +119,7 @@ void Pong::loop() {
 
 	// s->renderBall(d.entity->ballA);
 	// s->renderBallB();
-	s->renderGrid();
+	// s->renderGrid();
 	s->counter(serial);
 	SDL_RenderPresent(s->r);
 }
