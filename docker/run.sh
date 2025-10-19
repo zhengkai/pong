@@ -7,3 +7,5 @@ sudo docker build \
 	--progress=plain -t \
 	pong \
 	-f Dockerfile ..
+
+./test.sh
