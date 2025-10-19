@@ -14,7 +14,9 @@ struct sdlDep {
 };
 
 class sdl {
+
 private:
+	SDL_Renderer *r;
 	Input *input;
 	Text *text;
 	// SDL_Texture *bg;
@@ -23,16 +25,18 @@ private:
 	sdlDep d;
 
 public:
-	SDL_Renderer *r;
-
-public:
 	sdl(sdlDep dep, Input *input);
 	~sdl();
 	bool init();
 	void handleInput(SDL_Event *e);
 	void counter(int i);
+
+	void render();
+
+private:
 	void renderStart();
 	void renderEnd();
+	void renderResize();
 	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();
 };

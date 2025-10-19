@@ -1,5 +1,6 @@
 #include "sdl.h"
 #include "config.hpp"
+#include "context/entity.h"
 #include "input.h"
 #include "render/grid.h"
 #include "render/text.h"
@@ -33,8 +34,8 @@ bool sdl::init() {
 	}
 
 	window = SDL_CreateWindow("Pong Test",
-		cfgWinW / 2,
-		cfgWinH / 2,
+		cfgWinW,
+		cfgWinH,
 		SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE |
 			SDL_WINDOW_HIGH_PIXEL_DENSITY);
 	if (!window) {
@@ -73,12 +74,11 @@ bool sdl::init() {
 		return false;
 	}
 
-	int drawableWidth, drawableHeight;
-	SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
-	spdlog::error("output size {} {}", drawableWidth, drawableHeight);
+	// int drawableWidth, drawableHeight;
+	// SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
+	// spdlog::error("output size {} {}", drawableWidth, drawableHeight);
 
-	calcGrid(
-		static_cast<float>(cfgWinW), static_cast<float>(cfgWinH), d.window);
+	calcGrid(cfgWinW, cfgWinH, d.window);
 
 	text = new Text();
 	if (text->init(r)) {
@@ -93,6 +93,26 @@ bool sdl::init() {
 
 void sdl::counter(int i) {
 	text->rMono32(std::to_string(i), winW - 16, 16, Text::Align::RIGHT);
+}
+
+void sdl::render() {
+	renderResize();
+
+	renderStart();
+	renderBrick();
+
+	for (auto &b : context::BallList) {
+		renderBall(b);
+	}
+	// s->counter(serial);
+	SDL_RenderPresent(r);
+}
+
+void sdl::renderResize() {
+	if (input->winW == 0 || input->winH == 0) {
+		return;
+	}
+	calcGrid(input->winW, input->winH, d.window);
 }
 
 void sdl::renderBrick() {
@@ -171,6 +191,12 @@ void sdl::handleInput(SDL_Event *e) {
 		spdlog::info("ptr = {}", static_cast<void *>(input));
 		input->key(&e->key);
 		break;
+	case SDL_EVENT_WINDOW_RESIZED: {
+		input->winW = e->window.data1;
+		input->winH = e->window.data2;
+		break;
+	}
+
 	default:
 		break;
 	}

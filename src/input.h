@@ -8,6 +8,8 @@ public:
 	bool stop;
 	float x;
 	float y;
+	int winW;
+	int winH;
 
 public:
 	Input();

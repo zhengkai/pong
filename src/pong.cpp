@@ -110,18 +110,7 @@ void Pong::loop() {
 		}
 	}
 
-	s->renderStart();
-	s->renderBrick();
-
-	for (auto &b : context::BallList) {
-		s->renderBall(b);
-	}
-
-	// s->renderBall(d.entity->ballA);
-	// s->renderBallB();
-	// s->renderGrid();
-	s->counter(serial);
-	SDL_RenderPresent(s->r);
+	s->render();
 }
 
 void Pong::loopEvent() {
@@ -129,6 +118,7 @@ void Pong::loopEvent() {
 		return;
 	}
 	SDL_Event e;
+	input->Reset();
 	while (SDL_PollEvent(&e)) {
 		SDLEventLog(e.type);
 		if (e.type == SDL_EVENT_QUIT) {

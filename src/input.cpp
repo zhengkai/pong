@@ -35,4 +35,6 @@ void Input::Reset() {
 	stop = false;
 	x = 0;
 	y = 0;
+	winW = 0;
+	winH = 0;
 }
