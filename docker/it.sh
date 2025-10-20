@@ -4,22 +4,15 @@ cd "$(dirname "$(readlink -f "$0")")" || exit 1
 
 DIR="$(dirname "$(pwd)")"
 
-DOCKER_IMAGE="pong"
-
 mkdir -p "${DIR}/build"
-mkdir -p "${DIR}/build-wasm"
+
+DOCKER_IMAGE="pong"
 
 set -x
 sudo docker run \
+	-it \
 	--name "pong-cicd" \
 	--mount "type=bind,source=${DIR}/build,target=/app/build" \
 	--rm \
 	"$DOCKER_IMAGE" \
-	/app/run.sh
-
-sudo docker run \
-	--name "pong-cicd" \
-	--mount "type=bind,source=${DIR}/build-wasm,target=/app/build-wasm" \
-	--rm \
-	"$DOCKER_IMAGE" \
-	/app/wasm.sh
+	bash
