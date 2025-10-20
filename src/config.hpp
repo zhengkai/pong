@@ -11,8 +11,8 @@ constexpr int cfgPhyLoop = 1;
 constexpr int cfgWinW = 2000;
 constexpr int cfgWinH = 1600;
 
-constexpr int cfgGridW = 40;
-constexpr int cfgGridH = 32;
+constexpr int cfgGridW = 20;
+constexpr int cfgGridH = 16;
 
 constexpr int cfgGridWF = static_cast<float>(cfgGridW);
 constexpr int cfgGridHF = static_cast<float>(cfgGridH);

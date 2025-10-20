@@ -145,37 +145,3 @@ void Pong::sdlBg() {
 	}
 	stop = true;
 }
-
-void Pong::sdlBgStep() {
-#ifdef __EMSCRIPTEN__
-	if (stop) {
-		return;
-	}
-
-	SDL_Event event;
-
-	while (SDL_PollEvent(&event)) {
-		SDLEventLog(event.type);
-		if (event.type == SDL_EVENT_QUIT) {
-			stop = true;
-			break;
-		}
-		s->handleInput(&event);
-	}
-
-	// 递归调用自己，在浏览器下一帧继续执行
-	emscripten_async_call(
-		[](void *arg) { static_cast<Pong *>(arg)->sdlBgStep(); }, this, 0);
-#endif
-}
-
-void Pong::startBg() {
-	stop = false;
-#ifdef __EMSCRIPTEN__
-	sdlBgStep(); // 启动异步循环
-#endif
-}
-
-void Pong::stopBg() {
-	stop = true;
-}
