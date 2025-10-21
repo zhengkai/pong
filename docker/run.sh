@@ -25,7 +25,7 @@ sudo docker pull ubuntu:24.04
 sudo docker build \
 	--progress=plain -t \
 	pong \
-	-f Dockerfile ..
+	-f Dockerfile .. || exit 1
 
 ./test.sh || exit 1
 

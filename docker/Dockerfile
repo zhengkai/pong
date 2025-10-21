@@ -45,9 +45,13 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.
 	ln -sf /opt/cmake-4.1.2/bin/cmake /usr/local/bin/cmake && \
 	rm -f cmake-4.1.2-linux-x86_64.tar.gz
 
+COPY vcpkg.json .
+
 COPY tool/run.sh tool/run.sh
 
 RUN ./tool/run.sh
+
+RUN ./tool/vcpkg/vcpkg install --triplet x64-linux
 
 COPY . .
 

@@ -9,8 +9,10 @@ fi
 	set -x
 	cd emsdk || exit 1
 	git pull
-	./emsdk install latest
-	./emsdk activate latest
+	if [ ! -x upstream/emscripten/emmake ]; then
+		./emsdk install latest
+		./emsdk activate latest
+	fi
 )
 
 if [ ! -d vcpkg ]; then
@@ -20,4 +22,7 @@ fi
 	set -x
 	cd vcpkg || exit 1
 	git pull
+	if [ ! -x ./vcpkg ]; then
+		./bootstrap-vcpkg.sh
+	fi
 )
