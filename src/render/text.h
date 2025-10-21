@@ -29,5 +29,5 @@ private:
 #ifndef __EMSCRIPTEN__
 	void render(TTF_Font *font, std::string text, int x, int y, Align align);
 #endif
-	void error(const char *msg);
+	void error(std::string_view msg);
 };

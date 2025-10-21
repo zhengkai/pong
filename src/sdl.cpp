@@ -91,8 +91,10 @@ bool sdl::init() {
 	return true;
 }
 
-void sdl::counter(int i) {
-	text->rMono32(std::to_string(i), winW - 16, 16, Text::Align::RIGHT);
+void sdl::renderCcounter() {
+
+	std::string counter = std::to_string(d.window->counter);
+	text->rMono32(counter, winW - 16, 16, Text::Align::RIGHT);
 }
 
 void sdl::render() {
@@ -104,7 +106,8 @@ void sdl::render() {
 	for (auto &b : context::BallList) {
 		renderBall(b);
 	}
-	// s->counter(serial);
+
+	renderCcounter();
 	SDL_RenderPresent(r);
 }
 

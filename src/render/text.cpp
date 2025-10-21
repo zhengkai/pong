@@ -84,8 +84,8 @@ void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
 }
 #endif
 
-void Text::error(const char *msg) {
-	spdlog::error("yes {}", SDL_GetError());
+void Text::error(std::string_view msg) {
+	spdlog::error("{}: {}", msg, SDL_GetError());
 }
 
 Text::~Text() {

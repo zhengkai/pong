@@ -9,6 +9,7 @@ public:
 	float startX = 0.0f;
 	float startY = 0.0f;
 	float gridSize = 0;
+	int counter = 0;
 
 public:
 	Window() = default;

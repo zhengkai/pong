@@ -87,7 +87,7 @@ bool Pong::init() {
 
 void Pong::loop() {
 
-	serial++;
+	d.window->counter++;
 
 #ifndef __EMSCRIPTEN__
 	t->tick();

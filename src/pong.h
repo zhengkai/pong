@@ -19,7 +19,6 @@ private:
 	Time *t;
 	sdl *s;
 	std::vector<std::unique_ptr<Region>> region;
-	int serial;
 
 public:
 	bool stop;

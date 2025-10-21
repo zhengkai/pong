@@ -29,11 +29,11 @@ public:
 	~sdl();
 	bool init();
 	void handleInput(SDL_Event *e);
-	void counter(int i);
 
 	void render();
 
 private:
+	void renderCcounter();
 	void renderStart();
 	void renderEnd();
 	void renderResize();
