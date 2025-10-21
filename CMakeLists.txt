@@ -39,6 +39,9 @@ find_package(spdlog CONFIG REQUIRED QUIET)
 
 find_package(SDL3 CONFIG REQUIRED)
 find_package(SDL3_image CONFIG REQUIRED)
+if (NOT EMSCRIPTEN)
+find_package(SDL3_ttf CONFIG REQUIRED)
+endif()
 
 add_executable(${PROJ}
 	src/main.cpp
@@ -81,6 +84,11 @@ target_link_libraries(${PROJ} PRIVATE
 	SDL3_image::SDL3_image-static
 	spdlog::spdlog
 )
+if (NOT EMSCRIPTEN)
+target_link_libraries(${PROJ} PRIVATE
+	SDL3_ttf::SDL3_ttf-static
+)
+endif()
 
 target_include_directories(${PROJ} PUBLIC
 	${CMAKE_CURRENT_BINARY_DIR}

@@ -4,7 +4,9 @@
 #include "build.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#ifndef __EMSCRIPTEN__
 #include <SDL3_ttf/SDL_ttf.h>
+#endif
 #include <cstdio>
 #include <cstring>
 #include <spdlog/spdlog.h>
@@ -14,10 +16,12 @@ static void doShowVer() {
 		SDL_MAJOR_VERSION,
 		SDL_MINOR_VERSION,
 		SDL_MICRO_VERSION);
+#ifndef __EMSCRIPTEN__
 	spdlog::info("SDL ttf   = {}.{}.{}",
 		SDL_TTF_MAJOR_VERSION,
 		SDL_TTF_MINOR_VERSION,
 		SDL_TTF_MICRO_VERSION);
+#endif
 	spdlog::info("SDL image = {}.{}.{}",
 		SDL_IMAGE_MAJOR_VERSION,
 		SDL_IMAGE_MINOR_VERSION,

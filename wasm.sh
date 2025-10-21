@@ -22,7 +22,7 @@ done
 
 set -x
 emcmake cmake \
-	-DCMAKE_CXX_FLAGS="-gsource-map -O0 -pthread" \
+	-DCMAKE_CXX_FLAGS="-gsource-map -O0" \
 	-B build-wasm \
 	-DCMAKE_TOOLCHAIN_FILE="${PWD}/tool/vcpkg/scripts/buildsystems/vcpkg.cmake" \
 	-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="${PWD}/tool/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" \
