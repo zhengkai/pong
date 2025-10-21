@@ -7,8 +7,8 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	autoconf-archive \
 	autoconf \
+	autoconf-archive \
 	automake \
 	build-essential \
 	ca-certificates \
@@ -17,12 +17,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	curl \
 	curl \
 	git \
+	libegl1-mesa-dev \
+	libibus-1.0-dev \
 	libltdl-dev \
 	libssl-dev \
 	libtool \
-	libx11-dev libxft-dev libxext-dev \
-	libwayland-dev libxkbcommon-dev libegl1-mesa-dev \
-	libibus-1.0-dev \
+	libwayland-dev \
+	libx11-dev \
+	libxext-dev \
+	libxft-dev \
+	libxkbcommon-dev \
 	lld \
 	ninja-build \
 	pkg-config \
@@ -44,7 +48,6 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v4.1.2/cmake-4.1.
 COPY tool/run.sh tool/run.sh
 
 RUN ./tool/run.sh
-
 
 COPY . .
 

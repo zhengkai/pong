@@ -2,10 +2,31 @@
 
 cd "$(dirname "$(readlink -f "$0")")" || exit 1
 
+DIRTY="$(git status --porcelain)"
+if [ -n "$DIRTY" ]; then
+	>&2 echo "dirty git, exit"
+	exit 1
+fi
+git pull --rebase
+
+PREV_COMMIT=""
+COMMIT_FILE=".prev_commit"
+if [ -f "$COMMIT_FILE" ]; then
+	PREV_COMMIT="$(< "$COMMIT_FILE")"
+fi
+
+COMMIT="$(git rev-parse HEAD)"
+if [ "$PREV_COMMIT" == "$COMMIT" ]; then
+	>&2 echo "no new commit, exit"
+	exit 0
+fi
+
 sudo docker pull ubuntu:24.04
 sudo docker build \
 	--progress=plain -t \
 	pong \
 	-f Dockerfile ..
 
-./test.sh
+./test.sh || exit 1
+
+echo "$COMMIT" > "$COMMIT_FILE"
