@@ -33,9 +33,8 @@ public:
 	void render();
 
 private:
-	void renderCcounter();
-	void renderStart();
-	void renderEnd();
+	void renderControlMsg();
+	void renderCounter();
 	void renderResize();
 	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();

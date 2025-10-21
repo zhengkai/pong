@@ -12,6 +12,7 @@ private:
 	SDL_Renderer *r;
 #ifndef __EMSCRIPTEN__
 	TTF_Font *fMono32;
+	TTF_Font *fMono96;
 #endif
 
 public:
@@ -24,6 +25,7 @@ public:
 	~Text();
 	bool init(SDL_Renderer *r);
 	void rMono32(std::string text, int x, int y, Align align = Align::LEFT);
+	void rMono96(std::string text, int x, int y, Align align = Align::LEFT);
 
 private:
 #ifndef __EMSCRIPTEN__

@@ -91,23 +91,27 @@ bool sdl::init() {
 	return true;
 }
 
-void sdl::renderCcounter() {
+void sdl::renderCounter() {
 
-	std::string counter = std::to_string(d.window->counter);
+	std::string counter = std::to_string(d.window->serial);
 	text->rMono32(counter, winW - 16, 16, Text::Align::RIGHT);
 }
 
 void sdl::render() {
 	renderResize();
 
-	renderStart();
+	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
+	SDL_RenderClear(r);
+
 	renderBrick();
 
 	for (auto &b : context::BallList) {
 		renderBall(b);
 	}
 
-	renderCcounter();
+	renderCounter();
+	renderControlMsg();
+
 	SDL_RenderPresent(r);
 }
 
@@ -176,13 +180,17 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
 }
 
-void sdl::renderStart() {
-	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
-	SDL_RenderClear(r);
-}
-
-void sdl::renderEnd() {
-	// SDL_RenderPresent(r);
+void sdl::renderControlMsg() {
+	context::ControlMsg *c = d.window->controlMsg;
+	if (c == nullptr) {
+		return;
+	}
+	if (c->expireSerial < d.window->serial) {
+		delete c;
+		d.window->controlMsg = nullptr;
+		return;
+	}
+	text->rMono96(c->msg, winW / 2, winH - 192, Text::Align::CENTER);
 }
 
 void sdl::handleInput(SDL_Event *e) {

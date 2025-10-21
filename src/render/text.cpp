@@ -24,6 +24,12 @@ bool Text::init(SDL_Renderer *r) {
 		error("init fMono32 fail: {}");
 		return false;
 	}
+
+	fMono96 = TTF_OpenFont(util::file("JetBrainsMono-Regular.otf").c_str(), 96);
+	if (!fMono96) {
+		error("init fMono32 fail: {}");
+		return false;
+	}
 #endif
 
 	return true;
@@ -32,6 +38,12 @@ bool Text::init(SDL_Renderer *r) {
 void Text::rMono32(std::string text, int x, int y, Align align) {
 #ifndef __EMSCRIPTEN__
 	render(fMono32, text, x, y, align);
+#endif
+}
+
+void Text::rMono96(std::string text, int x, int y, Align align) {
+#ifndef __EMSCRIPTEN__
+	render(fMono96, text, x, y, align);
 #endif
 }
 

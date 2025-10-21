@@ -36,19 +36,21 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
+	w->controlMsg = new context::ControlMsg{
+		.msg = "foo",
+		.expireSerial = 1000,
+	};
 
 	d = {
 		.entity = e,
 		.window = w,
 	};
 
-	int id = 0;
-	// e->brick.reserve(cfgGridW * cfgGridH);
-
 	std::random_device rd;
 	std::mt19937 g(rd());
 	std::uniform_int_distribution<int> dist(0, cfgRegionNum - 1);
 
+	int id = 0;
 	for (int x = 0; x < cfgGridW; x++) {
 		for (int y = 0; y < cfgGridH; y++) {
 			e->brick.push_back({
@@ -87,7 +89,7 @@ bool Pong::init() {
 
 void Pong::loop() {
 
-	d.window->counter++;
+	d.window->serial++;
 
 #ifndef __EMSCRIPTEN__
 	t->tick();
