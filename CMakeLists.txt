@@ -47,7 +47,6 @@ add_executable(${PROJ}
 	src/main.cpp
 	src/pong.cpp
 	src/sdl.cpp
-	src/input.cpp
 	src/event.cpp
 	src/render/text.cpp
 	src/render/grid.cpp

@@ -44,6 +44,7 @@ bool Pong::init() {
 	d = {
 		.entity = e,
 		.window = w,
+		.input = in,
 	};
 
 	std::random_device rd;
@@ -100,7 +101,7 @@ void Pong::loop() {
 	t->tick();
 #endif
 
-	s->loopEvent();
+	loopEvent(d.input);
 
 	if (!g->parse()) {
 		stop = true;

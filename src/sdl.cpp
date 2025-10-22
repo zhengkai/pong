@@ -188,39 +188,6 @@ void sdl::renderControlMsg() {
 	text->rMono96(c->msg, winW / 2, winH - 192, Text::Align::CENTER);
 }
 
-void sdl::handleInput(SDL_Event *e) {
-
-	SDL_Gamepad *gamepad;
-
-	switch (e->type) {
-	case SDL_EVENT_KEY_DOWN:
-		d.input->key(&e->key);
-		break;
-	case SDL_EVENT_WINDOW_RESIZED: {
-		d.input->winResize(&e->window);
-		break;
-	}
-
-	default:
-		break;
-	}
-	// spdlog::info("sdl::handleInput done");
-}
-
-void sdl::loopEvent() {
-	SDL_Event e;
-	d.input->Reset();
-	while (SDL_PollEvent(&e)) {
-		SDLEventLog(e.type);
-		if (e.type == SDL_EVENT_QUIT) {
-			d.input->quit = true;
-			break;
-		}
-		// spdlog::info("sdlBg handleInput");
-		handleInput(&e);
-	}
-}
-
 sdl::~sdl() {
 	spdlog::info("sdl::~sdl");
 	if (text) {

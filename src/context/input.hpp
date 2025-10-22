@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../event.h"
+#include "../util/event.hpp"
 #include <SDL3/SDL_events.h>
 
 namespace context {
@@ -45,7 +45,7 @@ public:
 			quit = true;
 			break;
 		default:
-			std::string s = getSDLGamepadBtnName(e->button);
+			std::string s = util::getSDLGamepadBtnName(e->button);
 			spdlog::info("gamepad button {}", s);
 			break;
 		}

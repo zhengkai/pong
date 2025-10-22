@@ -31,7 +31,6 @@ public:
 	void handleInput(SDL_Event *e);
 
 	void render();
-	void loopEvent();
 
 private:
 	void renderControlMsg();

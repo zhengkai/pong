@@ -1,8 +1,6 @@
 #pragma once
 
+#include "context/input.hpp"
 #include <SDL3/SDL_events.h>
-#include <string>
 
-void SDLEventLog(Uint32 t);
-std::string getSDLEventName(Uint32 t);
-std::string getSDLGamepadBtnName(Uint8 t);
+void loopEvent(std::shared_ptr<context::Input> input);
