@@ -37,29 +37,28 @@ bool Text::init(SDL_Renderer *r) {
 
 void Text::rMono32(std::string text, int x, int y, Align align) {
 #ifndef __EMSCRIPTEN__
-	render(fMono32, text, x, y, align);
+	render(fMono32, text, x, y, align, 32.0f);
 #endif
 }
 
 void Text::rMono96(std::string text, int x, int y, Align align) {
 #ifndef __EMSCRIPTEN__
-	render(fMono96, text, x, y, align);
+	render(fMono96, text, x, y, align, 96.0f);
 #endif
 }
 
 #ifndef __EMSCRIPTEN__
-void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
+void Text::render(
+	TTF_Font *font, std::string text, int x, int y, Align align, float size) {
 
-	SDL_Color color = {200, 230, 255, 255};
+	SDL_Color color = {230, 230, 230, 255};
 
-	// 使用字体渲染文本为 Surface
 	SDL_Surface *surface = TTF_RenderText_Solid(font, text.c_str(), 0, color);
 	if (!surface) {
 		error("Failed to create text surface, {}");
 		return;
 	}
 
-	// 将 Surface 转换为 Texture
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(r, surface);
 	SDL_DestroySurface(surface);
 	if (!texture) {
@@ -70,28 +69,32 @@ void Text::render(TTF_Font *font, std::string text, int x, int y, Align align) {
 	SDL_PropertiesID pid = SDL_GetTextureProperties(texture);
 	float textWidth =
 		(float)SDL_GetNumberProperty(pid, SDL_PROP_TEXTURE_WIDTH_NUMBER, 0);
-	int textHeight =
-		(int)SDL_GetNumberProperty(pid, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
+	float textHeight =
+		(float)SDL_GetNumberProperty(pid, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0);
 
-	float alignedX = static_cast<float>(x);
+	float ax = static_cast<float>(x);
+	float ay = static_cast<float>(y);
 	switch (align) {
 	case Align::CENTER:
-		alignedX -= textWidth / 2;
+		ax -= textWidth / 2.0f;
 		break;
 	case Align::RIGHT:
-		alignedX -= textWidth;
+		ax -= textWidth;
 		break;
 	default:
 		break;
 	}
 
-	// 设置渲染位置
-	SDL_Rect dstRect = {
-		static_cast<int>(alignedX), y, static_cast<int>(textWidth), textHeight};
+	SDL_FRect bgRect = {
+		ax - (size / 4.0f), ay, textWidth + (size / 2.0f), textHeight};
 
-	SDL_FRect d;
-	SDL_RectToFRect(&dstRect, &d);
-	SDL_RenderTexture(r, texture, nullptr, &d);
+	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 128);
+	SDL_RenderFillRect(r, &bgRect);
+
+	SDL_FRect dstRect = {ax, ay, textWidth, textHeight};
+
+	SDL_RenderTexture(r, texture, nullptr, &dstRect);
 	SDL_DestroyTexture(texture);
 }
 #endif

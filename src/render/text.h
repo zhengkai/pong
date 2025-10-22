@@ -29,7 +29,12 @@ public:
 
 private:
 #ifndef __EMSCRIPTEN__
-	void render(TTF_Font *font, std::string text, int x, int y, Align align);
+	void render(TTF_Font *font,
+		std::string text,
+		int x,
+		int y,
+		Align align,
+		float size);
 #endif
 	void error(std::string_view msg);
 };
