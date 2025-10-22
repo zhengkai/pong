@@ -18,7 +18,7 @@ static SDL_AppResult SDL_Fail() {
 
 sdl::sdl(sdlDep dep) : window(nullptr), r(nullptr), d(std::move(dep)) {
 	for (const auto &b : d.entity->brick) {
-		spdlog::trace("brick {} {} {} {}", b.id, b.x, b.y, b.region);
+		spdlog::trace("brick {} {:.0f} {:.0f} {}", b.id, b.x, b.y, b.region);
 	}
 }
 
@@ -129,8 +129,8 @@ void sdl::renderBrick() {
 	rect.h = w->gridSize;
 
 	for (const auto &b : d.entity->brick) {
-		rect.x = w->startX + static_cast<float>(b.x) * w->gridSize;
-		rect.y = w->startY + static_cast<float>(b.y) * w->gridSize;
+		rect.x = w->startX + b.x * w->gridSize;
+		rect.y = w->startY + b.y * w->gridSize;
 		switch (b.region) {
 		case 1:
 			SDL_SetRenderDrawColor(r, 255, 0, 0, 180);

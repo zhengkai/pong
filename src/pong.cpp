@@ -52,8 +52,8 @@ bool Pong::init() {
 		for (int y = 0; y < cfgGridH; y++) {
 			e->brick.push_back({
 				.id = id,
-				.x = x,
-				.y = y,
+				.x = static_cast<float>(x),
+				.y = static_cast<float>(y),
 				.region = dist(grd),
 			});
 			id++;

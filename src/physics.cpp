@@ -48,13 +48,11 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 void Physics::update() {
 
 	float speed = d.entity->speed;
-	float dt = cfgFPSDeltaTime;
 	if (speed < 1.0f) {
-		dt *= speed;
-		_update(dt);
+		_update(cfgFPSDeltaTime * speed);
 	} else {
 		for (int cnt = static_cast<int>(d.entity->speed); cnt > 0; cnt--) {
-			_update(dt);
+			_update(cfgFPSDeltaTime);
 		}
 	}
 }
@@ -174,8 +172,7 @@ void Physics::createBrick() {
 	for (const auto &b : d.entity->brick) {
 
 		b2BodyDef bd = b2DefaultBodyDef();
-		bd.position = b2Vec2{
-			static_cast<float>(b.x) + 0.5f, static_cast<float>(b.y) + 0.5f};
+		bd.position = b2Vec2{b.x + 0.5f, b.y + 0.5f};
 		bd.type = b2_staticBody;
 
 		b2BodyId bb = b2CreateBody(world, &bd);
