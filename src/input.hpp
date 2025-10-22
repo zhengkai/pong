@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../util/event.hpp"
+#include "util/event.hpp"
 #include <SDL3/SDL_events.h>
 
-namespace context {
 struct Input {
 
 public:
@@ -51,5 +50,3 @@ public:
 		}
 	};
 };
-
-}; // namespace context

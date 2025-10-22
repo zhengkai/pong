@@ -1,10 +1,29 @@
 #include "game.h"
 #include "config.hpp"
+#include "input.hpp"
 #include <algorithm>
 
 static std::string speedMsg = "Speed Level: ";
 
-Game::Game(GameDep dep) : d(std::move(dep)) {
+static void handleInput(SDL_Event *e, std::shared_ptr<Input> input) {
+
+	SDL_Gamepad *gamepad;
+
+	switch (e->type) {
+	case SDL_EVENT_KEY_DOWN:
+		input->key(&e->key);
+		break;
+	case SDL_EVENT_WINDOW_RESIZED: {
+		input->winResize(&e->window);
+		break;
+	}
+
+	default:
+		break;
+	}
+}
+
+Game::Game(GameDep dep) : d(std::move(dep)), input(std::make_shared<Input>()) {
 }
 
 Game::~Game() {
@@ -12,12 +31,14 @@ Game::~Game() {
 
 bool Game::parse() {
 
-	if (d.input->quit) {
+	if (input->quit) {
 		return false;
 	}
 
-	if (d.input->speed != 0) {
-		int slv = d.entity->speedLevel + d.input->speed;
+	// control speed
+
+	if (input->speed != 0) {
+		int slv = d.entity->speedLevel + input->speed;
 		slv = std::max(-cfgSpeedLevelMax, std::min(cfgSpeedLevelMax, slv));
 		d.entity->speedLevel = slv;
 		d.entity->speed = std::pow(2, slv);
@@ -36,5 +57,30 @@ bool Game::parse() {
 		cm->expireSerial = d.window->serial + cfgFPS * 2;
 	}
 
+	// window resize
+
+	if (input->winW > 0 && input->winH > 0) {
+		auto wr = d.window->winResize;
+		if (wr == nullptr) {
+			wr = new context::WinResize();
+			d.window->winResize = wr;
+		}
+		wr->w = input->winW;
+		wr->h = input->winH;
+	}
+
 	return true;
+}
+
+void Game::loopEvent() {
+	SDL_Event e;
+	input->Reset();
+	while (SDL_PollEvent(&e)) {
+		util::SDLEventLog(e.type);
+		if (e.type == SDL_EVENT_QUIT) {
+			input->quit = true;
+			break;
+		}
+		handleInput(&e, input);
+	}
 }

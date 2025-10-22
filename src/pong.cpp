@@ -1,9 +1,7 @@
 #include "pong.h"
 #include "config.hpp"
 #include "context/entity.h"
-#include "context/input.hpp"
 #include "context/window.h"
-#include "event.h"
 #include "game.h"
 #include "region.hpp"
 #include "sdl.h"
@@ -39,12 +37,10 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
-	auto in = std::make_shared<context::Input>();
 
 	d = {
 		.entity = e,
 		.window = w,
-		.input = in,
 	};
 
 	std::random_device rd;
@@ -73,13 +69,11 @@ bool Pong::init() {
 	g = new Game({
 		.entity = e,
 		.window = w,
-		.input = in,
 	});
 
 	s = new sdl({
 		.entity = e,
 		.window = w,
-		.input = in,
 	});
 
 	spdlog::info("pong start");
@@ -101,7 +95,7 @@ void Pong::loop() {
 	t->tick();
 #endif
 
-	loopEvent(d.input);
+	g->loopEvent();
 
 	if (!g->parse()) {
 		stop = true;

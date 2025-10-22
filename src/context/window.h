@@ -2,6 +2,11 @@
 
 namespace context {
 
+struct WinResize {
+	int w = 0;
+	int h = 0;
+};
+
 struct ControlMsg {
 	std::string msg;
 	int expireSerial = 0;
@@ -16,6 +21,7 @@ public:
 	float gridSize = 0;
 	int serial = 0;
 	ControlMsg *controlMsg;
+	WinResize *winResize;
 
 public:
 	Window() = default;

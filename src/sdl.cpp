@@ -111,10 +111,13 @@ void sdl::render() {
 }
 
 void sdl::renderResize() {
-	if (d.input->winW == 0 || d.input->winH == 0) {
+	auto wr = d.window->winResize;
+	if (wr == nullptr) {
 		return;
 	}
-	calcGrid(d.input->winW, d.input->winH, d.window);
+	d.window->winResize = nullptr;
+	calcGrid(wr->w, wr->h, d.window);
+	delete wr;
 }
 
 void sdl::renderBrick() {
