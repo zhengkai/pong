@@ -39,6 +39,10 @@ void SDLEventLog(Uint32 t) {
 		// window
 		return;
 	}
+	if (t == SDL_EVENT_KEY_DOWN || t == SDL_EVENT_KEY_UP) {
+		// key
+		return;
+	}
 	spdlog::info("event.type {} {}", t, getSDLEventName(t));
 }
 

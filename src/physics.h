@@ -29,6 +29,7 @@ public:
 	void update();
 
 private:
+	void _update(float deltaTime);
 	b2BodyId createBall();
 	void createWall();
 	void createBrick();

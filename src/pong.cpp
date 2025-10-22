@@ -41,10 +41,6 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
-	w->controlMsg = new context::ControlMsg{
-		.msg = "foo",
-		.expireSerial = 1000,
-	};
 
 	d = {
 		.entity = e,
@@ -76,6 +72,7 @@ bool Pong::init() {
 
 	g = new Game({
 		.entity = e,
+		.window = w,
 	});
 
 	s = new sdl(

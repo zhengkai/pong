@@ -47,6 +47,20 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 
 void Physics::update() {
 
+	float speed = d.entity->speed;
+	float dt = cfgFPSDeltaTime;
+	if (speed < 1.0f) {
+		dt *= speed;
+		_update(dt);
+	} else {
+		for (int cnt = static_cast<int>(d.entity->speed); cnt > 0; cnt--) {
+			_update(dt);
+		}
+	}
+}
+
+void Physics::_update(float deltaTime) {
+
 	for (const auto &b : d.entity->brick) {
 		b2BodyId bb = brick[b.id];
 		if (b.region == region) {
@@ -56,7 +70,7 @@ void Physics::update() {
 		}
 	}
 
-	b2World_Step(world, cfgFPSDeltaTime * d.entity->speed, 8);
+	b2World_Step(world, deltaTime, 1);
 	b2ContactEvents ce = b2World_GetContactEvents(world);
 
 	if (ce.beginCount > 0) {

@@ -1,7 +1,8 @@
 #pragma once
 
-constexpr float cfgFPS = 60.0f;
-constexpr float cfgFPSDeltaTime = 1.0f / cfgFPS;
+constexpr int cfgFPS = 60;
+constexpr float cfgFPSF = static_cast<float>(cfgFPS);
+constexpr float cfgFPSDeltaTime = 1.0f / cfgFPSF;
 
 constexpr float cfgBallRadius = 0.5f;
 
@@ -10,6 +11,8 @@ constexpr int cfgPhyLoop = 1;
 
 constexpr int cfgWinW = 2000;
 constexpr int cfgWinH = 1600;
+
+constexpr int cfgSpeedLevelMax = 5;
 
 constexpr int cfgGridW = 20;
 constexpr int cfgGridH = 16;
