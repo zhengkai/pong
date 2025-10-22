@@ -1,8 +1,9 @@
 #pragma once
 
 #include "context/entity.h"
+#include "context/input.hpp"
+#include "context/window.h"
 #include "game.h"
-#include "input.h"
 #include "region.hpp"
 #include "sdl.h"
 #include "time.hpp"
@@ -10,13 +11,13 @@
 struct PongDeps {
 	std::shared_ptr<context::Entity> entity;
 	std::shared_ptr<context::Window> window;
+	std::shared_ptr<context::Input> input;
 };
 
 class Pong {
 
 private:
 	PongDeps d;
-	Input *input;
 	Time *t;
 	sdl *s;
 	Game *g;
@@ -29,8 +30,4 @@ public:
 	void loop();
 	void run();
 	bool init();
-
-private:
-	void sdlBg();
-	void loopEvent();
 };

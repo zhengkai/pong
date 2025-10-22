@@ -19,16 +19,10 @@ struct Ball {
 
 inline std::vector<std::shared_ptr<Ball>> BallList;
 
-class Entity {
-
-public:
+struct Entity {
 	int hit = 0;
 	float speed = 1.0f;
 	int speedLevel = 0;
 	std::vector<Brick> brick;
-
-public:
-	Entity() = default;
-	virtual ~Entity() = default;
 };
 }; // namespace context

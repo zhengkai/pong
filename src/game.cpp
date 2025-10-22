@@ -1,6 +1,5 @@
 #include "game.h"
 #include "config.hpp"
-#include "input.h"
 #include <algorithm>
 
 static std::string speedMsg = "Speed Level: ";
@@ -11,9 +10,14 @@ Game::Game(GameDep dep) : d(std::move(dep)) {
 Game::~Game() {
 }
 
-void Game::parse(Input *in) {
-	if (in->d.speed != 0) {
-		int slv = d.entity->speedLevel + in->d.speed;
+bool Game::parse() {
+
+	if (d.input->quit) {
+		return false;
+	}
+
+	if (d.input->speed != 0) {
+		int slv = d.entity->speedLevel + d.input->speed;
 		slv = std::max(-cfgSpeedLevelMax, std::min(cfgSpeedLevelMax, slv));
 		d.entity->speedLevel = slv;
 		d.entity->speed = std::pow(2, slv);
@@ -31,4 +35,6 @@ void Game::parse(Input *in) {
 		cm->msg = speedMsg + m;
 		cm->expireSerial = d.window->serial + cfgFPS * 2;
 	}
+
+	return true;
 }

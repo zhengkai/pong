@@ -1,7 +1,6 @@
 #include "sdl.h"
 #include "config.hpp"
 #include "context/entity.h"
-#include "input.h"
 #include "render/grid.h"
 #include "render/text.h"
 #include "util/path.hpp"
@@ -17,10 +16,7 @@ static SDL_AppResult SDL_Fail() {
 	return SDL_APP_FAILURE;
 }
 
-sdl::sdl(sdlDep dep, Input *in)
-	: input(in), window(nullptr), r(nullptr), d(std::move(dep)) {
-	spdlog::info("ptr = {}", static_cast<void *>(input));
-
+sdl::sdl(sdlDep dep) : window(nullptr), r(nullptr), d(std::move(dep)) {
 	for (const auto &b : d.entity->brick) {
 		spdlog::trace("brick {} {} {} {}", b.id, b.x, b.y, b.region);
 	}
@@ -36,8 +32,7 @@ bool sdl::init() {
 	window = SDL_CreateWindow("Pong Test",
 		cfgWinW,
 		cfgWinH,
-		SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_RESIZABLE |
-			SDL_WINDOW_HIGH_PIXEL_DENSITY);
+		SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
 	if (!window) {
 		SDL_Fail();
 		return false;
@@ -116,10 +111,10 @@ void sdl::render() {
 }
 
 void sdl::renderResize() {
-	if (input->d.winW == 0 || input->d.winH == 0) {
+	if (d.input->winW == 0 || d.input->winH == 0) {
 		return;
 	}
-	calcGrid(input->d.winW, input->d.winH, d.window);
+	calcGrid(d.input->winW, d.input->winH, d.window);
 }
 
 void sdl::renderBrick() {
@@ -199,10 +194,10 @@ void sdl::handleInput(SDL_Event *e) {
 
 	switch (e->type) {
 	case SDL_EVENT_KEY_DOWN:
-		input->key(&e->key);
+		d.input->key(&e->key);
 		break;
 	case SDL_EVENT_WINDOW_RESIZED: {
-		input->winResize(&e->window);
+		d.input->winResize(&e->window);
 		break;
 	}
 
@@ -212,9 +207,22 @@ void sdl::handleInput(SDL_Event *e) {
 	// spdlog::info("sdl::handleInput done");
 }
 
+void sdl::loopEvent() {
+	SDL_Event e;
+	d.input->Reset();
+	while (SDL_PollEvent(&e)) {
+		SDLEventLog(e.type);
+		if (e.type == SDL_EVENT_QUIT) {
+			d.input->quit = true;
+			break;
+		}
+		// spdlog::info("sdlBg handleInput");
+		handleInput(&e);
+	}
+}
+
 sdl::~sdl() {
 	spdlog::info("sdl::~sdl");
-	input = nullptr;
 	if (text) {
 		delete text;
 		text = nullptr;

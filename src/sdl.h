@@ -1,8 +1,8 @@
 #pragma once
 
 #include "context/entity.h"
+#include "context/input.hpp"
 #include "context/window.h"
-#include "input.h"
 #include "render/text.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
@@ -11,13 +11,13 @@
 struct sdlDep {
 	std::shared_ptr<context::Entity> entity;
 	std::shared_ptr<context::Window> window;
+	std::shared_ptr<context::Input> input;
 };
 
 class sdl {
 
 private:
 	SDL_Renderer *r;
-	Input *input;
 	Text *text;
 	// SDL_Texture *bg;
 	SDL_Window *window;
@@ -25,12 +25,13 @@ private:
 	sdlDep d;
 
 public:
-	sdl(sdlDep dep, Input *input);
+	sdl(sdlDep dep);
 	~sdl();
 	bool init();
 	void handleInput(SDL_Event *e);
 
 	void render();
+	void loopEvent();
 
 private:
 	void renderControlMsg();

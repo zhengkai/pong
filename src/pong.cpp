@@ -1,8 +1,10 @@
 #include "pong.h"
 #include "config.hpp"
+#include "context/entity.h"
+#include "context/input.hpp"
+#include "context/window.h"
 #include "event.h"
 #include "game.h"
-#include "input.h"
 #include "region.hpp"
 #include "sdl.h"
 #include "util/ball.hpp"
@@ -14,7 +16,7 @@
 #include <emscripten.h>
 #endif
 
-Pong::Pong() : stop(false), input(new Input()), t(new Time()) {
+Pong::Pong() : stop(false), t(new Time()) {
 }
 
 Pong::~Pong() {
@@ -27,10 +29,6 @@ Pong::~Pong() {
 		delete s;
 		s = nullptr;
 	}
-	if (input) {
-		delete input;
-		input = nullptr;
-	}
 	if (g) {
 		delete g;
 		g = nullptr;
@@ -41,6 +39,7 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
+	auto in = std::make_shared<context::Input>();
 
 	d = {
 		.entity = e,
@@ -73,14 +72,14 @@ bool Pong::init() {
 	g = new Game({
 		.entity = e,
 		.window = w,
+		.input = in,
 	});
 
-	s = new sdl(
-		{
-			.entity = e,
-			.window = w,
-		},
-		input);
+	s = new sdl({
+		.entity = e,
+		.window = w,
+		.input = in,
+	});
 
 	spdlog::info("pong start");
 
@@ -101,14 +100,12 @@ void Pong::loop() {
 	t->tick();
 #endif
 
-	loopEvent();
+	s->loopEvent();
 
-	if (input->d.quit) {
+	if (!g->parse()) {
 		stop = true;
 		return;
 	}
-
-	g->parse(input);
 
 	std::random_device rd;
 	std::mt19937 g(rd());
@@ -121,37 +118,4 @@ void Pong::loop() {
 	}
 
 	s->render();
-}
-
-void Pong::loopEvent() {
-	if (stop) {
-		return;
-	}
-	SDL_Event e;
-	input->Reset();
-	while (SDL_PollEvent(&e)) {
-		SDLEventLog(e.type);
-		if (e.type == SDL_EVENT_QUIT) {
-			stop = true;
-			break;
-		}
-		// spdlog::info("sdlBg handleInput");
-		s->handleInput(&e);
-	}
-}
-
-void Pong::sdlBg() {
-	spdlog::info("sdl bg start");
-
-	SDL_Event event;
-	while (!stop) {
-		SDL_WaitEventTimeout(&event, 0);
-		SDLEventLog(event.type);
-		if (event.type == SDL_EVENT_QUIT) {
-			break;
-		}
-		// spdlog::info("sdlBg handleInput");
-		s->handleInput(&event);
-	}
-	stop = true;
 }
