@@ -22,14 +22,14 @@ mkdir -p "$BUILD_WASM_DIR"
 set -x
 sudo docker run \
 	--name "pong-cicd" \
-	--mount "type=bind,source=${DIR}/build,target=/app/build" \
+	--mount "type=bind,source=${BUILD_DIR},target=/app/build" \
 	--rm \
 	"$DOCKER_IMAGE" \
 	/app/run.sh || exit 1
 
 sudo docker run \
 	--name "pong-cicd" \
-	--mount "type=bind,source=${DIR}/build-wasm,target=/app/build-wasm" \
+	--mount "type=bind,source=${BUILD_WASM_DIR},target=/app/build-wasm" \
 	--rm \
 	"$DOCKER_IMAGE" \
 	/app/wasm.sh || exit 1
