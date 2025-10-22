@@ -23,6 +23,8 @@ class Entity {
 
 public:
 	int hit = 0;
+	float speed = 1.0f;
+	int speedLevel = 0;
 	std::vector<Brick> brick;
 
 public:

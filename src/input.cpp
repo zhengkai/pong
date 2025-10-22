@@ -3,26 +3,38 @@
 #include <SDL3/SDL_events.h>
 #include <spdlog/spdlog.h>
 
-Input::Input() : stop(false), x(0), y(0) {
+Input::Input() : d{} {
 }
 
 Input::~Input() {
 	spdlog::info("Input::~Input");
 }
 
+void Input::winResize(SDL_WindowEvent *w) {
+	d.winW = w->data1;
+	d.winH = w->data2;
+}
+
 void Input::key(SDL_KeyboardEvent *e) {
-	if (e->key == SDLK_ESCAPE) {
-		spdlog::info("esc key");
-		stop = true;
-		spdlog::info("esc key done");
-		return;
+	switch (e->key) {
+	case SDLK_ESCAPE:
+		d.quit = true;
+		break;
+	case SDLK_UP:
+	case SDLK_RIGHT:
+		d.speed = 1;
+		break;
+	case SDLK_DOWN:
+	case SDLK_LEFT:
+		d.speed = -1;
+		break;
 	}
 }
 
 void Input::gamepadButton(SDL_GamepadButtonEvent *e, bool down) {
 	switch (e->button) {
 	case SDL_GAMEPAD_BUTTON_START:
-		Input::stop = true;
+		d.quit = true;
 		break;
 	default:
 		std::string s = getSDLGamepadBtnName(e->button);
@@ -32,9 +44,5 @@ void Input::gamepadButton(SDL_GamepadButtonEvent *e, bool down) {
 }
 
 void Input::Reset() {
-	stop = false;
-	x = 0;
-	y = 0;
-	winW = 0;
-	winH = 0;
+	d = {};
 }

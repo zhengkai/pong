@@ -1,6 +1,7 @@
 #pragma once
 
 #include "context/entity.h"
+#include "game.h"
 #include "input.h"
 #include "region.hpp"
 #include "sdl.h"
@@ -18,6 +19,7 @@ private:
 	Input *input;
 	Time *t;
 	sdl *s;
+	Game *g;
 	std::vector<std::unique_ptr<Region>> region;
 
 public:

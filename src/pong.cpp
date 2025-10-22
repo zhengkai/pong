@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "config.hpp"
 #include "event.h"
+#include "game.h"
 #include "input.h"
 #include "region.hpp"
 #include "sdl.h"
@@ -30,6 +31,10 @@ Pong::~Pong() {
 		delete input;
 		input = nullptr;
 	}
+	if (g) {
+		delete g;
+		g = nullptr;
+	}
 }
 
 bool Pong::init() {
@@ -47,7 +52,7 @@ bool Pong::init() {
 	};
 
 	std::random_device rd;
-	std::mt19937 g(rd());
+	std::mt19937 grd(rd());
 	std::uniform_int_distribution<int> dist(0, cfgRegionNum - 1);
 
 	int id = 0;
@@ -57,7 +62,7 @@ bool Pong::init() {
 				.id = id,
 				.x = x,
 				.y = y,
-				.region = dist(g),
+				.region = dist(grd),
 			});
 			id++;
 		}
@@ -68,6 +73,10 @@ bool Pong::init() {
 	for (auto &b : context::BallList) {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
+
+	g = new Game({
+		.entity = e,
+	});
 
 	s = new sdl(
 		{
@@ -97,10 +106,12 @@ void Pong::loop() {
 
 	loopEvent();
 
-	if (input->stop) {
+	if (input->d.quit) {
 		stop = true;
 		return;
 	}
+
+	g->parse(input);
 
 	std::random_device rd;
 	std::mt19937 g(rd());

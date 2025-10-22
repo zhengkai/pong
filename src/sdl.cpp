@@ -116,10 +116,10 @@ void sdl::render() {
 }
 
 void sdl::renderResize() {
-	if (input->winW == 0 || input->winH == 0) {
+	if (input->d.winW == 0 || input->d.winH == 0) {
 		return;
 	}
-	calcGrid(input->winW, input->winH, d.window);
+	calcGrid(input->d.winW, input->d.winH, d.window);
 }
 
 void sdl::renderBrick() {
@@ -199,12 +199,10 @@ void sdl::handleInput(SDL_Event *e) {
 
 	switch (e->type) {
 	case SDL_EVENT_KEY_DOWN:
-		spdlog::info("ptr = {}", static_cast<void *>(input));
 		input->key(&e->key);
 		break;
 	case SDL_EVENT_WINDOW_RESIZED: {
-		input->winW = e->window.data1;
-		input->winH = e->window.data2;
+		input->winResize(&e->window);
 		break;
 	}
 

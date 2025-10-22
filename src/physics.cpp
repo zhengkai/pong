@@ -56,7 +56,7 @@ void Physics::update() {
 		}
 	}
 
-	b2World_Step(world, cfgFPSDeltaTime, 8);
+	b2World_Step(world, cfgFPSDeltaTime * d.entity->speed, 8);
 	b2ContactEvents ce = b2World_GetContactEvents(world);
 
 	if (ce.beginCount > 0) {

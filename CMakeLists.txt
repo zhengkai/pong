@@ -52,6 +52,7 @@ add_executable(${PROJ}
 	src/render/text.cpp
 	src/render/grid.cpp
 	src/physics.cpp
+	src/game.cpp
 )
 
 if (EMSCRIPTEN)
