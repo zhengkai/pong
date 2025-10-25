@@ -69,6 +69,12 @@ bool Game::parse() {
 		wr->h = input->winH;
 	}
 
+	// show ball
+
+	if (input->space) {
+		d.window->showBall = !d.window->showBall;
+	}
+
 	return true;
 }
 

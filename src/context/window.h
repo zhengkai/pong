@@ -22,6 +22,7 @@ public:
 	int serial = 0;
 	ControlMsg *controlMsg;
 	WinResize *winResize;
+	bool showBall = true;
 
 public:
 	Window() = default;

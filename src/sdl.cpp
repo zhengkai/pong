@@ -100,8 +100,10 @@ void sdl::render() {
 
 	renderBrick();
 
-	for (auto &b : context::BallList) {
-		renderBall(b);
+	if (d.window->showBall) {
+		for (auto &b : context::BallList) {
+			renderBall(b);
+		}
 	}
 
 	renderCounter();

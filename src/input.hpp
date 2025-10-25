@@ -8,6 +8,7 @@ struct Input {
 public:
 	bool quit = false;
 	bool stop = false;
+	bool space = false;
 	float x = 0.0f;
 	float y = 0.0f;
 	int winW = 0;
@@ -35,6 +36,9 @@ public:
 		case SDLK_DOWN:
 		case SDLK_LEFT:
 			speed = -1;
+			break;
+		case SDLK_SPACE:
+			space = true;
 			break;
 		}
 	};
