@@ -12,10 +12,27 @@ static SDL_AppResult SDL_Fail() {
 	return SDL_APP_FAILURE;
 }
 
-sdl::sdl(sdlDep dep) : window(nullptr), r(nullptr), d(std::move(dep)) {
+sdl::sdl(sdlDep dep) : w(nullptr), r(nullptr), d(std::move(dep)) {
 	for (const auto &b : d.entity->brick) {
 		spdlog::trace("brick {} {:.0f} {:.0f} {}", b.id, b.x, b.y, b.region);
 	}
+}
+
+void sdl::initWinSize() {
+
+	SDL_DisplayID display = SDL_GetPrimaryDisplay();
+	if (!display) {
+		return;
+	}
+	auto mode = SDL_GetCurrentDisplayMode(display);
+	if (!mode) {
+		return;
+	}
+
+	spdlog::info("win get size {} {}", mode->w, mode->h);
+
+	d.window->w = std::min(cfgWinW, mode->w);
+	d.window->h = std::min(cfgWinH, mode->h);
 }
 
 bool sdl::init() {
@@ -25,11 +42,14 @@ bool sdl::init() {
 		return false;
 	}
 
-	window = SDL_CreateWindow("Pong Test",
-		cfgWinW,
-		cfgWinH,
+	initWinSize();
+
+	spdlog::info("win create size {} {}", d.window->w, d.window->h);
+	w = SDL_CreateWindow("Pong Test",
+		d.window->w,
+		d.window->h,
 		SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
-	if (!window) {
+	if (!w) {
 		SDL_Fail();
 		return false;
 	}
@@ -37,7 +57,7 @@ bool sdl::init() {
 	SDL_HideCursor();
 	// SDL_SetWindowMouseGrab(window, true);
 
-	r = SDL_CreateRenderer(window, NULL);
+	r = SDL_CreateRenderer(w, NULL);
 	if (!r) {
 		SDL_Fail();
 		return false;
@@ -192,7 +212,7 @@ void sdl::renderControlMsg() {
 
 void sdl::calcGrid(int winW, int winH) {
 
-	float scale = SDL_GetWindowDisplayScale(window);
+	float scale = SDL_GetWindowDisplayScale(w);
 	spdlog::info("start sdl::calcGrid, window display scale {:.1f}", scale);
 
 	auto w = d.window;
@@ -227,9 +247,9 @@ sdl::~sdl() {
 		SDL_DestroyRenderer(r);
 		r = nullptr;
 	}
-	if (window) {
-		SDL_DestroyWindow(window);
-		window = nullptr;
+	if (w) {
+		SDL_DestroyWindow(w);
+		w = nullptr;
 	}
 	SDL_Quit();
 }

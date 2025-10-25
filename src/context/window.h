@@ -17,8 +17,8 @@ struct ControlMsg {
 class Window {
 
 public:
-	int w = cfgGridW;
-	int h = cfgGridH;
+	int w = cfgWinW;
+	int h = cfgWinH;
 	float scale = 1.0f;
 	float cellSize = 0.0f;
 	float startX = 0.0f;

@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+constexpr bool cfgWASM = true;
+#else
+constexpr bool cfgWASM = false;
+#endif
+
 constexpr int cfgFPS = 60;
 constexpr float cfgFPSF = static_cast<float>(cfgFPS);
 constexpr float cfgFPSDeltaTime = 1.0f / cfgFPSF;
@@ -9,8 +15,8 @@ constexpr float cfgBallRadius = 0.5f;
 constexpr int cfgRegionNum = 6;
 constexpr int cfgPhyLoop = 1;
 
-constexpr int cfgWinW = 720;
-constexpr int cfgWinH = 720;
+constexpr int cfgWinW = 1600;
+constexpr int cfgWinH = 960;
 
 constexpr int cfgSpeedLevelMax = 5;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.hpp"
 #include "util/event.hpp"
 #include <SDL3/SDL_events.h>
 
@@ -27,7 +28,9 @@ public:
 	void key(SDL_KeyboardEvent *e) {
 		switch (e->key) {
 		case SDLK_ESCAPE:
-			quit = true;
+			if (!cfgWASM) {
+				quit = true;
+			}
 			break;
 		case SDLK_UP:
 		case SDLK_RIGHT:

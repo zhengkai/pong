@@ -18,7 +18,7 @@ private:
 	SDL_Renderer *r;
 	Text *text;
 	// SDL_Texture *bg;
-	SDL_Window *window;
+	SDL_Window *w;
 	SDL_Texture *ballTex;
 	sdlDep d;
 
@@ -37,4 +37,5 @@ private:
 	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();
 	void calcGrid(int winW, int winH);
+	void initWinSize();
 };
