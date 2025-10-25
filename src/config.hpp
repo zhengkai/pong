@@ -9,8 +9,8 @@ constexpr float cfgBallRadius = 0.5f;
 constexpr int cfgRegionNum = 6;
 constexpr int cfgPhyLoop = 1;
 
-constexpr int cfgWinW = 2000;
-constexpr int cfgWinH = 1600;
+constexpr int cfgWinW = 720;
+constexpr int cfgWinH = 720;
 
 constexpr int cfgSpeedLevelMax = 5;
 

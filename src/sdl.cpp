@@ -1,15 +1,11 @@
 #include "sdl.h"
 #include "config.hpp"
 #include "context/entity.h"
-#include "render/grid.h"
 #include "render/text.h"
 #include "util/path.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
 #include <spdlog/spdlog.h>
-
-static float winW = static_cast<float>(cfgWinW);
-static float winH = static_cast<float>(cfgWinH);
 
 static SDL_AppResult SDL_Fail() {
 	SDL_LogError(SDL_LOG_CATEGORY_CUSTOM, "Error %s", SDL_GetError());
@@ -73,7 +69,7 @@ bool sdl::init() {
 	// SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
 	// spdlog::error("output size {} {}", drawableWidth, drawableHeight);
 
-	calcGrid(cfgWinW, cfgWinH, d.window);
+	calcGrid(cfgWinW, cfgWinH);
 
 	text = new Text();
 	if (text->init(r)) {
@@ -89,7 +85,7 @@ bool sdl::init() {
 void sdl::renderCounter() {
 
 	std::string counter = std::to_string(d.window->serial);
-	text->rMono32(counter, winW - 16, 16, Text::Align::RIGHT);
+	text->rMono32(counter, d.window->w - 16, 16, Text::Align::RIGHT);
 }
 
 void sdl::render() {
@@ -118,7 +114,7 @@ void sdl::renderResize() {
 		return;
 	}
 	d.window->winResize = nullptr;
-	calcGrid(wr->w, wr->h, d.window);
+	calcGrid(wr->w, wr->h);
 	delete wr;
 }
 
@@ -190,7 +186,35 @@ void sdl::renderControlMsg() {
 		d.window->controlMsg = nullptr;
 		return;
 	}
-	text->rMono96(c->msg, winW / 2, winH - 192, Text::Align::CENTER);
+	text->rMono96(
+		c->msg, d.window->w / 2, d.window->h - 192, Text::Align::CENTER);
+}
+
+void sdl::calcGrid(int winW, int winH) {
+
+	float scale = SDL_GetWindowDisplayScale(window);
+	spdlog::info("start sdl::calcGrid, window display scale {:.1f}", scale);
+
+	auto w = d.window;
+
+	float ww = std::floor(static_cast<float>(winW) * scale);
+	float wh = std::floor(static_cast<float>(winH) * scale);
+	w->w = static_cast<int>(ww);
+	w->h = static_cast<int>(wh);
+
+	float gs = std::floor(
+		ww / cfgGridWF < wh / cfgGridHF ? ww / cfgGridWF : wh / cfgGridHF);
+
+	w->gridSize = gs;
+	spdlog::info("gridSize = {}, win = {}x{}", gs, winW, winH);
+
+	w->startX = std::floor((ww - (gs * cfgGridW)) / 2);
+	w->startY = std::floor((wh - (gs * cfgGridH)) / 2);
+	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
+	spdlog::info("h {}*{}={}", gs, cfgGridH, gs * cfgGridH);
+	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
+
+	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
 }
 
 sdl::~sdl() {

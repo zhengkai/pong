@@ -36,4 +36,5 @@ private:
 	void renderResize();
 	void renderBall(std::shared_ptr<context::Ball> b);
 	void renderBrick();
+	void calcGrid(int winW, int winH);
 };
