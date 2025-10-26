@@ -33,6 +33,9 @@ gdb:
 vc:
 	vcpkg install
 
+version:
+	RUIN_DIR=$(RUIN_DIR) ./build/pong --version
+
 clean:
 	@rm -rf build || :
 	./run.sh

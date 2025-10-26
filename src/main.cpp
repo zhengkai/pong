@@ -7,7 +7,7 @@
 static Pong *thePong = nullptr;
 
 void wasmLoop() {
-	while (thePong->stop) {
+	if (thePong->stop) {
 		emscripten_cancel_main_loop();
 		return;
 	}

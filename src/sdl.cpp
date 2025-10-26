@@ -44,17 +44,34 @@ bool sdl::init() {
 
 	initWinSize();
 
-	spdlog::info("win create size {} {}", d.window->w, d.window->h);
-	w = SDL_CreateWindow("Pong Test",
-		d.window->w,
-		d.window->h,
+	SDL_PropertiesID props = SDL_CreateProperties();
+
+	SDL_SetStringProperty(
+		props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "Pong Test");
+	SDL_SetNumberProperty(
+		props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, d.window->w);
+	SDL_SetNumberProperty(
+		props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, d.window->h);
+	SDL_SetNumberProperty(props,
+		SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,
 		SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+
+#ifdef __EMSCRIPTEN__
+	// SDL_SetStringProperty(
+	// props, SDL_PROP_WINDOW_CREATE_EMSCRIPTEN_CANVAS_ID_STRING, "#pong");
+#endif
+
+	w = SDL_CreateWindowWithProperties(props);
+
+	SDL_DestroyProperties(props);
+
+	spdlog::info("win create size {} {}", d.window->w, d.window->h);
 	if (!w) {
 		SDL_Fail();
 		return false;
 	}
 
-	SDL_HideCursor();
+	// SDL_HideCursor();
 	// SDL_SetWindowMouseGrab(window, true);
 
 	r = SDL_CreateRenderer(w, NULL);

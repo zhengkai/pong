@@ -8,10 +8,10 @@
 
 <div class="loading">loading...</div>
 
-<canvas id="pong"></canvas>
+<canvas id="canvas"></canvas>
 
 <script type='text/javascript'>
-const canvasElement = document.getElementById('pong');
+const canvasElement = document.getElementById('canvas');
 
 canvasElement.addEventListener('webglcontextlost', (e) => {
 	const msg = 'WebGL context lost. You will need to reload the page.';
@@ -27,6 +27,10 @@ var Module = {
 	canvas: canvasElement,
 	setStatus(text) {
 		console.info('status:', text);
+		if (text === 'Running...') {
+			document.querySelector('.loading').style.display = 'none';
+			canvas.style.display = 'block';
+		}
 	},
 	totalDependencies: 0,
 	monitorRunDependencies(left) {
