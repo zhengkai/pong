@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Pong</title>
+<link rel="stylesheet" href="/style.css">
+<body>
+
+<div class="loading">loading...</div>
+
+<canvas id="pong"></canvas>
+
+<script type='text/javascript'>
+const canvasElement = document.getElementById('pong');
+
+canvasElement.addEventListener('webglcontextlost', (e) => {
+	const msg = 'WebGL context lost. You will need to reload the page.';
+	console.error(msg);
+	alert(msg);
+	e.preventDefault();
+}, false);
+
+var Module = {
+	print(...args) {
+		console.log(...args);
+	},
+	canvas: canvasElement,
+	setStatus(text) {
+		console.info('status:', text);
+	},
+	totalDependencies: 0,
+	monitorRunDependencies(left) {
+		console.log('monitorRunDependencies:', left);
+		this.totalDependencies = Math.max(this.totalDependencies, left);
+	}
+};
+Module.setStatus('Downloading...');
+window.onerror = (event) => {
+	// TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+	Module.setStatus('Exception thrown, see JavaScript console');
+	Module.setStatus = (text) => {
+		if (text) {
+			console.error('[post-exception status] ' + text);
+		}
+	};
+};
+</script>
+<script async type="text/javascript" src="pong.js"></script>
+</body>
+</html>
