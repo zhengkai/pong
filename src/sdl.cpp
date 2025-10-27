@@ -1,10 +1,12 @@
 #include "sdl.h"
 #include "config.hpp"
 #include "context/entity.h"
+#include "context/window.h"
 #include "render/text.h"
 #include "util/path.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
+#include <memory>
 #include <spdlog/spdlog.h>
 
 static SDL_AppResult SDL_Fail() {
@@ -134,7 +136,7 @@ void sdl::render() {
 	renderBrick();
 
 	if (d.window->showBall) {
-		for (auto &b : context::BallList) {
+		for (auto &b : d.entity->ballList) {
 			renderBall(b);
 		}
 	}

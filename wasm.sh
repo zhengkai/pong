@@ -32,3 +32,13 @@ emcmake cmake \
 
 emmake cmake \
 	--build build-wasm --config Release "-j$(nproc)"
+
+if [ -d "gh-pages" ]; then
+	(
+		cd gh-pages || exit 1
+		cp ../build-wasm/pong.wasm .
+		cp ../build-wasm/pong.data .
+		cp ../build-wasm/pong.js .
+		../tool/emsdk/upstream/emscripten/emstrip pong.wasm
+	)
+fi

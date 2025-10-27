@@ -8,7 +8,6 @@
 #include "util/ball.hpp"
 #include <SDL3/SDL_events.h>
 #include <algorithm>
-#include <cstring>
 #include <spdlog/spdlog.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -37,6 +36,7 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
+	e->ballList = util::generateBall(cfgGridWF, cfgGridHF, cfgRegionNum, 3);
 
 	d = {
 		.entity = e,
@@ -60,9 +60,7 @@ bool Pong::init() {
 		}
 	}
 
-	context::BallList =
-		util::generateBall(cfgGridWF, cfgGridHF, cfgRegionNum, 3);
-	for (auto &b : context::BallList) {
+	for (auto &b : e->ballList) {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
 

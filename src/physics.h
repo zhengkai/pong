@@ -2,6 +2,7 @@
 
 #include "context/entity.h"
 #include <box2d/box2d.h>
+#include <memory>
 
 struct PhysicsDep {
 	std::shared_ptr<context::Entity> entity;

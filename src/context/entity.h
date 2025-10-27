@@ -17,12 +17,11 @@ struct Ball {
 	b2Vec2 speed;
 };
 
-inline std::vector<std::shared_ptr<Ball>> BallList;
-
 struct Entity {
 	int hit = 0;
 	float speed = 1.0f;
 	int speedLevel = 0;
+	std::vector<std::shared_ptr<Ball>> ballList;
 	std::vector<Brick> brick;
 };
 }; // namespace context
