@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "sys/debug.hpp"
 #include "sys/ver.hpp"
+#include "util/hct.hpp"
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 
@@ -16,6 +17,11 @@ void wasmLoop() {
 #endif
 
 int main(int argc, char *argv[]) {
+
+	auto r = util::Rainbow(3);
+	for (const auto &c : r) {
+		spdlog::info("rainbow color {} {} {}", c.r, c.g, c.b);
+	}
 
 	std::srand(std::time(nullptr));
 

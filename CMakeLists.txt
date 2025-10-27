@@ -50,6 +50,12 @@ add_executable(${PROJ}
 	src/render/text.cpp
 	src/physics.cpp
 	src/game.cpp
+	src/game.cpp
+
+	src/util/material/cam.cpp
+	src/util/material/hct_solver.cpp
+	src/util/material/utils.cpp
+	src/util/material/viewing_conditions.cpp
 )
 
 if (EMSCRIPTEN)
