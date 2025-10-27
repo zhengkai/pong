@@ -68,10 +68,7 @@ target_precompile_headers(${PROJ} PRIVATE
 	<cstring>
 	<fmt/format.h>
 	<random>
-	<spdlog/sinks/stdout_color_sinks.h>
-	<spdlog/spdlog.h>
 	<string>
-	<thread>
 	<vector>
 )
 

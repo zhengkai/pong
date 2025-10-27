@@ -1,7 +1,7 @@
 #include "physics.h"
 #include "config.hpp"
-#include "spdlog/spdlog.h"
 #include <box2d/box2d.h>
+#include <spdlog/spdlog.h>
 
 // defualt shape def
 static b2ShapeDef dsd = [] {

@@ -2,6 +2,7 @@
 
 #include "context/entity.h"
 #include "physics.h"
+#include <spdlog/spdlog.h>
 
 struct Region {
 

@@ -16,7 +16,8 @@
     },
     {
       "name": "sdl3-ttf",
-      "features": ["harfbuzz", "svg"]
+      "features": ["harfbuzz", "svg"],
+      "platform": "!wasm32"
     },
     "fmt"
   ],

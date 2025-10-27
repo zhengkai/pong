@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstring>
 #ifndef __EMSCRIPTEN__
 #include <spdlog/async.h>
 #include <spdlog/async_logger.h>
