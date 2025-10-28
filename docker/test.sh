@@ -5,9 +5,7 @@ if [ "${HOSTNAME,,}" != 'doll' ]; then
 	exit
 fi
 
-cd "$(dirname "$(readlink -f "$0")")" || exit 1
-
-DIR="$(dirname "$(pwd)")"
+DIR="$(dirname "$(readlink -f "$0")")" && cd "$DIR" || exit 1
 
 DOCKER_IMAGE="pong"
 
@@ -33,11 +31,3 @@ sudo docker run \
 	--rm \
 	"$DOCKER_IMAGE" \
 	/app/wasm.sh || exit 1
-
-(
-	cd "$BUILD_WASM_DIR" || exit 1
-	../tool/run.sh
-
-	cp pong* /www/pong/
-	../tool/emsdk/upstream/emscripten/emstrip /www/pong/pong.wasm
-)

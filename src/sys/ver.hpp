@@ -38,9 +38,9 @@ static void doShowVer() {
 }
 
 inline bool showVer(int argc, char *argv[]) {
+	doShowVer();
 	for (int i = 1; i < argc; ++i) {
 		if (std::strcmp(argv[i], "--version") == 0) {
-			doShowVer();
 			return true;
 		}
 	}

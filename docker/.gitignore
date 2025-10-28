@@ -1,1 +1,3 @@
 /.prev_commit
+/build
+/build-wasm
