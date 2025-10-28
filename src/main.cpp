@@ -18,11 +18,6 @@ void wasmLoop() {
 
 int main(int argc, char *argv[]) {
 
-	auto r = util::Rainbow(3);
-	for (const auto &c : r) {
-		spdlog::info("rainbow color {} {} {}", c.r, c.g, c.b);
-	}
-
 	std::srand(std::time(nullptr));
 
 	if (showVer(argc, argv)) {

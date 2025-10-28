@@ -168,35 +168,8 @@ void sdl::renderBrick() {
 	for (const auto &b : d.entity->brick) {
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
-		switch (b.region) {
-		case 1:
-			SDL_SetRenderDrawColor(r, 255, 0, 0, 180);
-			break;
-		case 2:
-			SDL_SetRenderDrawColor(r, 0, 0, 255, 180);
-			break;
-		case 3:
-			SDL_SetRenderDrawColor(r, 75, 0, 130, 180);
-			break;
-		case 4:
-			SDL_SetRenderDrawColor(r, 148, 0, 211, 180);
-			break;
-		case 5:
-			SDL_SetRenderDrawColor(r, 0, 206, 209, 180);
-			break;
-		case 6:
-			SDL_SetRenderDrawColor(r, 255, 255, 0, 180);
-			break;
-		case 7:
-			SDL_SetRenderDrawColor(r, 255, 20, 147, 180);
-			break;
-		case 8:
-			SDL_SetRenderDrawColor(r, 255, 127, 0, 180);
-			break;
-		default:
-			SDL_SetRenderDrawColor(r, 0, 255, 0, 180);
-			break;
-		}
+		auto c = d.entity->ballList[b.region]->color;
+		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
 	}
 }
@@ -252,8 +225,6 @@ void sdl::calcGrid(int winW, int winH) {
 	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
 	spdlog::info("h {}*{}={}", gs, cfgGridH, gs * cfgGridH);
 	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
-
-	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
 }
 
 sdl::~sdl() {

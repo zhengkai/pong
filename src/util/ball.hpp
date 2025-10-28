@@ -2,6 +2,7 @@
 
 #include "../config.hpp"
 #include "../context/entity.h"
+#include "hct.hpp"
 #include "rand.hpp"
 #include <box2d/box2d.h>
 #include <numbers>
@@ -25,6 +26,8 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 	std::uniform_real_distribution<float> yDist(0.0f, h - 2.0f);
 
 	li.reserve(count);
+
+	auto rainbow = Rainbow(count);
 
 	int maxAttempts = 1000; // 防止无限循环
 
@@ -56,9 +59,8 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 				.region = region,
 				.pos = pos,
 				.speed = randomSpeedDirection(cfgSpeed),
-			})); // 速度为0
-
-			// spdlog::info("new ball {} pos {} {}", region, pos.x, pos.y);
+				.color = rainbow[region],
+			}));
 		}
 	}
 
