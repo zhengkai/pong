@@ -82,6 +82,8 @@ bool sdl::init() {
 		return false;
 	}
 
+	rainbow = std::make_unique<Rainbow>(r);
+
 	SDL_SetRenderDrawColor(r, 64, 64, 64, 255);
 	SDL_RenderClear(r);
 
@@ -130,7 +132,7 @@ void sdl::renderCounter() {
 void sdl::render() {
 	renderResize();
 
-	SDL_SetRenderDrawColor(r, 16, 64, 128, 64);
+	SDL_SetRenderDrawColor(r, 16, 64, 128, 255);
 	SDL_RenderClear(r);
 
 	renderBrick();
@@ -140,6 +142,8 @@ void sdl::render() {
 			renderBall(b);
 		}
 	}
+
+	rainbow->render(d.entity->ballList, d.window);
 
 	renderCounter();
 	renderControlMsg();
@@ -214,16 +218,18 @@ void sdl::calcGrid(int winW, int winH) {
 	w->w = static_cast<int>(ww);
 	w->h = static_cast<int>(wh);
 
-	float gs = std::floor(
-		ww / cfgGridWF < wh / cfgGridHF ? ww / cfgGridWF : wh / cfgGridHF);
+	float wf = cfgGridWF;
+	float hf = cfgGridHF + cfgPaddingTop;
+
+	float gs = std::floor(ww / wf < wh / hf ? ww / wf : wh / hf);
 
 	w->gridSize = gs;
 	spdlog::info("gridSize = {}, win = {}x{}", gs, winW, winH);
 
-	w->startX = std::floor((ww - (gs * cfgGridW)) / 2);
-	w->startY = std::floor((wh - (gs * cfgGridH)) / 2);
-	spdlog::info("w {}*{}={}", gs, cfgGridW, gs * cfgGridW);
-	spdlog::info("h {}*{}={}", gs, cfgGridH, gs * cfgGridH);
+	w->startX = std::floor((ww - (gs * wf)) / 2);
+	w->startY = std::floor((wh - (gs * hf)) / 2) + (gs * cfgPaddingTop);
+	spdlog::info("w {}*{}={}, window w = {}", gs, cfgGridW, gs * cfgGridW, ww);
+	spdlog::info("h {}*{}={}, window h = {}", gs, cfgGridH, gs * cfgGridH, wh);
 	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
 }
 

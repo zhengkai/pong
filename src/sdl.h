@@ -2,6 +2,7 @@
 
 #include "context/entity.h"
 #include "context/window.h"
+#include "render/rainbow.hpp"
 #include "render/text.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
@@ -22,6 +23,7 @@ private:
 	SDL_Window *w;
 	SDL_Texture *ballTex;
 	sdlDep d;
+	std::unique_ptr<Rainbow> rainbow;
 
 public:
 	sdl(sdlDep dep);

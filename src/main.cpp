@@ -1,7 +1,6 @@
 #include "pong.h"
 #include "sys/debug.hpp"
 #include "sys/ver.hpp"
-#include "util/hct.hpp"
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 
@@ -20,11 +19,11 @@ int main(int argc, char *argv[]) {
 
 	std::srand(std::time(nullptr));
 
+	checkDebug(argc, argv);
+
 	if (showVer(argc, argv)) {
 		return 0;
 	}
-
-	checkDebug(argc, argv);
 
 	Pong p;
 	if (!p.init()) {

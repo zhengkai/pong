@@ -21,10 +21,12 @@ constexpr int cfgWinH = 960;
 constexpr int cfgSpeedLevelMax = 5;
 
 constexpr int cfgGridW = 28;
-constexpr int cfgGridH = 16;
+constexpr int cfgGridH = 17;
 
-constexpr int cfgGridWF = static_cast<float>(cfgGridW);
-constexpr int cfgGridHF = static_cast<float>(cfgGridH);
+constexpr float cfgGridWF = static_cast<float>(cfgGridW);
+constexpr float cfgGridHF = static_cast<float>(cfgGridH);
+
+constexpr float cfgPaddingTop = 0.8f;
 
 constexpr float cfgSpeed = 30.0f;
 
