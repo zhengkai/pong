@@ -2,6 +2,7 @@
 
 #include "../config.hpp"
 #include "../context/entity.h"
+#include "rand.hpp"
 #include <box2d/box2d.h>
 #include <numbers>
 #include <spdlog/spdlog.h>
@@ -19,8 +20,7 @@ inline b2Vec2 randomSpeedDirection(float speed) {
 inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 	float w, float h, int count, float minDistance) {
 	std::vector<std::shared_ptr<context::Ball>> li;
-	std::random_device rd;
-	std::mt19937 gen(rd());
+
 	std::uniform_real_distribution<float> xDist(0.0f, w - 2.0f);
 	std::uniform_real_distribution<float> yDist(0.0f, h - 2.0f);
 
@@ -35,7 +35,7 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 
 		while (!validPosition && attempts < maxAttempts) {
 			attempts++;
-			pos = b2Vec2(xDist(gen) + 1.0f, yDist(gen) + 1.0f);
+			pos = b2Vec2(xDist(rng()) + 1.0f, yDist(rng()) + 1.0f);
 			validPosition = true;
 
 			// 检查与已有球的距离

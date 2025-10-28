@@ -6,6 +6,7 @@
 #include "region.hpp"
 #include "sdl.h"
 #include "util/ball.hpp"
+#include "util/rand.hpp"
 #include <SDL3/SDL_events.h>
 #include <algorithm>
 #include <spdlog/spdlog.h>
@@ -43,8 +44,6 @@ bool Pong::init() {
 		.window = w,
 	};
 
-	std::random_device rd;
-	std::mt19937 grd(rd());
 	std::uniform_int_distribution<int> dist(0, cfgRegionNum - 1);
 
 	int id = 0;
@@ -54,7 +53,7 @@ bool Pong::init() {
 				.id = id,
 				.x = static_cast<float>(x),
 				.y = static_cast<float>(y),
-				.region = dist(grd),
+				.region = dist(util::rng()),
 			});
 			id++;
 		}
@@ -100,11 +99,8 @@ void Pong::loop() {
 		return;
 	}
 
-	std::random_device rd;
-	std::mt19937 g(rd());
-
 	for (int i = 0; i < cfgPhyLoop; i++) {
-		std::shuffle(region.begin(), region.end(), g);
+		std::ranges::shuffle(region.begin(), region.end(), util::rng());
 		for (auto &r : region) {
 			r->update();
 		}

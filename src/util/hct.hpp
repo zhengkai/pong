@@ -2,6 +2,7 @@
 
 #include "material/hct_solver.h"
 #include "material/utils.h"
+#include "rand.hpp"
 #include <SDL3/SDL_pixels.h>
 
 namespace util {
@@ -88,9 +89,11 @@ inline std::vector<SDL_Color> Rainbow(
 
 	std::vector<SDL_Color> li;
 	li.reserve(num);
-	double total = static_cast<double>(num + 1);
+	double step = 360.0 / static_cast<double>(num + 1);
+	double start =
+		std::uniform_real_distribution<double>(0.0, step)(util::rng());
 	for (int i = 0; i < num; ++i) {
-		double hue = static_cast<double>(i) / total * 360.0;
+		double hue = start + static_cast<double>(i) * step;
 		HCT hct(hue, chroma, tone);
 		li.push_back(hct.ToColor());
 	}
