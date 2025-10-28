@@ -23,6 +23,15 @@ constexpr int cfgSpeedLevelMax = 5;
 constexpr int cfgGridW = 28;
 constexpr int cfgGridH = 17;
 
+constexpr int cfgBrickTotal = cfgGridW * cfgGridH;
+
+constexpr float cfgPowerAvg =
+	static_cast<float>(cfgBrickTotal) / static_cast<float>(cfgRegionNum);
+
+constexpr int cfgPowerMin = static_cast<int>(cfgPowerAvg * 0.7f);
+constexpr int cfgPowerMax = static_cast<int>(cfgPowerAvg * 1.3f);
+constexpr double cfgPowerDiff = static_cast<double>(cfgPowerMax - cfgPowerMin);
+
 constexpr float cfgGridWF = static_cast<float>(cfgGridW);
 constexpr float cfgGridHF = static_cast<float>(cfgGridH);
 

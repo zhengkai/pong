@@ -167,6 +167,19 @@ void sdl::renderBrick() {
 
 	auto w = d.window;
 
+	auto bl = d.entity->ballList;
+
+	for (auto &b : bl) {
+		b->power = 0;
+	}
+	for (const auto &b : d.entity->brick) {
+		bl[b.region]->power++;
+	}
+	for (auto &b : bl) {
+		auto power = std::max(0, std::min(cfgPowerMax, b->power) - cfgPowerMin);
+		b->tone = static_cast<double>(power) / cfgPowerDiff * 20.0 + 40.0;
+	}
+
 	SDL_FRect rect;
 	rect.w = w->gridSize;
 	rect.h = w->gridSize;
@@ -174,7 +187,8 @@ void sdl::renderBrick() {
 	for (const auto &b : d.entity->brick) {
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
-		auto c = d.entity->ballList[b.region]->color;
+		auto ball = bl[b.region];
+		auto c = util::HCT(ball->hue, 80, ball->tone).ToColor();
 		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
 	}
@@ -192,7 +206,7 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 
-	auto bc = util::lighten(b->color, 0.5f);
+	auto bc = util::HCT(b->hue, 80, 80).ToColor();
 
 	SDL_SetTextureColorMod(ballTex, bc.r, bc.g, bc.b);
 

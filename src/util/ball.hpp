@@ -59,7 +59,7 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 				.region = region,
 				.pos = pos,
 				.speed = randomSpeedDirection(cfgSpeed),
-				.color = rainbow[region],
+				.hue = rainbow[region],
 			}));
 		}
 	}

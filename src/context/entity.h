@@ -15,7 +15,9 @@ struct Ball {
 	int region = 0;
 	b2Vec2 pos;
 	b2Vec2 speed;
-	SDL_Color color;
+	double hue;
+	double tone = 0;
+	int power = 0;
 };
 
 struct Entity {

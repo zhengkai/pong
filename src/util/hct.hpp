@@ -84,20 +84,19 @@ private:
 	Argb argb_ = 0;
 };
 
-inline std::vector<SDL_Color> Rainbow(int num) {
+inline std::vector<double> Rainbow(int num) {
 
-	std::uniform_real_distribution<double> dist1(70.0, 90.0);
-	std::uniform_real_distribution<double> dist2(50.0, 70.0);
+	// std::uniform_real_distribution<double> dist1(70.0, 90.0);
+	// std::uniform_real_distribution<double> dist2(50.0, 70.0);
 
-	std::vector<SDL_Color> li;
+	std::vector<double> li;
 	li.reserve(num);
 	double step = 360.0 / static_cast<double>(num);
 	double start =
 		std::uniform_real_distribution<double>(0.0, step)(util::rng());
 	for (int i = 0; i < num; ++i) {
 		double hue = start + static_cast<double>(i) * step;
-		HCT hct(hue, dist1(util::rng()), dist2(util::rng()));
-		li.push_back(hct.ToColor());
+		li.push_back(hue);
 	}
 	return li;
 }
