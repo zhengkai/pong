@@ -10,7 +10,7 @@ constexpr int cfgFPS = 60;
 constexpr float cfgFPSF = static_cast<float>(cfgFPS);
 constexpr float cfgFPSDeltaTime = 1.0f / cfgFPSF;
 
-constexpr float cfgBallRadius = 0.65f;
+constexpr float cfgBallRadius = 0.57f;
 
 constexpr int cfgRegionNum = 6;
 constexpr int cfgPhyLoop = 1;

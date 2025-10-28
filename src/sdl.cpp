@@ -3,6 +3,7 @@
 #include "context/entity.h"
 #include "context/window.h"
 #include "render/text.h"
+#include "util/color.hpp"
 #include "util/path.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -98,6 +99,7 @@ bool sdl::init() {
 		return false;
 	}
 	ballTex = SDL_CreateTextureFromSurface(r, surf);
+
 	SDL_DestroySurface(surf);
 
 	if (!ballTex) {
@@ -189,6 +191,11 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 	rect.h = rect.w;
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
+
+	auto bc = util::lighten(b->color, 0.5f);
+
+	SDL_SetTextureColorMod(ballTex, bc.r, bc.g, bc.b);
+
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
 }
 
