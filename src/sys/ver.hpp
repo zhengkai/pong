@@ -7,7 +7,6 @@
 #ifndef __EMSCRIPTEN__
 #include <SDL3_ttf/SDL_ttf.h>
 #endif
-#include <cstdio>
 #include <cstring>
 #include <spdlog/spdlog.h>
 
@@ -35,14 +34,4 @@ static void doShowVer() {
 		GIT_HASH,
 		(strcmp(GIT_DIRTY, "yes") == 0) ? "-dirty" : "");
 	spdlog::info("build time = {}", BUILD_TIMESTAMP);
-}
-
-inline bool showVer(int argc, char *argv[]) {
-	doShowVer();
-	for (int i = 1; i < argc; ++i) {
-		if (std::strcmp(argv[i], "--version") == 0) {
-			return true;
-		}
-	}
-	return false;
 }

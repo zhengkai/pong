@@ -1,5 +1,6 @@
 #include "pong.h"
-#include "sys/debug.hpp"
+#include "sys/arg.hpp"
+#include "sys/spdlog.hpp"
 #include "sys/ver.hpp"
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -17,11 +18,12 @@ void wasmLoop() {
 
 int main(int argc, char *argv[]) {
 
-	std::srand(std::time(nullptr));
+	parseArg(argc, argv);
 
-	checkDebug(argc, argv);
+	spdlogInit();
 
-	if (showVer(argc, argv)) {
+	doShowVer();
+	if (config::versionOnly) {
 		return 0;
 	}
 

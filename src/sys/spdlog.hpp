@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../config.hpp"
 #ifndef __EMSCRIPTEN__
 #include <spdlog/async.h>
 #include <spdlog/async_logger.h>
@@ -7,7 +8,7 @@
 #include <spdlog/spdlog.h>
 #endif
 
-inline bool checkDebug(int argc, char *argv[]) {
+inline void spdlogInit() {
 
 #ifndef __EMSCRIPTEN__
 	spdlog::init_thread_pool(8192, 1);
@@ -29,20 +30,20 @@ inline bool checkDebug(int argc, char *argv[]) {
 
 	bool verbose = false;
 
-	for (int i = 1; i < argc; ++i) {
-		std::string arg = argv[i];
-		if (arg.rfind("--verbose", 0) == 0) {
-			verbose = true;
-			log_level = spdlog::level::debug; // debug 默认
-			if (arg == "--verbose=trace") {
-				log_level = spdlog::level::trace;
-			}
-			break;
-		}
+	if (config::verbose == "trace") {
+		log_level = spdlog::level::trace;
+	} else if (config::verbose == "debug") {
+		log_level = spdlog::level::debug;
+	} else if (config::verbose == "warn") {
+		log_level = spdlog::level::warn;
+	} else if (config::verbose == "err") {
+		log_level = spdlog::level::err;
+	} else if (config::verbose == "critical") {
+		log_level = spdlog::level::critical;
+	} else if (config::verbose == "off") {
+		log_level = spdlog::level::off;
 	}
 
 	spdlog::set_level(log_level);
 	spdlog::set_pattern("%m-%d %H:%M:%S.%e %^[%l]%$ %v");
-
-	return verbose;
 }

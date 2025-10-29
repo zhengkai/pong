@@ -1,5 +1,37 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
+
+namespace config {
+
+inline bool versionOnly = false;
+inline std::string verbose = "info";
+
+inline int regionNum;
+const int regionNumDefault = 6;
+
+inline int gridW;
+inline int gridH;
+
+inline int brickTotal;
+
+inline float powerAvg;
+
+inline int powerMin;
+inline int powerMax;
+inline double powerDiff;
+
+inline void setRegion(int r) {
+	regionNum = r;
+	brickTotal = gridW * gridH;
+	powerAvg = static_cast<float>(brickTotal) / static_cast<float>(regionNum);
+	powerMin = static_cast<int>(powerAvg * 0.7f);
+	powerMax = static_cast<int>(powerAvg * 1.3f);
+	powerDiff = static_cast<double>(powerMax - powerMin);
+};
+
+}; // namespace config
+
 #ifdef __EMSCRIPTEN__
 constexpr bool cfgWASM = true;
 #else

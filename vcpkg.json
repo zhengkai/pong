@@ -5,6 +5,7 @@
     "bzip2",
     "box2d",
     "spdlog",
+    "cli11",
     {
       "name": "sdl3",
       "features": ["alsa", "vulkan"],

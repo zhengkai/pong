@@ -36,11 +36,12 @@ include(cmake/build-info.cmake)
 find_package(box2d CONFIG REQUIRED QUIET)
 find_package(fmt CONFIG REQUIRED QUIET)
 find_package(spdlog CONFIG REQUIRED QUIET)
+find_package(CLI11 CONFIG REQUIRED QUIET)
 
-find_package(SDL3 CONFIG REQUIRED)
-find_package(SDL3_image CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED QUIET)
+find_package(SDL3_image CONFIG REQUIRED QUIET)
 if (NOT EMSCRIPTEN)
-find_package(SDL3_ttf CONFIG REQUIRED)
+find_package(SDL3_ttf CONFIG REQUIRED QUIET)
 endif()
 
 add_executable(${PROJ}
@@ -84,6 +85,7 @@ target_link_libraries(${PROJ} PRIVATE
 	SDL3::SDL3-static
 	SDL3_image::SDL3_image-static
 	spdlog::spdlog
+	CLI11::CLI11
 )
 if (NOT EMSCRIPTEN)
 target_link_libraries(${PROJ} PRIVATE
