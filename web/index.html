@@ -6,14 +6,15 @@
 <link rel="stylesheet" href="/style.css">
 <body>
 
-<div class="loading">loading...</div>
+<div id="loading">loading...</div>
 
 <canvas id="canvas"></canvas>
 
 <script type='text/javascript'>
-const canvasElement = document.getElementById('canvas');
+const ce = document.getElementById('canvas');
+const le = document.getElementById('loading');
 
-canvasElement.addEventListener('webglcontextlost', (e) => {
+ce.addEventListener('webglcontextlost', (e) => {
 	const msg = 'WebGL context lost. You will need to reload the page.';
 	console.error(msg);
 	alert(msg);
@@ -23,19 +24,22 @@ canvasElement.addEventListener('webglcontextlost', (e) => {
 var Module = {
 	arguments: ["-W", "24", "-H", "16", "-r", "6"],
 	print(...args) {
-		console.log(...args);
+		console.log('print', ...args);
 	},
-	canvas: canvasElement,
+	canvas: ce,
 	setStatus(text) {
-		console.info('status:', text);
-		if (text === 'Running...') {
-			document.querySelector('.loading').style.display = 'none';
-			canvas.style.display = 'block';
+		if (text.startsWith('Downloading')) {
+			le.innerText = text;
+			return
+		}
+		if (text.startsWith('Running...')) {
+			le.style.display = 'none';
+			ce.style.display = 'block';
+			return;
 		}
 	},
 	totalDependencies: 0,
 	monitorRunDependencies(left) {
-		console.log('monitorRunDependencies:', left);
 		this.totalDependencies = Math.max(this.totalDependencies, left);
 	}
 };

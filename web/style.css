@@ -7,10 +7,6 @@ html, body {
 	user-select: none;
 }
 
-body {
-	background-color: #000;
-}
-
 html, body, canvas#canvas {
 	margin: 0;
 	padding: 0;
@@ -22,12 +18,13 @@ html, body, canvas#canvas {
 	min-height: 100vh;
 }
 
-div.loading {
+div#loading {
 	margin: 10vh auto;
-	font-size: 16px;
-	color: #333;
-	max-width: 240px;
-	text-align: center;
+	font-size: 3vh;
+	padding-left: 10vh;
+	font-family: monospace;
+	color: #000;
+	text-align: left;
 }
 
 canvas#canvas {
