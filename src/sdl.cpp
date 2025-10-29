@@ -175,10 +175,6 @@ void sdl::renderBrick() {
 	for (const auto &b : d.entity->brick) {
 		bl[b.region]->power++;
 	}
-	for (auto &b : bl) {
-		auto power = std::max(0, std::min(cfgPowerMax, b->power) - cfgPowerMin);
-		b->tone = static_cast<double>(power) / cfgPowerDiff * 20.0 + 40.0;
-	}
 
 	SDL_FRect rect;
 	rect.w = w->gridSize;
@@ -188,7 +184,7 @@ void sdl::renderBrick() {
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
 		auto ball = bl[b.region];
-		auto c = util::HCT(ball->hue, 80, ball->tone).ToColor();
+		auto c = util::HCT(ball->hue, 80, b.tone).ToColor();
 		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
 	}

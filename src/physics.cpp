@@ -42,7 +42,17 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 
 	context::Brick *b = (context::Brick *)ud;
 	b->region = region;
-	// spdlog::trace("contactCheck {}", b->id);
+
+	int cnt = 0;
+	for (auto &eb : d.entity->brick) {
+		if (eb.region == region) {
+			cnt++;
+		}
+	}
+
+	auto power = std::max(0, std::min(cfgPowerMax, cnt) - cfgPowerMin);
+	b->tone = static_cast<double>(power) / cfgPowerDiff * 10.0 + 45.0;
+	// spdlog::info("brick {} {} {} {}", region, b->id, cnt, b->tone);
 	return true;
 }
 

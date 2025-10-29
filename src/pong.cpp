@@ -54,6 +54,7 @@ bool Pong::init() {
 				.x = static_cast<float>(x),
 				.y = static_cast<float>(y),
 				.region = dist(util::rng()),
+				.tone = 50.0,
 			});
 			id++;
 		}

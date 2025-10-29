@@ -9,6 +9,7 @@ struct Brick {
 	float x = 0;
 	float y = 0;
 	int region = 0;
+	double tone = 0;
 };
 
 struct Ball {
