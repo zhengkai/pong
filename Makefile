@@ -6,7 +6,7 @@ default:
 	./run.sh
 
 run:
-	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose
+	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose -r 20
 
 debug:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose
@@ -26,6 +26,9 @@ ver:
 
 pong:
 	./build/pong --pong
+
+small:
+	./build/pong --grid-w=20 --grid-h=16
 
 gdb:
 	gdb ./build/pong

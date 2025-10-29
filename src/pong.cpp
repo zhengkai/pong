@@ -37,28 +37,14 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
-	e->ballList = util::generateBall(cfgGridWF, cfgGridHF, cfgRegionNum, 3);
+	e->ballList = util::generateBall(
+		config::gridWF, config::gridHF, config::regionNum, 3);
+	e->brick = genBrick();
 
 	d = {
 		.entity = e,
 		.window = w,
 	};
-
-	std::uniform_int_distribution<int> dist(0, cfgRegionNum - 1);
-
-	int id = 0;
-	for (int x = 0; x < cfgGridW; x++) {
-		for (int y = 0; y < cfgGridH; y++) {
-			e->brick.push_back({
-				.id = id,
-				.x = static_cast<float>(x),
-				.y = static_cast<float>(y),
-				.region = dist(util::rng()),
-				.tone = 50.0,
-			});
-			id++;
-		}
-	}
 
 	for (auto &b : e->ballList) {
 		region.push_back(std::make_unique<Region>(e, b));
@@ -83,6 +69,29 @@ bool Pong::init() {
 	spdlog::info("sdl init done");
 
 	return true;
+}
+
+std::vector<context::Brick> Pong::genBrick() {
+
+	std::vector<context::Brick> li;
+
+	std::uniform_int_distribution<int> dist(0, config::regionNum - 1);
+
+	int id = 0;
+	for (int x = 0; x < config::gridW; x++) {
+		for (int y = 0; y < config::gridH; y++) {
+			li.push_back({
+				.id = id,
+				.x = static_cast<float>(x),
+				.y = static_cast<float>(y),
+				.region = dist(util::rng()),
+				.tone = 50.0,
+			});
+			id++;
+		}
+	}
+
+	return li;
 }
 
 void Pong::loop() {

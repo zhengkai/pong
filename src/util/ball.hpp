@@ -10,9 +10,11 @@
 
 namespace util {
 
+static std::uniform_real_distribution<float> angleDist(
+	0.0f, 2.0f * std::numbers::pi_v<float>);
+
 inline b2Vec2 randomSpeedDirection(float speed) {
-	float angle = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
-		2.0f * std::numbers::pi_v<float>;
+	float angle = angleDist(rng());
 	float x = std::cos(angle) * speed;
 	float y = std::sin(angle) * speed;
 	return b2Vec2(x, y);
@@ -54,14 +56,15 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 			}
 		}
 
-		if (validPosition) {
-			li.push_back(std::make_shared<context::Ball>(context::Ball{
-				.region = region,
-				.pos = pos,
-				.speed = randomSpeedDirection(cfgSpeed),
-				.hue = rainbow[region],
-			}));
+		if (!validPosition) {
+			continue;
 		}
+		li.push_back(std::make_shared<context::Ball>(context::Ball{
+			.region = region,
+			.pos = pos,
+			.speed = randomSpeedDirection(cfgSpeed),
+			.hue = rainbow[region],
+		}));
 	}
 
 	return li;

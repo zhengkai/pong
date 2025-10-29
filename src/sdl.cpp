@@ -3,7 +3,6 @@
 #include "context/entity.h"
 #include "context/window.h"
 #include "render/text.h"
-#include "util/color.hpp"
 #include "util/path.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -235,8 +234,8 @@ void sdl::calcGrid(int winW, int winH) {
 	w->w = static_cast<int>(ww);
 	w->h = static_cast<int>(wh);
 
-	float wf = cfgGridWF;
-	float hf = cfgGridHF + cfgPaddingTop;
+	float wf = config::gridWF;
+	float hf = config::gridHF + cfgPaddingTop;
 
 	float gs = std::floor(ww / wf < wh / hf ? ww / wf : wh / hf);
 
@@ -245,8 +244,10 @@ void sdl::calcGrid(int winW, int winH) {
 
 	w->startX = std::floor((ww - (gs * wf)) / 2);
 	w->startY = std::floor((wh - (gs * hf)) / 2) + (gs * cfgPaddingTop);
-	spdlog::info("w {}*{}={}, window w = {}", gs, cfgGridW, gs * cfgGridW, ww);
-	spdlog::info("h {}*{}={}, window h = {}", gs, cfgGridH, gs * cfgGridH, wh);
+	spdlog::info(
+		"w {}*{}={}, window w = {}", gs, config::gridW, gs * config::gridW, ww);
+	spdlog::info(
+		"h {}*{}={}, window h = {}", gs, config::gridH, gs * config::gridH, wh);
 	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
 }
 

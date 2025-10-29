@@ -50,8 +50,9 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 		}
 	}
 
-	auto power = std::max(0, std::min(cfgPowerMax, cnt) - cfgPowerMin);
-	b->tone = static_cast<double>(power) / cfgPowerDiff * 10.0 + 45.0;
+	auto power =
+		std::max(0, std::min(config::powerMax, cnt) - config::powerMin);
+	b->tone = static_cast<double>(power) / config::powerDiff * 10.0 + 45.0;
 	// spdlog::info("brick {} {} {} {}", region, b->id, cnt, b->tone);
 	return true;
 }
@@ -146,8 +147,8 @@ void Physics::createWall() {
 	bd.type = b2_staticBody;
 	b2BodyId wall = b2CreateBody(world, &bd);
 
-	float left = 0.0f, right = static_cast<float>(cfgGridW);
-	float top = 0.0f, bottom = static_cast<float>(cfgGridH);
+	float left = 0.0f, right = config::gridWF;
+	float top = 0.0f, bottom = config::gridHF;
 
 	b2Segment seg;
 

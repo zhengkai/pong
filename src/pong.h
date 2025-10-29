@@ -21,6 +21,9 @@ private:
 	Game *g;
 	std::vector<std::unique_ptr<Region>> region;
 
+private:
+	std::vector<context::Brick> genBrick();
+
 public:
 	bool stop;
 	Pong();
@@ -28,4 +31,5 @@ public:
 	void loop();
 	void run();
 	bool init();
+	bool initBrick();
 };
