@@ -6,4 +6,6 @@
 
 由于一切都在学习中，有些实现看起来非常蠢
 
-基于 [box2d](https://box2d.org/)、[SDL3](https://wiki.libsdl.org/SDL3/FrontPage)，使用了 [cmake](https://cmake.org/) 和 [vcpkg](https://vcpkg.io/) 进行构建和依赖管理。在 linxu 和 wasm 上编译通过。
+方向键可以调整速度，空格键可以切换是否显示球体
+
+基于 [box2d](https://box2d.org/)、[SDL3](https://wiki.libsdl.org/SDL3/FrontPage)，使用了 [cmake](https://cmake.org/) 和 [vcpkg](https://vcpkg.io/) 进行构建和依赖管理。在 linxu 和 wasm 上编译通过
