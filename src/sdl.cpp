@@ -194,9 +194,9 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 	auto w = d.window;
 
 	SDL_FRect rect;
-	rect.x = w->startX + (b->pos.x - cfgBallRadius) * w->gridSize;
-	rect.y = w->startY + (b->pos.y - cfgBallRadius) * w->gridSize;
-	rect.w = w->gridSize * cfgBallRadius / 0.5f;
+	rect.x = w->startX + (b->pos.x - config::ballRadius) * w->gridSize;
+	rect.y = w->startY + (b->pos.y - config::ballRadius) * w->gridSize;
+	rect.w = w->gridSize * config::ballRadius / 0.5f;
 	rect.h = rect.w;
 
 	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);

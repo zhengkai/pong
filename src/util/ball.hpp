@@ -62,7 +62,7 @@ inline std::vector<std::shared_ptr<context::Ball>> generateBall(
 		li.push_back(std::make_shared<context::Ball>(context::Ball{
 			.region = region,
 			.pos = pos,
-			.speed = randomSpeedDirection(cfgSpeed),
+			.speed = randomSpeedDirection(config::speed),
 			.hue = rainbow[region],
 		}));
 	}

@@ -1,6 +1,7 @@
 #include "physics.h"
 #include "config.hpp"
 #include "context/entity.h"
+#include "util/rand.hpp"
 #include <box2d/box2d.h>
 #include <spdlog/spdlog.h>
 
@@ -103,18 +104,38 @@ void Physics::_update(float deltaTime) {
 		v.y *= 100.0f;
 	}
 
-	float speed = std::sqrt(v.x * v.x + v.y * v.y);
+	if (config::classic) {
 
-	if (speed != cfgSpeed) {
-		b2Body_SetLinearVelocity(
-			ballBody, b2Vec2{v.x / speed * cfgSpeed, v.y / speed * cfgSpeed});
+		if (v.x < 0.0f) {
+			v.x = -config::speedClassic;
+		} else if (v.x == 0.0f) {
+			v.x =
+				util::randBool() ? config::speedClassic : -config::speedClassic;
+		} else {
+			v.x = config::speedClassic;
+		}
+		if (v.y < 0.0f) {
+			v.y = -config::speedClassic;
+		} else if (v.y == 0.0f) {
+			v.y =
+				util::randBool() ? config::speedClassic : -config::speedClassic;
+		} else {
+			v.y = config::speedClassic;
+		}
+		b2Body_SetLinearVelocity(ballBody, v);
+	} else {
+		float speed = std::sqrt(v.x * v.x + v.y * v.y);
+		if (speed != config::speed) {
+			b2Body_SetLinearVelocity(ballBody,
+				b2Vec2{
+					v.x / speed * config::speed, v.y / speed * config::speed});
+		}
+		spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
+			region,
+			p.x,
+			p.y,
+			speed);
 	}
-
-	spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
-		region,
-		p.x,
-		p.y,
-		speed);
 }
 
 b2BodyId Physics::createBall() {
@@ -126,7 +147,7 @@ b2BodyId Physics::createBall() {
 
 	b2Circle circle = {
 		.center = {0.0f, 0.0f},
-		.radius = cfgBallRadius,
+		.radius = config::ballRadius,
 	};
 	b2ShapeId ballShape = b2CreateCircleShape(bb, &dsd, &circle);
 	b2Shape_SetRestitution(ballShape, 1.0f);

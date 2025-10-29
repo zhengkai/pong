@@ -9,6 +9,10 @@ inline int parseArg(int argc, char **argv) {
 
 	app.add_flag("-v,--version", config::versionOnly, "Print version only");
 
+	app.add_flag("-c,--classic",
+		config::classic,
+		"Classic mode (like \"vnglst/pong-wars\")");
+
 	int regionNum;
 	app.add_option("-r,--region-num", regionNum, "Region number")
 		->default_val(config::regionNumDefault)
@@ -23,8 +27,9 @@ inline int parseArg(int argc, char **argv) {
 		->default_val(config::gridHDefault)
 		->check(CLI::Range(10, 100));
 
-	app.add_option(
-		   "--verbose", config::verbose, "Verbose level (info/debug/trace)")
+	app.add_option("--verbose",
+		   config::verbose,
+		   "Verbose level (info, debug, trace, warn, err, critical, off)")
 		->default_val("info")
 		->expected(0, 1)
 		->check(CLI::IsMember(

@@ -39,7 +39,8 @@ bool Game::parse() {
 
 	if (input->speed != 0) {
 		int slv = d.entity->speedLevel + input->speed;
-		slv = std::max(-cfgSpeedLevelMax, std::min(cfgSpeedLevelMax, slv));
+		slv = std::max(
+			-config::speedLevelMax, std::min(config::speedLevelMax, slv));
 		d.entity->speedLevel = slv;
 		d.entity->speed = std::pow(2, slv);
 
