@@ -63,10 +63,10 @@ bool Pong::init() {
 	spdlog::info("pong start");
 
 	if (!s->init()) {
-		spdlog::info("sdl init failed");
+		spdlog::error("sdl init failed");
 		return false;
 	}
-	spdlog::info("sdl init done");
+	spdlog::trace("sdl init done");
 
 	return true;
 }

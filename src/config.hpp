@@ -1,5 +1,6 @@
 #pragma once
 
+#include <numbers>
 #include <spdlog/spdlog.h>
 
 namespace config {

@@ -31,7 +31,7 @@ void sdl::initWinSize() {
 		return;
 	}
 
-	spdlog::info("win get size {} {}", mode->w, mode->h);
+	spdlog::info("desktop get size {}x{}", mode->w, mode->h);
 
 	d.window->w = std::min(cfgWinW, mode->w);
 	d.window->h = std::min(cfgWinH, mode->h);
@@ -67,7 +67,6 @@ bool sdl::init() {
 
 	SDL_DestroyProperties(props);
 
-	spdlog::info("win create size {} {}", d.window->w, d.window->h);
 	if (!w) {
 		SDL_Fail();
 		return false;
@@ -115,7 +114,7 @@ bool sdl::init() {
 
 	text = new Text();
 	if (text->init(r)) {
-		spdlog::info("text inited");
+		spdlog::trace("text inited");
 	} else {
 		spdlog::error("Failed to init text");
 		return false;
@@ -243,16 +242,22 @@ void sdl::calcGrid(int winW, int winH) {
 	spdlog::info("gridSize = {}, win = {}x{}", gs, winW, winH);
 
 	w->startX = std::floor((ww - (gs * wf)) / 2);
-	w->startY = std::floor((wh - (gs * hf)) / 2) + (gs * cfgPaddingTop);
+	w->startY = std::floor((wh - (gs * hf)) / 2 + (gs * cfgPaddingTop));
 	spdlog::info(
-		"w {}*{}={}, window w = {}", gs, config::gridW, gs * config::gridW, ww);
-	spdlog::info(
-		"h {}*{}={}, window h = {}", gs, config::gridH, gs * config::gridH, wh);
-	spdlog::info("startX = {}, startY = {}", w->startX, w->startY);
+		"grid {}x{}={}, grid pixel: {}x{}, win pixel: {}x{}, start: x={},y={}",
+		config::gridW,
+		config::gridH,
+		config::gridW * config::gridH,
+		gs * config::gridW,
+		gs * config::gridH,
+		w->w,
+		w->h,
+		w->startX,
+		w->startY);
 }
 
 sdl::~sdl() {
-	spdlog::info("sdl::~sdl");
+	spdlog::trace("sdl::~sdl");
 	if (text) {
 		delete text;
 		text = nullptr;
