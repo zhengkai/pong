@@ -11,7 +11,7 @@ DOCKER_IMAGE="pong"
 set -x
 sudo docker run \
 	-it \
-	--name "pong-cicd" \
+	--name "pong-cicd-it" \
 	--mount "type=bind,source=${DIR}/build,target=/app/build" \
 	--rm \
 	"$DOCKER_IMAGE" \

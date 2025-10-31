@@ -7,10 +7,19 @@ if [ -n "$DIRTY" ]; then
 	>&2 echo "dirty git, exit"
 	exit 1
 fi
+
+LOCK_FILE=".build.lock"
+exec 200>"$LOCK_FILE"
+flock -n 200 || {
+    echo "$0 is running, exit"
+    exit
+}
+echo $$ > "$LOCK_FILE"
+
 git pull --rebase || exit 1
 
 PREV_COMMIT=""
-COMMIT_FILE=".prev_commit"
+COMMIT_FILE=".prev-commit"
 if [ -f "$COMMIT_FILE" ]; then
 	PREV_COMMIT="$(< "$COMMIT_FILE")"
 fi
@@ -21,12 +30,9 @@ if [ "$PREV_COMMIT" == "$COMMIT" ]; then
 	exit 0
 fi
 
-sudo docker pull ubuntu:24.04
 sudo docker build \
 	--progress=plain -t \
 	pong \
 	-f Dockerfile .. || exit 1
 
-./test.sh || exit 1
-
-echo "$COMMIT" > "$COMMIT_FILE"
+echo "$COMMIT" | tee "$COMMIT_FILE"

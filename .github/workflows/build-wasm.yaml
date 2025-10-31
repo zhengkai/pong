@@ -1,22 +1,18 @@
 name: Build WASM
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - master
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Master
-        uses: actions/checkout@v4
-        with:
-          path: main
-
-      - name: Checkout Save Github Pages
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.CERT_REPO_TOKEN }}
-          path: main/gh-pages
+      - name: Checkout
+        run: |
+          git clone --depth 1 "https://x-access-token:${{ secrets.PONG_TOKEN }}@github.com/zhengkai/pong.git" main && \
+          git clone --branch gh-pages "https://x-access-token:${{ secrets.PONG_TOKEN }}@github.com/zhengkai/pong.git" main/gh-pages
 
       - name: Install Dependencies
         run: |
@@ -32,6 +28,7 @@ jobs:
           curl \
           curl \
           git \
+          imagemagick \
           libegl1-mesa-dev \
           libibus-1.0-dev \
           libltdl-dev \
@@ -73,8 +70,9 @@ jobs:
         working-directory: main
 
       - name: Save Github Pages
-        uses: devops-infra/action-commit-push@v1.0.3
-        with:
-          amend: true
-          force: true
-          path: main/gh-pages
+        run: |
+          cd main/gh-pages && \
+          git config user.name "Github Actions Bot" && \
+          git config user.email "pong.bot@soulogic.com" && \
+          git commit --message="Update WASM build" --amend || echo "No changes to commit" && \
+          git push --force

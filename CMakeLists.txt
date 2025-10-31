@@ -60,6 +60,8 @@ add_executable(${PROJ}
 )
 
 if (EMSCRIPTEN)
+	set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	set_target_properties(${PROJ} PROPERTIES SUFFIX ".html")
 endif()
 

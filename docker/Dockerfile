@@ -1,4 +1,4 @@
-FROM ubuntu:25.04
+FROM ubuntu:25.10
 
 ENV DEBIAN_FRONTEND="noninteractive" \
     TZ="Asia/Shanghai" \
@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	curl \
 	curl \
 	git \
+	imagemagick \
 	libc6-dev \
 	libegl1-mesa-dev \
 	libibus-1.0-dev \
@@ -55,5 +56,7 @@ RUN ./tool/run.sh
 RUN ./tool/vcpkg/vcpkg install --triplet x64-linux
 
 COPY . .
+
+RUN ./misc/gen-circle.sh
 
 CMD ["run.sh"]

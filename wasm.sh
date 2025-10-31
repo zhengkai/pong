@@ -41,4 +41,10 @@ if [ -d "gh-pages" ]; then
 		cp ../build-wasm/pong.js .
 		../tool/emsdk/upstream/emscripten/emstrip pong.wasm
 	)
+else
+	(
+		cd build-wasm || exit 1
+		cp pong.wasm pong-strip.wasm
+		../tool/emsdk/upstream/emscripten/emstrip pong-strip.wasm
+	)
 fi
