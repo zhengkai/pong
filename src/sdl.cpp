@@ -262,6 +262,11 @@ sdl::~sdl() {
 		delete text;
 		text = nullptr;
 	}
+
+	if (ballTex) {
+		SDL_DestroyTexture(ballTex);
+		ballTex = nullptr;
+	}
 	if (r) {
 		SDL_DestroyRenderer(r);
 		r = nullptr;

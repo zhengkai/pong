@@ -17,8 +17,8 @@ class Pong {
 private:
 	PongDeps d;
 	std::unique_ptr<Time> t;
-	sdl *s;
-	Game *g;
+	std::unique_ptr<sdl> s;
+	std::unique_ptr<Game> g;
 	std::vector<std::unique_ptr<Region>> region;
 
 private:

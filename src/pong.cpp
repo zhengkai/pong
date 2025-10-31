@@ -19,14 +19,6 @@ Pong::Pong() : stop(false), t(std::make_unique<Time>()) {
 
 Pong::~Pong() {
 	stop = true;
-	if (s) {
-		delete s;
-		s = nullptr;
-	}
-	if (g) {
-		delete g;
-		g = nullptr;
-	}
 }
 
 bool Pong::init() {
@@ -46,12 +38,12 @@ bool Pong::init() {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
 
-	g = new Game({
+	g = std::make_unique<Game>(GameDep{
 		.entity = e,
 		.window = w,
 	});
 
-	s = new sdl({
+	s = std::make_unique<sdl>(sdlDep{
 		.entity = e,
 		.window = w,
 	});
