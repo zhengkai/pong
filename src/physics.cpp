@@ -41,6 +41,8 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 		return false;
 	}
 
+	ball->hit = true;
+
 	context::Brick *b = (context::Brick *)ud;
 	b->region = region;
 
@@ -59,6 +61,8 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 }
 
 void Physics::update() {
+
+	ball->hit = false;
 
 	float speed = d.entity->speed;
 	if (speed < 1.0f) {

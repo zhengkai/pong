@@ -32,7 +32,8 @@ public:
 		for (const auto &b : ballList) {
 			rect.x = window->startX + size * i;
 			i++;
-			auto c = util::HCT(b->hue, 80, 60).ToColor();
+			double tone = b->hit ? 80.0 : 60.0;
+			auto c = util::HCT(b->hue, 80, tone).ToColor();
 			SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 			SDL_RenderFillRect(r, &rect);
 		}

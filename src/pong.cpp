@@ -14,15 +14,11 @@
 #include <emscripten.h>
 #endif
 
-Pong::Pong() : stop(false), t(new Time()) {
+Pong::Pong() : stop(false), t(std::make_unique<Time>()) {
 }
 
 Pong::~Pong() {
 	stop = true;
-	if (t) {
-		delete t;
-		t = nullptr;
-	}
 	if (s) {
 		delete s;
 		s = nullptr;
