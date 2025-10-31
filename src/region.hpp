@@ -24,7 +24,7 @@ public:
 	~Region() {
 		spdlog::trace("region destory {}", id);
 	}
-	void update() {
-		phy->update();
+	void update(float dt) {
+		phy->update(dt);
 	}
 };

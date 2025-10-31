@@ -16,7 +16,7 @@ static SDL_AppResult SDL_Fail() {
 
 sdl::sdl(sdlDep dep) : w(nullptr), r(nullptr), d(std::move(dep)) {
 	for (const auto &b : d.entity->brick) {
-		spdlog::trace("brick {} {:.0f} {:.0f} {}", b.id, b.x, b.y, b.region);
+		// spdlog::trace("brick {} {:.0f} {:.0f} {}", b.id, b.x, b.y, b.region);
 	}
 }
 
@@ -198,7 +198,7 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 	rect.w = w->gridSize * config::ballRadius / 0.5f;
 	rect.h = rect.w;
 
-	spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
+	// spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 
 	auto bc = util::HCT(b->hue, 80, 80).ToColor();
 

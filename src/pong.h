@@ -19,6 +19,7 @@ private:
 	std::unique_ptr<Time> t;
 	std::unique_ptr<sdl> s;
 	std::unique_ptr<Game> g;
+	steady_clock::time_point prev;
 	std::vector<std::unique_ptr<Region>> region;
 
 private:

@@ -86,7 +86,12 @@ void Pong::loop() {
 
 	d.window->serial++;
 
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+	auto now = steady_clock::now();
+	auto dt = duration<float>(now - prev).count();
+	prev = now;
+#else
+	float dt = cfgFPSDeltaTime;
 	t->tick();
 #endif
 
@@ -97,10 +102,11 @@ void Pong::loop() {
 		return;
 	}
 
+	spdlog::trace("dt = {:.6f}s", dt);
 	for (int i = 0; i < cfgPhyLoop; i++) {
 		std::ranges::shuffle(region.begin(), region.end(), util::rng());
 		for (auto &r : region) {
-			r->update();
+			r->update(dt);
 		}
 	}
 

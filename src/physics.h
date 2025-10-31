@@ -27,7 +27,7 @@ public:
 	Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b);
 	~Physics();
 
-	void update();
+	void update(float dt);
 
 private:
 	void _update(float deltaTime);

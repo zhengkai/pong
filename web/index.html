@@ -8,11 +8,39 @@
 
 <div id="loading">loading...</div>
 
+<div id="debug"></div>
+
 <canvas id="canvas"></canvas>
 
 <script type='text/javascript'>
 const ce = document.getElementById('canvas');
 const le = document.getElementById('loading');
+const de = document.getElementById('debug');
+
+let gs = 50;
+if (window.innerWidth < 600) {
+	gs = 30;
+	if (window.innerWidth < 400) {
+		gs = 20;
+	}
+}
+
+const gw = Math.max(14, (window.innerWidth / 50) | 0);
+const gh = Math.max(14, (window.innerHeight / 50) | 0);
+const region = Math.floor(gw * gh / 80);
+let arg = ["-W", gw, "-H", gh, "-r", region];
+const query = window.location.search;
+let debug = false;
+if (query.includes('debug')) {
+	debug = true;
+}
+if (query.includes('trace')) {
+	debug = true;
+	arg.push('--verbose=trace');
+}
+if (query.includes('classic')) {
+	arg.push('--classic');
+}
 
 ce.addEventListener('webglcontextlost', (e) => {
 	const msg = 'WebGL context lost. You will need to reload the page.';
@@ -21,10 +49,26 @@ ce.addEventListener('webglcontextlost', (e) => {
 	e.preventDefault();
 }, false);
 
+arg = arg.map(v => `${v}`);
+console.log('Arguments:', arg);
+
 var Module = {
-	arguments: ["-W", "24", "-H", "16", "-r", "5"],
+	arguments: arg,
 	print(...args) {
-		console.log('print', ...args);
+		if (!args.length) {
+			return;
+		}
+		if (args[0].substring(18, 27) !== ' [trace] ') {
+			console.log(...args);
+		}
+		if (debug) {
+			const p = document.createElement('p');
+			p.innerText = args.join(' ');
+			de.appendChild(p);
+			while (de.children.length > 20) {
+				de.removeChild(de.firstElementChild);
+			}
+		}
 	},
 	canvas: ce,
 	setStatus(text) {
@@ -35,6 +79,9 @@ var Module = {
 		if (text.startsWith('Running...')) {
 			le.style.display = 'none';
 			ce.style.display = 'block';
+			if (debug) {
+				de.style.display = 'block';
+			}
 			return;
 		}
 	},
@@ -53,7 +100,7 @@ window.onerror = (event) => {
 		}
 	};
 };
-</script>
-<script async type="text/javascript" src="pong.js"></script>
-</body>
+			</script>
+			<script async type="text/javascript" src="pong.js"></script>
+		</body>
 </html>

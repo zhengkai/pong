@@ -60,7 +60,7 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 	return true;
 }
 
-void Physics::update() {
+void Physics::update(float dt) {
 
 	ball->hit = false;
 
@@ -134,11 +134,8 @@ void Physics::_update(float deltaTime) {
 				b2Vec2{
 					v.x / speed * config::speed, v.y / speed * config::speed});
 		}
-		spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
-			region,
-			p.x,
-			p.y,
-			speed);
+		// spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
+		// region, p.x, p.y, speed);
 	}
 }
 

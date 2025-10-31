@@ -7,6 +7,10 @@ html, body {
 	user-select: none;
 }
 
+* {
+	font-family: monospace;
+}
+
 html, body, canvas#canvas {
 	margin: 0;
 	padding: 0;
@@ -22,11 +26,30 @@ div#loading {
 	margin: 10vh auto;
 	font-size: 3vh;
 	padding-left: 10vh;
-	font-family: monospace;
 	color: #000;
 	text-align: left;
 }
 
 canvas#canvas {
 	display: none;
+}
+
+div#debug {
+	position: fixed;
+	top: 50px;
+	left: 0;
+	width: 100%;
+	padding: 8px;
+	z-index: 9999;
+	pointer-events: none;
+	color: #fff;
+	p {
+		margin: 0;
+		line-height: 1.75;
+		text-shadow:
+			1px 1px 0 #000,
+			-1px 1px 0 #000,
+			1px -1px 0 #000,
+			-1px -1px 0 #000;
+	}
 }
