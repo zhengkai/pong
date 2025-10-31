@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	curl \
 	curl \
 	git \
+	libc6-dev \
 	libegl1-mesa-dev \
 	libibus-1.0-dev \
 	libltdl-dev \

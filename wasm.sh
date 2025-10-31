@@ -12,7 +12,7 @@ fi
 
 PRELOAD_FILE=(
 	"circle.webp"
-	"JetBrainsMono-Regular.otf"
+	# "JetBrainsMono-Regular.otf"
 )
 PRELOAD_ARG=""
 for file in "${PRELOAD_FILE[@]}"; do
