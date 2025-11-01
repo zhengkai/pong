@@ -10,6 +10,7 @@
 #include <memory>
 
 struct sdlDep {
+	std::shared_ptr<context::BallCluster> ballCluster;
 	std::shared_ptr<context::Entity> entity;
 	std::shared_ptr<context::Window> window;
 };
@@ -37,7 +38,7 @@ private:
 	void renderControlMsg();
 	void renderCounter();
 	void renderResize();
-	void renderBall(std::shared_ptr<context::Ball> b);
+	void renderBall(std::shared_ptr<context::Ball> b, double hue);
 	void renderBrick();
 	void calcGrid(int winW, int winH);
 	void initWinSize();

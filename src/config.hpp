@@ -19,7 +19,9 @@ constexpr float ballRadius = 0.57f;
 const float speed = 30.0f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
 
+inline std::vector<int> region;
 inline int regionNum;
+inline int ballNum;
 const int regionNumDefault = 6;
 
 const int gridWDefault = 60;
@@ -48,11 +50,16 @@ inline void setGrid(int w, int h) {
 	gridHF = static_cast<float>(gridH);
 }
 
-inline void setRegion(int r) {
-	regionNum = r;
-	powerAvg = static_cast<float>(brickTotal) / static_cast<float>(regionNum);
-	powerMin = static_cast<int>(powerAvg * 0.7f);
-	powerMax = static_cast<int>(powerAvg * 1.3f);
+inline void setRegion(std::vector<int> r) {
+	region = r;
+	regionNum = static_cast<int>(region.size());
+	ballNum = 0;
+	for (int i = 0; i < regionNum; i++) {
+		ballNum += region[i];
+	}
+	powerAvg = static_cast<float>(brickTotal) / static_cast<float>(ballNum);
+	powerMin = static_cast<int>(powerAvg / 1.5f);
+	powerMax = static_cast<int>(powerAvg * 1.5f);
 	powerDiff = static_cast<double>(powerMax - powerMin);
 };
 

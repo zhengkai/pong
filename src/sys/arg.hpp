@@ -2,6 +2,7 @@
 
 #include "../config.hpp"
 #include <CLI/CLI.hpp>
+#include <numbers>
 #include <spdlog/spdlog.h>
 
 inline int parseArg(int argc, char **argv) {
@@ -13,10 +14,8 @@ inline int parseArg(int argc, char **argv) {
 		config::classic,
 		"Classic mode (like \"vnglst/pong-wars\")");
 
-	int regionNum;
-	app.add_option("-r,--region-num", regionNum, "Region number")
-		->default_val(config::regionNumDefault)
-		->check(CLI::Range(2, 100));
+	std::vector<int> region;
+	app.add_option("-r,--region", region, "Region number")->delimiter(',');
 
 	int w;
 	app.add_option("-W,--grid-w", w, "Grid width")
@@ -37,8 +36,16 @@ inline int parseArg(int argc, char **argv) {
 
 	CLI11_PARSE(app, argc, argv);
 
+	int rsize = region.size();
+	if (rsize == 0) {
+		region = std::vector<int>(5, 1);
+	} else if (rsize == 1) {
+		rsize = std::max(std::min(region[0], 99), 2);
+		region = std::vector<int>(rsize, 1);
+	}
+
 	config::setGrid(w, h);
-	config::setRegion(regionNum);
+	config::setRegion(region);
 
 	return 0;
 }

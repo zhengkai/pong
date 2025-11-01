@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../config.hpp"
-#include "../context/entity.h"
+#include "../context/ball.h"
 #include "hct.hpp"
 #include "rand.hpp"
 #include <box2d/box2d.h>
@@ -20,53 +19,33 @@ inline b2Vec2 randomSpeedDirection(float speed) {
 	return b2Vec2(x, y);
 };
 
-inline std::vector<std::shared_ptr<context::Ball>> generateBall(
-	float w, float h, int count, float minDistance) {
-	std::vector<std::shared_ptr<context::Ball>> li;
+std::vector<std::shared_ptr<context::BallGroup>> genBallGroupList(
+	float w, float h, std::vector<int> numLi) {
 
-	std::uniform_real_distribution<float> xDist(0.0f, w - 2.0f);
-	std::uniform_real_distribution<float> yDist(0.0f, h - 2.0f);
+	std::vector<std::shared_ptr<context::BallGroup>> re;
+	re.reserve(numLi.size());
 
-	li.reserve(count);
+	std::uniform_real_distribution<float> xDist(1.0f, w - 1.0f);
+	std::uniform_real_distribution<float> yDist(1.0f, h - 1.0f);
+	std::uniform_real_distribution<float> speedDist(-10.0f, 10.0f);
 
-	auto rainbow = Rainbow(count);
+	auto rainbow = Rainbow(numLi.size());
 
-	int maxAttempts = 1000; // 防止无限循环
-
-	for (int region = 0; region < count; ++region) {
-		b2Vec2 pos;
-		bool validPosition = false;
-		int attempts = 0;
-
-		while (!validPosition && attempts < maxAttempts) {
-			attempts++;
-			pos = b2Vec2(xDist(rng()) + 1.0f, yDist(rng()) + 1.0f);
-			validPosition = true;
-
-			// 检查与已有球的距离
-			for (const auto &ball : li) {
-				float dx = pos.x - ball->pos.x;
-				float dy = pos.y - ball->pos.y;
-				float distance = std::sqrt(dx * dx + dy * dy);
-
-				if (distance < minDistance) {
-					validPosition = false;
-					break;
-				}
-			}
+	int region = 0;
+	for (int n : numLi) {
+		n = std::max(1, std::min(n, 10));
+		auto g = std::make_shared<context::BallGroup>();
+		g->region = region;
+		g->hue = rainbow[region];
+		for (int i = 0; i < n; i++) {
+			auto b = std::make_shared<context::Ball>();
+			b->pos = b2Vec2(xDist(util::rng()), yDist(util::rng()));
+			b->speed = b2Vec2(speedDist(util::rng()), speedDist(util::rng()));
+			g->list.push_back(b);
 		}
-
-		if (!validPosition) {
-			continue;
-		}
-		li.push_back(std::make_shared<context::Ball>(context::Ball{
-			.region = region,
-			.pos = pos,
-			.speed = randomSpeedDirection(config::speed),
-			.hue = rainbow[region],
-		}));
+		re.push_back(g);
+		region++;
 	}
-
-	return li;
+	return re;
 };
-} // namespace util
+}; // namespace util

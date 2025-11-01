@@ -1,11 +1,13 @@
 #include "pong.h"
 #include "config.hpp"
+#include "context/ball.h"
 #include "context/entity.h"
 #include "context/window.h"
 #include "game.h"
 #include "region.hpp"
 #include "sdl.h"
 #include "util/ball.hpp"
+#include "util/print.hpp"
 #include "util/rand.hpp"
 #include <SDL3/SDL_events.h>
 #include <algorithm>
@@ -25,16 +27,20 @@ bool Pong::init() {
 
 	auto e = std::make_shared<context::Entity>();
 	auto w = std::make_shared<context::Window>();
-	e->ballList = util::generateBall(
-		config::gridWF, config::gridHF, config::regionNum, 3);
+	auto bc = std::make_shared<context::BallCluster>();
+
+	bc->group =
+		util::genBallGroupList(config::gridWF, config::gridHF, config::region);
+
 	e->brick = genBrick();
 
 	d = {
+		.ballCluster = bc,
 		.entity = e,
 		.window = w,
 	};
 
-	for (auto &b : e->ballList) {
+	for (auto &b : bc->group) {
 		region.push_back(std::make_unique<Region>(e, b));
 	}
 
@@ -44,6 +50,7 @@ bool Pong::init() {
 	});
 
 	s = std::make_unique<sdl>(sdlDep{
+		.ballCluster = bc,
 		.entity = e,
 		.window = w,
 	});
@@ -55,6 +62,10 @@ bool Pong::init() {
 		return false;
 	}
 	spdlog::trace("sdl init done");
+
+	spdlog::info("region num = {}, list = {}",
+		config::regionNum,
+		util::joinVector(config::region));
 
 	return true;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../config.hpp"
-#include "../context/entity.h"
+#include "../context/ball.h"
 #include "../context/window.h"
 #include "../util/hct.hpp"
 #include <SDL3/SDL_render.h>
@@ -16,7 +16,7 @@ public:
 	Rainbow(SDL_Renderer *r) : r(r) {};
 	~Rainbow() {};
 
-	void render(std::vector<std::shared_ptr<context::Ball>> ballList,
+	void render(std::vector<std::shared_ptr<context::BallGroup>> bl,
 		std::shared_ptr<context::Window> window) {
 
 		auto rainbow = util::Rainbow(10);
@@ -29,7 +29,7 @@ public:
 		rect.y = window->startY - size;
 
 		float i = 0.0f;
-		for (const auto &b : ballList) {
+		for (const auto &b : bl) {
 			rect.x = window->startX + size * i;
 			i++;
 			double tone = b->hit ? 80.0 : 60.0;

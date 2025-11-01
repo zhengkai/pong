@@ -8,6 +8,7 @@
 #include "time.hpp"
 
 struct PongDeps {
+	std::shared_ptr<context::BallCluster> ballCluster;
 	std::shared_ptr<context::Entity> entity;
 	std::shared_ptr<context::Window> window;
 };

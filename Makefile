@@ -6,13 +6,13 @@ default:
 	./run.sh
 
 run:
-	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose -r 20
+	RUIN_DIR=$(RUIN_DIR) ./build/pong -r 2,2,2,3,4,9,1
 
 classic:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong -W 25 -H 25 -r 2 -c
 
 debug:
-	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose
+	RUIN_DIR=$(RUIN_DIR) CMAKE_BUILD_TYPE=debug ./run.sh
 
 trace:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong --verbose=trace

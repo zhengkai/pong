@@ -138,12 +138,14 @@ void sdl::render() {
 	renderBrick();
 
 	if (d.window->showBall) {
-		for (auto &b : d.entity->ballList) {
-			renderBall(b);
+		for (auto &bg : d.ballCluster->group) {
+			for (auto &b : bg->list) {
+				renderBall(b, bg->hue);
+			}
 		}
 	}
 
-	rainbow->render(d.entity->ballList, d.window);
+	rainbow->render(d.ballCluster->group, d.window);
 
 	renderCounter();
 	renderControlMsg();
@@ -165,14 +167,7 @@ void sdl::renderBrick() {
 
 	auto w = d.window;
 
-	auto bl = d.entity->ballList;
-
-	for (auto &b : bl) {
-		b->power = 0;
-	}
-	for (const auto &b : d.entity->brick) {
-		bl[b.region]->power++;
-	}
+	auto bl = d.ballCluster->group;
 
 	SDL_FRect rect;
 	rect.w = w->gridSize;
@@ -188,7 +183,7 @@ void sdl::renderBrick() {
 	}
 }
 
-void sdl::renderBall(std::shared_ptr<context::Ball> b) {
+void sdl::renderBall(std::shared_ptr<context::Ball> b, double hue) {
 
 	auto w = d.window;
 
@@ -200,9 +195,9 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b) {
 
 	// spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
 
-	auto bc = util::HCT(b->hue, 80, 80).ToColor();
+	auto c = util::HCT(hue, 80, 80).ToColor();
 
-	SDL_SetTextureColorMod(ballTex, bc.r, bc.g, bc.b);
+	SDL_SetTextureColorMod(ballTex, c.r, c.g, c.b);
 
 	SDL_RenderTexture(r, ballTex, nullptr, &rect);
 }

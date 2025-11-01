@@ -14,8 +14,8 @@ static b2ShapeDef dsd = [] {
 	return sd;
 }();
 
-Physics::Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b)
-	: d(std::move(dep)), region(b->region), ball(b) {
+Physics::Physics(PhysicsDep dep, std::shared_ptr<context::BallGroup> bg)
+	: d(std::move(dep)), region(bg->region), bg(bg) {
 
 	b2WorldDef worldDef = b2DefaultWorldDef();
 	worldDef.gravity = b2Vec2{0.0f, 0.0f};
@@ -24,7 +24,13 @@ Physics::Physics(PhysicsDep dep, std::shared_ptr<context::Ball> b)
 	createBrick();
 	createWall();
 
-	ballBody = createBall();
+	for (const auto &b : bg->list) {
+		b2BodyId ball = createBall(b);
+		bl.push_back(ball);
+	}
+
+	ballSize = static_cast<int>(bl.size());
+
 	// spdlog::info("phy init {} {} {}", b->region, b->pos.x, b->pos.y);
 }
 
@@ -41,28 +47,21 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 		return false;
 	}
 
-	ball->hit = true;
+	bg->hit = true;
 
 	context::Brick *b = (context::Brick *)ud;
 	b->region = region;
+	bg->power++;
 
-	int cnt = 0;
-	for (auto &eb : d.entity->brick) {
-		if (eb.region == region) {
-			cnt++;
-		}
-	}
-
-	auto power =
-		std::max(0, std::min(config::powerMax, cnt) - config::powerMin);
+	auto power = std::max(
+		0, std::min(config::powerMax, bg->power / ballSize) - config::powerMin);
 	b->tone = static_cast<double>(power) / config::powerDiff * 10.0 + 45.0;
-	// spdlog::info("brick {} {} {} {}", region, b->id, cnt, b->tone);
 	return true;
 }
 
 void Physics::update(float dt) {
 
-	ball->hit = false;
+	bg->hit = false;
 
 	float speed = d.entity->speed;
 	if (speed < 1.0f) {
@@ -75,15 +74,18 @@ void Physics::update(float dt) {
 }
 
 void Physics::_update(float deltaTime) {
-
+	bg->power = 0;
 	for (const auto &b : d.entity->brick) {
 		b2BodyId bb = brick[b.id];
 		if (b.region == region) {
+			bg->power++;
 			b2Body_Disable(bb);
 		} else {
 			b2Body_Enable(bb);
 		}
 	}
+
+	// spdlog::info("brick {} power:{}", region, bg->power);
 
 	b2World_Step(world, deltaTime, 1);
 	b2ContactEvents ce = b2World_GetContactEvents(world);
@@ -96,9 +98,17 @@ void Physics::_update(float deltaTime) {
 		// std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
-	b2Vec2 p = b2Body_GetPosition(ballBody);
+	for (int i = 0; i < ballSize; i++) {
+		_updateBall(i);
+	}
+}
 
-	ball->pos = p;
+void Physics::_updateBall(int idx) {
+
+	b2BodyId ballBody = bl[idx];
+
+	b2Vec2 p = b2Body_GetPosition(ballBody);
+	bg->list[idx]->pos = p;
 
 	b2Vec2 v = b2Body_GetLinearVelocity(ballBody);
 
@@ -139,7 +149,7 @@ void Physics::_update(float deltaTime) {
 	}
 }
 
-b2BodyId Physics::createBall() {
+b2BodyId Physics::createBall(std::shared_ptr<context::Ball> ball) {
 
 	b2BodyDef ballBodyDef = b2DefaultBodyDef();
 	ballBodyDef.type = b2_dynamicBody;

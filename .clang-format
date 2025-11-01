@@ -4,6 +4,7 @@ Language:        Cpp
 AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
 AlignArrayOfStructures: None
+AllowShortNamespacesOnASingleLine: false
 AlignConsecutiveAssignments:
   Enabled:         false
   AcrossEmptyLines: false
