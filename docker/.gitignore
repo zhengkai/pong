@@ -1,3 +1,4 @@
 /.prev_commit
+/.build.lock
 /build
 /build-wasm

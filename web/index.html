@@ -27,7 +27,22 @@ if (window.innerWidth < 600) {
 
 const gw = Math.max(14, (window.innerWidth / 50) | 0);
 const gh = Math.max(14, (window.innerHeight / 50) | 0);
-const region = Math.floor(gw * gh / 80);
+let region = Math.floor(gw * gh / 80);
+if (region < 3) {
+	region = '1,2';
+} else {
+    let total = region;
+	region = [];
+	while (total > 3) {
+        const r = Math.floor(Math.random() * 3) + 1;
+        region.push(r);
+		total -= r;
+    }
+	if (total > 0) {
+		region.push(total);
+	}
+	region = region.join(',');
+}
 let arg = ["-W", gw, "-H", gh, "-r", region];
 const query = window.location.search;
 let debug = false;
@@ -100,7 +115,9 @@ window.onerror = (event) => {
 		}
 	};
 };
-			</script>
+
+// build:
+</script>
 			<script async type="text/javascript" src="pong.js"></script>
 		</body>
 </html>
