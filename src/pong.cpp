@@ -74,7 +74,17 @@ std::vector<context::Brick> Pong::genBrick() {
 
 	std::vector<context::Brick> li;
 
-	std::uniform_int_distribution<int> dist(0, config::regionNum - 1);
+	std::uniform_int_distribution<int> dist(0, config::ballNum - 1);
+
+	std::vector<int> regionBall;
+	regionBall.reserve(config::ballNum);
+	int i = 0;
+	for (const int num : config::region) {
+		for (int j = 0; j < num; j++) {
+			regionBall.push_back(i);
+		}
+		i++;
+	}
 
 	int id = 0;
 	for (int x = 0; x < config::gridW; x++) {
@@ -83,7 +93,7 @@ std::vector<context::Brick> Pong::genBrick() {
 				.id = id,
 				.x = static_cast<float>(x),
 				.y = static_cast<float>(y),
-				.region = dist(util::rng()),
+				.region = regionBall[dist(util::rng())],
 				.tone = 50.0,
 			});
 			id++;
