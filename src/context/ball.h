@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../util/hct.hpp"
+#include <SDL3/SDL_pixels.h>
 #include <box2d/box2d.h>
 
 namespace context {
@@ -12,7 +14,7 @@ struct Ball {
 struct BallGroup {
 	int region = 0;
 	std::vector<std::shared_ptr<Ball>> list;
-	double hue = 0;
+	util::HCT color = util::HCT(0, 0, 0);
 	double tone = 0;
 	int power = 0;
 	bool hit = false;

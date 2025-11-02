@@ -35,10 +35,6 @@ inline int brickTotal;
 
 inline float powerAvg;
 
-inline int powerMin;
-inline int powerMax;
-inline double powerDiff;
-
 const int speedLevelMax = 5; // 1/32 to 32x
 
 inline void setGrid(int w, int h) {
@@ -58,10 +54,14 @@ inline void setRegion(std::vector<int> r) {
 		ballNum += region[i];
 	}
 	powerAvg = static_cast<float>(brickTotal) / static_cast<float>(ballNum);
-	powerMin = static_cast<int>(powerAvg / 1.5f);
-	powerMax = static_cast<int>(powerAvg * 1.5f);
-	powerDiff = static_cast<double>(powerMax - powerMin);
 };
+
+enum class ColorTheme {
+	HCT,
+	Map,
+	Rand,
+};
+inline ColorTheme colorTheme = ColorTheme::HCT;
 
 }; // namespace config
 

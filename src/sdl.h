@@ -5,6 +5,7 @@
 #include "render/rainbow.hpp"
 #include "render/text.h"
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_render.h>
 #include <box2d/box2d.h>
 #include <memory>
@@ -38,7 +39,7 @@ private:
 	void renderControlMsg();
 	void renderCounter();
 	void renderResize();
-	void renderBall(std::shared_ptr<context::Ball> b, double hue);
+	void renderBall(std::shared_ptr<context::Ball> b, SDL_Color c);
 	void renderBrick();
 	void calcGrid(int winW, int winH);
 	void initWinSize();

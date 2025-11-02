@@ -94,7 +94,7 @@ std::vector<context::Brick> Pong::genBrick() {
 				.x = static_cast<float>(x),
 				.y = static_cast<float>(y),
 				.region = regionBall[dist(util::rng())],
-				.tone = 50.0,
+				.power = 0,
 			});
 			id++;
 		}

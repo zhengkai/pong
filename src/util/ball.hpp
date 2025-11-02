@@ -1,6 +1,8 @@
 #pragma once
 
+#include "../config.hpp"
 #include "../context/ball.h"
+#include "color.hpp"
 #include "hct.hpp"
 #include "rand.hpp"
 #include <box2d/box2d.h>
@@ -29,14 +31,24 @@ std::vector<std::shared_ptr<context::BallGroup>> genBallGroupList(
 	std::uniform_real_distribution<float> yDist(1.0f, h - 1.0f);
 	std::uniform_real_distribution<float> speedDist(-10.0f, 10.0f);
 
-	auto rainbow = Rainbow(numLi.size());
+	std::vector<HCT> rainbow;
+	switch (config::colorTheme) {
+	case config::ColorTheme::Map:
+		for (auto c : util::mapColor) {
+			rainbow.push_back(util::HCT(c));
+		}
+		break;
+	default:
+		rainbow = Rainbow(numLi.size());
+		break;
+	}
 
 	int region = 0;
 	for (int n : numLi) {
 		n = std::max(1, std::min(n, 10));
 		auto g = std::make_shared<context::BallGroup>();
 		g->region = region;
-		g->hue = rainbow[region];
+		g->color = rainbow[region % rainbow.size()];
 		for (int i = 0; i < n; i++) {
 			auto b = std::make_shared<context::Ball>();
 			b->pos = b2Vec2(xDist(util::rng()), yDist(util::rng()));

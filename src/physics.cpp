@@ -18,7 +18,7 @@ Physics::Physics(PhysicsDep dep, std::shared_ptr<context::BallGroup> bg)
 	: d(std::move(dep)), region(bg->region), bg(bg) {
 
 	b2WorldDef worldDef = b2DefaultWorldDef();
-	worldDef.gravity = b2Vec2{0.0f, 0.0f};
+	worldDef.gravity = b2Vec2{ 0.0f, 0.0f };
 	world = b2CreateWorld(&worldDef);
 
 	createBrick();
@@ -53,9 +53,12 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 	b->region = region;
 	bg->power++;
 
-	auto power = std::max(
-		0, std::min(config::powerMax, bg->power / ballSize) - config::powerMin);
-	b->tone = static_cast<double>(power) / config::powerDiff * 10.0 + 45.0;
+	auto power =
+		static_cast<float>(bg->power / ballSize) / config::powerAvg - 1.0f;
+	power *= 0.2f;
+	// spdlog::info("power {} {:.2f} {:.2f}", bg->power, config::powerAvg,
+	// power);
+	b->power = static_cast<double>(std::min(0.3f, std::max(power, -0.3f)));
 	return true;
 }
 
@@ -142,7 +145,7 @@ void Physics::_updateBall(int idx) {
 		if (speed != config::speed) {
 			b2Body_SetLinearVelocity(ballBody,
 				b2Vec2{
-					v.x / speed * config::speed, v.y / speed * config::speed});
+					v.x / speed * config::speed, v.y / speed * config::speed });
 		}
 		// spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
 		// region, p.x, p.y, speed);
@@ -157,7 +160,7 @@ b2BodyId Physics::createBall(std::shared_ptr<context::Ball> ball) {
 	b2BodyId bb = b2CreateBody(world, &ballBodyDef);
 
 	b2Circle circle = {
-		.center = {0.0f, 0.0f},
+		.center = { 0.0f, 0.0f },
 		.radius = config::ballRadius,
 	};
 	b2ShapeId ballShape = b2CreateCircleShape(bb, &dsd, &circle);
@@ -185,26 +188,26 @@ void Physics::createWall() {
 	b2Segment seg;
 
 	// 上边界
-	seg.point1 = b2Vec2{left, top};
-	seg.point2 = b2Vec2{right, top};
+	seg.point1 = b2Vec2{ left, top };
+	seg.point2 = b2Vec2{ right, top };
 	b2ShapeId wallTop = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallTop, 1.0f);
 
 	// 下边界
-	seg.point1 = b2Vec2{left, bottom};
-	seg.point2 = b2Vec2{right, bottom};
+	seg.point1 = b2Vec2{ left, bottom };
+	seg.point2 = b2Vec2{ right, bottom };
 	b2ShapeId wallBottom = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallBottom, 1.0f);
 
 	// 左边界
-	seg.point1 = b2Vec2{left, bottom};
-	seg.point2 = b2Vec2{left, top};
+	seg.point1 = b2Vec2{ left, bottom };
+	seg.point2 = b2Vec2{ left, top };
 	b2ShapeId wallLeft = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallLeft, 1.0f);
 
 	// 右边界
-	seg.point1 = b2Vec2{right, bottom};
-	seg.point2 = b2Vec2{right, top};
+	seg.point1 = b2Vec2{ right, bottom };
+	seg.point2 = b2Vec2{ right, top };
 	b2ShapeId wallRight = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallRight, 1.0f);
 }
@@ -216,7 +219,7 @@ void Physics::createBrick() {
 	for (const auto &b : d.entity->brick) {
 
 		b2BodyDef bd = b2DefaultBodyDef();
-		bd.position = b2Vec2{b.x + 0.5f, b.y + 0.5f};
+		bd.position = b2Vec2{ b.x + 0.5f, b.y + 0.5f };
 		bd.type = b2_staticBody;
 
 		b2BodyId bb = b2CreateBody(world, &bd);

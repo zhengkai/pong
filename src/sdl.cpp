@@ -18,6 +18,7 @@ sdl::sdl(sdlDep dep) : w(nullptr), r(nullptr), d(std::move(dep)) {
 	for (const auto &b : d.entity->brick) {
 		// spdlog::trace("brick {} {:.0f} {:.0f} {}", b.id, b.x, b.y, b.region);
 	}
+	// util::shuffleMapColor();
 }
 
 void sdl::initWinSize() {
@@ -138,9 +139,17 @@ void sdl::render() {
 	renderBrick();
 
 	if (d.window->showBall) {
-		for (auto &bg : d.ballCluster->group) {
+		auto bl = d.ballCluster->group;
+		for (auto &bg : bl) {
 			for (auto &b : bg->list) {
-				renderBall(b, bg->hue);
+
+				auto bc = bg->color;
+				if (bl.size() == 2) {
+					bc = bl[1 - bg->region]->color;
+				} else {
+					bc = bc.Lighten(0.5);
+				}
+				renderBall(b, bc.ToColor());
 			}
 		}
 	}
@@ -176,14 +185,15 @@ void sdl::renderBrick() {
 	for (const auto &b : d.entity->brick) {
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
-		auto ball = bl[b.region];
-		auto c = util::HCT(ball->hue, 80, b.tone).ToColor();
+		auto bg = bl[b.region];
+		SDL_Color c = bg->color.Lighten(b.power).ToColor();
+		// spdlog::info("power {}", b.power);
 		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
 	}
 }
 
-void sdl::renderBall(std::shared_ptr<context::Ball> b, double hue) {
+void sdl::renderBall(std::shared_ptr<context::Ball> b, SDL_Color c) {
 
 	auto w = d.window;
 
@@ -194,8 +204,6 @@ void sdl::renderBall(std::shared_ptr<context::Ball> b, double hue) {
 	rect.h = rect.w;
 
 	// spdlog::trace("ball = {} {} {}", rect.x, rect.y, rect.w);
-
-	auto c = util::HCT(hue, 80, 80).ToColor();
 
 	SDL_SetTextureColorMod(ballTex, c.r, c.g, c.b);
 

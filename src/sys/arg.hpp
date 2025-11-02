@@ -2,13 +2,23 @@
 
 #include "../config.hpp"
 #include <CLI/CLI.hpp>
-#include <numbers>
 #include <spdlog/spdlog.h>
 
 inline int parseArg(int argc, char **argv) {
 	CLI::App app{"Pong"};
 
 	app.add_flag("-v,--version", config::versionOnly, "Print version only");
+
+	app.add_option(
+		   "-t,--theme", config::colorTheme, "Color theme (hct, map, rand)")
+		->default_val(config::ColorTheme::Map)
+		->transform(
+			CLI::CheckedTransformer(std::map<std::string, config::ColorTheme>({
+										{"hct", config::ColorTheme::HCT},
+										{"map", config::ColorTheme::Map},
+										{"rand", config::ColorTheme::Rand},
+									}),
+				CLI::ignore_case));
 
 	app.add_flag("-c,--classic",
 		config::classic,
