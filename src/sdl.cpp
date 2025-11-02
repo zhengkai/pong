@@ -183,6 +183,9 @@ void sdl::renderBrick() {
 	rect.h = w->gridSize;
 
 	for (const auto &b : d.entity->brick) {
+		if (b.region < 0) {
+			continue;
+		}
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
 		auto bg = bl[b.region];
