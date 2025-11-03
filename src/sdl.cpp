@@ -49,7 +49,7 @@ bool sdl::init() {
 	SDL_PropertiesID props = SDL_CreateProperties();
 
 	SDL_SetStringProperty(
-		props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "Pong Test");
+		props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, config::winTitle);
 	SDL_SetNumberProperty(
 		props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, d.window->w);
 	SDL_SetNumberProperty(
@@ -139,13 +139,13 @@ void sdl::render() {
 	renderBrick();
 
 	if (d.window->showBall) {
-		auto bl = d.ballCluster->group;
-		for (auto &bg : bl) {
+		auto gl = d.ballCluster->group;
+		for (auto &bg : gl) {
 			for (auto &b : bg->list) {
 
 				auto bc = bg->color;
-				if (bl.size() == 2) {
-					bc = bl[1 - bg->region]->color;
+				if (gl.size() == 2) {
+					bc = gl[1 - bg->region]->color;
 				} else {
 					bc = bc.Lighten(0.5);
 				}
@@ -181,6 +181,8 @@ void sdl::renderBrick() {
 	auto rl = d.entity->brick;
 
 	std::vector<SDL_FRect> edges;
+
+	calcRegionSize();
 
 	bool cw = false, cn = false, ce = false, cs = false;
 
@@ -241,8 +243,28 @@ void sdl::renderBrick() {
 			}
 		}
 
-		auto bg = d.ballCluster->group[b.region];
-		SDL_Color c = bg->color.Lighten(b.power).ToColor();
+		auto group = d.ballCluster->group[b.region];
+		auto bc = group->color;
+
+		// double power = b.power * 2.0f;
+		double power = b.power;
+
+		auto g = group->gradation;
+		power = ((b.x - group->size.x) / group->size.w * g.w) *
+			((b.y - group->size.y) / group->size.h * g.h);
+
+		// spdlog::info(
+		// 	"power={:.2f} bx={} wf={} gx={} gw={} x-rate={:.2f} x-final={:.2f}",
+		// 	power,
+		// 	b.x,
+		// 	config::gridWF,
+		// 	group->size.x,
+		// 	group->size.w,
+		// 	(b.x - group->size.x) / group->size.w,
+		// 	(b.x - group->size.x) / group->size.w * g.w);
+
+		SDL_Color c = bc.Lighten(power).ToColor();
+
 		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
 
@@ -279,6 +301,46 @@ void sdl::renderBrick() {
 		for (const auto &e : edges) {
 			SDL_RenderFillRect(r, &e);
 		}
+	}
+}
+
+void sdl::calcRegionSize() {
+	struct RegionSize {
+		int w;
+		int e;
+		int n;
+		int s;
+	};
+	std::vector<RegionSize> li;
+	auto gl = d.ballCluster->group;
+	li.reserve(gl.size());
+	for (size_t i = 0; i < gl.size(); i++) {
+		li.push_back(
+			RegionSize{.w = config::gridW, .e = 0, .n = config::gridH, .s = 0});
+	}
+
+	for (const auto &b : d.entity->brick) {
+		if (b.region < 0) {
+			continue;
+		}
+		auto g = gl[b.region];
+		auto &r = li[b.region];
+		if (r.w > b.x) {
+			r.w = b.x;
+		}
+		if (r.e < b.x) {
+			r.e = b.x;
+		}
+		if (r.n > b.y) {
+			r.n = b.y;
+		}
+		if (r.s < b.y) {
+			r.s = b.y;
+		}
+		g->size.x = static_cast<float>(r.w);
+		g->size.w = std::max(3.0f, static_cast<float>(r.e) - g->size.x);
+		g->size.y = static_cast<float>(r.n);
+		g->size.h = std::max(3.0f, static_cast<float>(r.s) - g->size.y);
 	}
 }
 

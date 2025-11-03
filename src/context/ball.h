@@ -6,6 +6,13 @@
 
 namespace context {
 
+struct Gradation {
+	float x = 0.0f;
+	float w = 0.0f;
+	float y = 0.0f;
+	float h = 0.0f;
+};
+
 struct Ball {
 	b2Vec2 pos;
 	b2Vec2 speed;
@@ -18,6 +25,8 @@ struct BallGroup {
 	double tone = 0;
 	int power = 0;
 	bool hit = false;
+	Gradation gradation = {};
+	Gradation size = {};
 };
 
 struct BallCluster {

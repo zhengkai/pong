@@ -11,8 +11,10 @@ class Time {
 public:
 	explicit Time() : start(steady_clock::now()) {
 		ft = std::chrono::duration<float>(cfgFPSDeltaTime);
+#ifndef __EMSCRIPTEN__
 		spdlog::info(
 			"time start, {} fps, {:.6f} s per frame", cfgFPS, ft.count());
+#endif
 	}
 
 	// 每帧开始时调用

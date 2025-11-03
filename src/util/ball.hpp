@@ -11,6 +11,8 @@
 
 namespace util {
 
+static std::uniform_real_distribution<float> gradationDist(0.0f, 1.0f);
+
 static std::uniform_real_distribution<float> angleDist(
 	0.0f, 2.0f * std::numbers::pi_v<float>);
 
@@ -19,6 +21,24 @@ inline b2Vec2 randomSpeedDirection(float speed) {
 	float x = std::cos(angle) * speed;
 	float y = std::sin(angle) * speed;
 	return b2Vec2(x, y);
+};
+
+inline context::Gradation randomGradation() {
+	auto w = gradationDist(util::rng());
+	auto h = 1.0f - w;
+	if (gradationDist(util::rng()) < 0.5f) {
+		w = -w;
+	}
+	if (gradationDist(util::rng()) < 0.5f) {
+		h = -h;
+	}
+	auto g = context::Gradation{
+		.x = -(w / 2.0f),
+		.w = w,
+		.y = -(h / 2.0f),
+		.h = h,
+	};
+	return g;
 };
 
 std::vector<std::shared_ptr<context::BallGroup>> genBallGroupList(
@@ -47,6 +67,7 @@ std::vector<std::shared_ptr<context::BallGroup>> genBallGroupList(
 	for (int n : numLi) {
 		n = std::max(1, std::min(n, 10));
 		auto g = std::make_shared<context::BallGroup>();
+		g->gradation = randomGradation();
 		g->region = region;
 		g->color = rainbow[region % rainbow.size()];
 		for (int i = 0; i < n; i++) {

@@ -20,6 +20,8 @@ constexpr float ballRadius = 0.57f;
 const float speed = 30.0f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
 
+inline const char *winTitle = "Pong Test";
+
 const SDL_Color colorBg = {16, 64, 128, 255};
 
 const float brickBorder = 1.0f;

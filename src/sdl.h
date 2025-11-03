@@ -43,4 +43,5 @@ private:
 	void renderBrick();
 	void calcGrid(int winW, int winH);
 	void initWinSize();
+	void calcRegionSize();
 };
