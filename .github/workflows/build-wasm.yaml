@@ -6,11 +6,11 @@ on:
       - master
 
 concurrency:
-  group: build-master
+  group: build-wasm
   cancel-in-progress: true
 
 jobs:
-  check:
+  build-wasm:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

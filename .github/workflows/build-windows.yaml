@@ -1,0 +1,59 @@
+name: Build Windows Release
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: build-windows
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: powershell
+
+env:
+  CC: clang
+  CXX: clang++
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+
+      - name: Download CMake ${{ env.CMAKE_VERSION }}
+        env:
+          CMAKE_VERSION: "4.1.2"
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v$env:CMAKE_VERSION/cmake-$env:CMAKE_VERSION-windows-x86_64.msi" -OutFile cmake.msi
+          Start-Process msiexec.exe -ArgumentList "/i", "cmake.msi", "/qn", "/norestart", "ADD_CMAKE_TO_PATH=System" -Wait
+          cmake --version
+          Remove-Item cmake.msi
+
+      - name: Checkout
+        run: |
+          git clone --depth 1 "https://github.com/zhengkai/pong.git" .
+
+      - name: Clone vcpkg
+        run: |
+          cd tool
+          git clone https://github.com/microsoft/vcpkg.git vcpkg
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          .\vcpkg.exe install --triplet x64-windows
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cmake -B build -DCMAKE_TOOLCHAIN_FILE="$PWD\tool\vcpkg\scripts\buildsystems\vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build with CMake
+        run: cmake --build build --config Release -- /m
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pong-windows
+          path: build\Release\*

@@ -23,7 +23,7 @@
 
 namespace material_color_utilities {
 
-constexpr double kScaledDiscountFromLinrgb[3][3] = {
+const double kScaledDiscountFromLinrgb[3][3] = {
 	{
 		0.001200833568784504,
 		0.002389694492170889,
@@ -41,7 +41,7 @@ constexpr double kScaledDiscountFromLinrgb[3][3] = {
 	},
 };
 
-constexpr double kLinrgbFromScaledDiscount[3][3] = {
+const double kLinrgbFromScaledDiscount[3][3] = {
 	{
 		1373.2198709594231,
 		-1100.4251190754821,
@@ -61,7 +61,7 @@ constexpr double kLinrgbFromScaledDiscount[3][3] = {
 
 constexpr double kYFromLinrgb[3] = {0.2126, 0.7152, 0.0722};
 
-constexpr double kCriticalPlanes[255] = {
+const double kCriticalPlanes[255] = {
 	0.015176349177441876,
 	0.045529047532325624,
 	0.07588174588720938,
@@ -389,7 +389,7 @@ double Intercept(double source, double mid, double target) {
 }
 
 Vec3 LerpPoint(Vec3 source, double t, Vec3 target) {
-	return (Vec3){
+	return Vec3{
 		source.a + (target.a - source.a) * t,
 		source.b + (target.b - source.b) * t,
 		source.c + (target.c - source.c) * t,
@@ -450,27 +450,27 @@ Vec3 NthVertex(double y, int n) {
 		double b = coord_b;
 		double r = (y - g * k_g - b * k_b) / k_r;
 		if (IsBounded(r)) {
-			return (Vec3){r, g, b};
+			return Vec3{r, g, b};
 		} else {
-			return (Vec3){-1.0, -1.0, -1.0};
+			return Vec3{-1.0, -1.0, -1.0};
 		}
 	} else if (n < 8) {
 		double b = coord_a;
 		double r = coord_b;
 		double g = (y - r * k_r - b * k_b) / k_g;
 		if (IsBounded(g)) {
-			return (Vec3){r, g, b};
+			return Vec3{r, g, b};
 		} else {
-			return (Vec3){-1.0, -1.0, -1.0};
+			return Vec3{-1.0, -1.0, -1.0};
 		}
 	} else {
 		double r = coord_a;
 		double g = coord_b;
 		double b = (y - r * k_r - g * k_g) / k_b;
 		if (IsBounded(b)) {
-			return (Vec3){r, g, b};
+			return Vec3{r, g, b};
 		} else {
-			return (Vec3){-1.0, -1.0, -1.0};
+			return Vec3{-1.0, -1.0, -1.0};
 		}
 	}
 }
@@ -484,7 +484,7 @@ Vec3 NthVertex(double y, int n) {
  * an endpoint of the segment containing the desired color.
  */
 void BisectToSegment(double y, double target_hue, Vec3 out[2]) {
-	Vec3 left = (Vec3){-1.0, -1.0, -1.0};
+	Vec3 left = Vec3{-1.0, -1.0, -1.0};
 	Vec3 right = left;
 	double left_hue = 0.0;
 	double right_hue = 0.0;
@@ -520,7 +520,7 @@ void BisectToSegment(double y, double target_hue, Vec3 out[2]) {
 }
 
 Vec3 Midpoint(Vec3 a, Vec3 b) {
-	return (Vec3){
+	return Vec3{
 		(a.a + b.a) / 2,
 		(a.b + b.b) / 2,
 		(a.c + b.c) / 2,
@@ -638,7 +638,7 @@ Argb FindResultByJ(double hue_radians, double chroma, double y) {
 		double r_c_scaled = InverseChromaticAdaptation(r_a);
 		double g_c_scaled = InverseChromaticAdaptation(g_a);
 		double b_c_scaled = InverseChromaticAdaptation(b_a);
-		Vec3 scaled = (Vec3){r_c_scaled, g_c_scaled, b_c_scaled};
+		Vec3 scaled = Vec3{r_c_scaled, g_c_scaled, b_c_scaled};
 		Vec3 linrgb = MatrixMultiply(scaled, kLinrgbFromScaledDiscount);
 		// ===========================================================
 		// Operations inlined from Cam16 to avoid repeated calculation

@@ -10,8 +10,6 @@ set(VCPKG_VERBOSE OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(BUILD_SHARED_LIBS OFF)
-
 if (CMAKE_BUILD_TYPE STREQUAL "debug")
 	target_compile_options(${PROJ} PRIVATE
 		-Wall -Wextra -Werror
@@ -28,7 +26,9 @@ endif()
 
 if (MSVC)
 	add_compile_options(/utf-8)
-	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") # 静态 CRT
+    set(BUILD_SHARED_LIBS ON)
+else()
+    set(BUILD_SHARED_LIBS OFF)
 endif()
 
 include(cmake/build-info.cmake)
@@ -59,9 +59,10 @@ add_executable(${PROJ}
 	src/util/material/viewing_conditions.cpp
 )
 
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
 if (EMSCRIPTEN)
-	set(CMAKE_THREAD_LIBS_INIT "-lpthread")
-	set(THREADS_PREFER_PTHREAD_FLAG ON)
 	set_target_properties(${PROJ} PROPERTIES SUFFIX ".html")
 endif()
 
@@ -84,14 +85,14 @@ target_precompile_headers(${PROJ} PRIVATE
 target_link_libraries(${PROJ} PRIVATE
 	box2d::box2d
 	fmt::fmt
-	SDL3::SDL3-static
-	SDL3_image::SDL3_image-static
+	SDL3::SDL3
+	SDL3_image::SDL3_image
 	spdlog::spdlog
 	CLI11::CLI11
 )
 if (NOT EMSCRIPTEN)
 target_link_libraries(${PROJ} PRIVATE
-	SDL3_ttf::SDL3_ttf-static
+	SDL3_ttf::SDL3_ttf
 )
 endif()
 
