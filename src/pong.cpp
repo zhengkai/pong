@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "config.hpp"
 #include "context/ball.h"
+#include "context/brick.hpp"
 #include "context/entity.h"
 #include "context/window.h"
 #include "game.h"
@@ -73,34 +74,12 @@ bool Pong::init() {
 std::vector<context::Brick> Pong::genBrick() {
 
 	std::vector<context::Brick> li;
-
-	std::uniform_int_distribution<int> dist(0, config::ballNum - 1);
-
-	std::vector<int> regionBall;
-	regionBall.reserve(config::ballNum);
-	int i = 0;
-	for (const int num : config::region) {
-		for (int j = 0; j < num; j++) {
-			regionBall.push_back(i);
-		}
-		i++;
-	}
-
-	int id = 0;
-	for (int x = 0; x < config::gridW; x++) {
-		for (int y = 0; y < config::gridH; y++) {
-			li.push_back({
-				.id = id,
-				.x = static_cast<float>(x),
-				.y = static_cast<float>(y),
-				// .region = regionBall[dist(util::rng())],
-				.region = -1,
-				.power = 0,
-			});
-			id++;
+	for (int y = 0; y < config::gridH; y++) {
+		for (int x = 0; x < config::gridW; x++) {
+			auto b = context::genBrick(x, y);
+			li.push_back(b);
 		}
 	}
-
 	return li;
 }
 

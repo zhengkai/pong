@@ -6,7 +6,7 @@ default:
 	./run.sh
 
 run:
-	RUIN_DIR=$(RUIN_DIR) ./build/pong -r 2,2 --theme=map --classic
+	RUIN_DIR=$(RUIN_DIR) ./build/pong -r 2,2,2,2,2,2,2,2
 
 classic:
 	RUIN_DIR=$(RUIN_DIR) ./build/pong -W 25 -H 25 -r 2 -c

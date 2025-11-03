@@ -1,6 +1,5 @@
 #include "sdl.h"
 #include "config.hpp"
-#include "context/entity.h"
 #include "context/window.h"
 #include "render/text.h"
 #include "util/path.hpp"
@@ -133,7 +132,8 @@ void sdl::renderCounter() {
 void sdl::render() {
 	renderResize();
 
-	SDL_SetRenderDrawColor(r, 16, 64, 128, 255);
+	auto c = config::colorBg;
+	SDL_SetRenderDrawColor(r, c.r, c.g, c.b, c.a);
 	SDL_RenderClear(r);
 
 	renderBrick();
@@ -176,23 +176,109 @@ void sdl::renderBrick() {
 
 	auto w = d.window;
 
-	auto bl = d.ballCluster->group;
-
 	SDL_FRect rect;
-	rect.w = w->gridSize;
-	rect.h = w->gridSize;
 
-	for (const auto &b : d.entity->brick) {
-		if (b.region < 0) {
-			continue;
-		}
+	auto rl = d.entity->brick;
+
+	std::vector<SDL_FRect> edges;
+
+	bool cw = false, cn = false, ce = false, cs = false;
+
+	for (const auto &b : rl) {
+		rect.w = w->gridSize;
+		rect.h = w->gridSize;
 		rect.x = w->startX + b.x * w->gridSize;
 		rect.y = w->startY + b.y * w->gridSize;
-		auto bg = bl[b.region];
+
+		SDL_FRect corner;
+		corner.w = config::brickBorder;
+		corner.h = config::brickBorder;
+		if (b.region < 0) {
+			if (config::brickBorder <= 0.0f) {
+				continue;
+			}
+			corner.x = rect.x - config::brickBorder;
+			corner.y = rect.y - config::brickBorder;
+			edges.push_back(corner);
+
+			corner.x = rect.x + rect.w;
+			corner.y = rect.y - config::brickBorder;
+			edges.push_back(corner);
+
+			corner.x = rect.x + rect.w;
+			corner.y = rect.y + rect.h;
+			edges.push_back(corner);
+
+			corner.x = rect.x - config::brickBorder;
+			corner.y = rect.y + rect.h;
+			edges.push_back(corner);
+			continue;
+		}
+
+		if (config::brickBorder > 0.0f) {
+			cw = false;
+			cn = false;
+			ce = false;
+			cs = false;
+			auto s = b.side;
+			if (s.e < 0 || rl[s.e].region != b.region) {
+				ce = true;
+				rect.w -= config::brickBorder;
+			}
+			if (s.s < 0 || rl[s.s].region != b.region) {
+				cs = true;
+				rect.h -= config::brickBorder;
+			}
+			if (s.w < 0 || rl[s.w].region != b.region) {
+				cw = true;
+				rect.x += config::brickBorder;
+				rect.w -= config::brickBorder;
+			}
+			if (s.n < 0 || rl[s.n].region != b.region) {
+				cn = true;
+				rect.y += config::brickBorder;
+				rect.h -= config::brickBorder;
+			}
+		}
+
+		auto bg = d.ballCluster->group[b.region];
 		SDL_Color c = bg->color.Lighten(b.power).ToColor();
-		// spdlog::info("power {}", b.power);
 		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, 255);
 		SDL_RenderFillRect(r, &rect);
+
+		if (config::brickBorder > 0.0f) {
+			c = config::colorBg;
+			SDL_SetRenderDrawColor(r, c.r, c.g, c.b, c.a);
+
+			if (cw && cn) {
+				corner.x = rect.x - config::brickBorder * 2.0f;
+				corner.y = rect.y - config::brickBorder * 2.0f;
+				SDL_RenderFillRect(r, &corner);
+			}
+			if (cn && ce) {
+				corner.x = rect.x + rect.w + config::brickBorder;
+				corner.y = rect.y - config::brickBorder * 2.0f;
+				SDL_RenderFillRect(r, &corner);
+			}
+			if (ce && cs) {
+				corner.x = rect.x + rect.w + config::brickBorder;
+				corner.y = rect.y + rect.h + config::brickBorder;
+				edges.push_back(corner);
+			}
+			if (cs && cw) {
+				corner.x = rect.x - config::brickBorder * 2.0f;
+				corner.y = rect.y + rect.h + config::brickBorder;
+				edges.push_back(corner);
+			}
+		}
+	}
+
+	if (config::brickBorder > 0.0f) {
+		auto c = config::colorBg;
+		SDL_SetRenderDrawColor(r, c.r, c.g, c.b, c.a);
+		for (const auto &e : edges) {
+			SDL_RenderFillRect(r, &e);
+		}
 	}
 }
 

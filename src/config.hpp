@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL3/SDL_pixels.h>
 #include <numbers>
 #include <spdlog/spdlog.h>
 
@@ -18,6 +19,10 @@ constexpr float ballRadius = 0.57f;
 
 const float speed = 30.0f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
+
+const SDL_Color colorBg = {16, 64, 128, 255};
+
+const float brickBorder = 1.0f;
 
 inline std::vector<int> region;
 inline int regionNum;
