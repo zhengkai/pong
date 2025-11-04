@@ -15,6 +15,7 @@ public:
 	int winW = 0;
 	int winH = 0;
 	int speed = 0;
+	bool fullscreen = false;
 
 	void Reset() {
 		*this = {};
@@ -42,6 +43,16 @@ public:
 			break;
 		case SDLK_SPACE:
 			space = true;
+			break;
+		case SDLK_F11:
+			fullscreen = true;
+			break;
+		case SDLK_RETURN:
+		case SDLK_RETURN2:
+		case SDLK_KP_ENTER:
+			if (e->mod & SDL_KMOD_ALT) {
+				fullscreen = true;
+			}
 			break;
 		}
 	};

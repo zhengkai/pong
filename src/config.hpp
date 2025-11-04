@@ -7,6 +7,7 @@
 
 namespace config {
 
+inline bool fullscreen = false;
 inline bool versionOnly = false;
 inline bool helpOnly = false;
 inline std::string verbose = "info";

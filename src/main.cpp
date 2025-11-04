@@ -21,7 +21,10 @@ int main(int argc, char *argv[]) {
 
 	util::InitDir();
 
-	parseArg(argc, argv);
+	int pa = parseArg(argc, argv);
+	if (pa) {
+		return pa == 127 ? 0 : pa;
+	}
 
 	spdlogInit();
 

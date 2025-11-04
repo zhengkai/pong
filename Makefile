@@ -7,6 +7,7 @@ default:
 
 run:
 	# PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2
+	# PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2 --fullscreen
 	PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2
 
 classic:
@@ -17,6 +18,12 @@ debug:
 
 trace:
 	PONG_DIR=$(PONG_DIR) ./build/pong --verbose=trace
+
+fullscreen:
+	PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2 --fullscreen
+
+help:
+	./build/pong --help
 
 wasm:
 	./wasm.sh

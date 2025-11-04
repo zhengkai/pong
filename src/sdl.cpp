@@ -72,6 +72,10 @@ bool sdl::init() {
 		return false;
 	}
 
+	if (config::fullscreen) {
+		SDL_SetWindowFullscreen(w, true);
+	}
+
 	// SDL_HideCursor();
 	// SDL_SetWindowMouseGrab(window, true);
 
@@ -130,6 +134,10 @@ void sdl::renderCounter() {
 }
 
 void sdl::render() {
+
+	if (toggleFullscreen()) {
+		return;
+	}
 	renderResize();
 
 	auto c = config::colorBg;
@@ -373,6 +381,16 @@ void sdl::renderControlMsg() {
 	}
 	text->rMono96(
 		c->msg, d.window->w / 2, d.window->h - 192, Text::Align::CENTER);
+}
+
+bool sdl::toggleFullscreen() {
+	if (!d.window->toggleFullscreen) {
+		return false;
+	}
+	d.window->toggleFullscreen = false;
+	config::fullscreen = !config::fullscreen;
+	SDL_SetWindowFullscreen(w, config::fullscreen);
+	return true;
 }
 
 void sdl::calcGrid(int winW, int winH) {

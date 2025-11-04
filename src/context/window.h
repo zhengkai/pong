@@ -28,6 +28,7 @@ public:
 	ControlMsg *controlMsg;
 	WinResize *winResize;
 	bool showBall = true;
+	bool toggleFullscreen = false;
 
 public:
 	Window() = default;

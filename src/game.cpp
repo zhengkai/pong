@@ -76,6 +76,12 @@ bool Game::parse() {
 		d.window->showBall = !d.window->showBall;
 	}
 
+	// fullscreen toggle
+	if (input->fullscreen) {
+		spdlog::info("toggling fullscreen");
+		d.window->toggleFullscreen = true;
+	}
+
 	return true;
 }
 

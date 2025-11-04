@@ -27,6 +27,8 @@ inline int parseArg(int argc, char **argv) {
 	std::vector<int> region;
 	app.add_option("-r,--region", region, "Region number")->delimiter(',');
 
+	app.add_flag("-f,--fullscreen", config::fullscreen, "Fullscreen");
+
 	int w;
 	app.add_option("-W,--grid-w", w, "Grid width")
 		->default_val(config::gridWDefault)
@@ -44,7 +46,14 @@ inline int parseArg(int argc, char **argv) {
 		->check(CLI::IsMember(
 			{"info", "debug", "trace", "warn", "err", "critical", "off"}));
 
-	CLI11_PARSE(app, argc, argv);
+	try {
+		app.parse(argc, argv);
+	} catch (const CLI::CallForHelp &e) {
+		std::cout << app.help() << std::endl;
+		return 127; // 表示要退出
+	} catch (const CLI::ParseError &e) {
+		return 1;
+	}
 
 	int rsize = region.size();
 	if (rsize == 0) {

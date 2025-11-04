@@ -44,4 +44,5 @@ private:
 	void calcGrid(int winW, int winH);
 	void initWinSize();
 	void calcRegionSize();
+	bool toggleFullscreen();
 };
