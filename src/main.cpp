@@ -2,6 +2,7 @@
 #include "sys/arg.hpp"
 #include "sys/spdlog.hpp"
 #include "sys/ver.hpp"
+#include "util/path.hpp"
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 
@@ -17,6 +18,8 @@ void wasmLoop() {
 #endif
 
 int main(int argc, char *argv[]) {
+
+	util::InitDir();
 
 	parseArg(argc, argv);
 

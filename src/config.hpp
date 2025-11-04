@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL_pixels.h>
+#include <filesystem>
 #include <numbers>
 #include <spdlog/spdlog.h>
 
@@ -16,6 +17,8 @@ inline bool classic = false;
 
 // 球半径小于 0.5 时，会出现长期垂直/水平方向运动，看起来不太自然
 constexpr float ballRadius = 0.57f;
+
+inline std::vector<std::filesystem::path> dirList;
 
 const float speed = 30.0f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
