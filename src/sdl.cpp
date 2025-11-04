@@ -382,8 +382,13 @@ void sdl::calcGrid(int winW, int winH) {
 
 	auto w = d.window;
 
-	float ww = std::floor(static_cast<float>(winW) * scale);
-	float wh = std::floor(static_cast<float>(winH) * scale);
+	float ww = static_cast<float>(winW);
+	float wh = static_cast<float>(winH);
+#ifndef _MSC_VER
+	ww *= scale;
+	wh *= scale;
+#endif
+
 	w->w = static_cast<int>(ww);
 	w->h = static_cast<int>(wh);
 

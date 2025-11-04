@@ -3,7 +3,15 @@
 #include "../config.hpp"
 #include <filesystem>
 #include <string>
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#elif !defined(__EMSCRIPTEN__)
 #include <unistd.h>
+#endif
 
 namespace fs = std::filesystem;
 
@@ -23,20 +31,25 @@ inline std::string file(const std::filesystem::path in) {
 
 inline fs::path getAppDir() {
 
-#if _MSC_VER
+#ifdef _MSC_VER
 	wchar_t buf[MAX_PATH];
 	GetModuleFileNameW(nullptr, buf, MAX_PATH);
 	return fs::path(buf).parent_path();
-#elif __APPLE__
+#elif defined(__APPLE__)
 	char buf[1024];
 	uint32_t size = sizeof(buf);
 	_NSGetExecutablePath(buf, &size);
 	return fs::path(buf).parent_path();
+#elif defined(__EMSCRIPTEN__)
+	return "";
 #else
 	char buf[1024];
 	ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
-	buf[len] = '\0';
-	return fs::path(buf).parent_path();
+	if (len != -1) {
+		buf[len] = '\0';
+		return fs::path(buf).parent_path();
+	}
+	return fs::current_path();
 #endif
 };
 

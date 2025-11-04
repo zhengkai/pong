@@ -52,6 +52,12 @@ jobs:
       - name: Build with CMake
         run: cmake --build build --config Release -- /m
 
+      - name: Download Font
+        run: Invoke-WebRequest -Uri "https://github.com/JetBrains/JetBrainsMono/raw/refs/heads/master/fonts/otf/JetBrainsMono-Regular.otf" -OutFile "build\Release\JetBrainsMono-Regular.otf"
+
+      - name: Copy Image
+        run: Copy-Item -Path "misc\circle.webp" -Destination "build\Release\circle.webp"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
