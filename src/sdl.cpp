@@ -167,6 +167,8 @@ void sdl::render() {
 	renderCounter();
 	renderControlMsg();
 
+	// renderGamepad();
+
 	SDL_RenderPresent(r);
 }
 
@@ -431,6 +433,15 @@ void sdl::calcGrid(int winW, int winH) {
 		w->h,
 		w->startX,
 		w->startY);
+}
+
+void sdl::renderGamepad() {
+
+	std::string x = std::to_string(d.entity->gamepadX);
+	std::string y = std::to_string(d.entity->gamepadY);
+
+	text->rMono32(x, 512, 512, Text::Align::RIGHT);
+	text->rMono32(y, 512, 554, Text::Align::RIGHT);
 }
 
 sdl::~sdl() {

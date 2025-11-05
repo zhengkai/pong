@@ -10,5 +10,7 @@ struct Entity {
 	float speed = 1.0f;
 	int speedLevel = 0;
 	std::vector<Brick> brick;
+	float gamepadX = 0.0f;
+	float gamepadY = 0.0f;
 };
 }; // namespace context

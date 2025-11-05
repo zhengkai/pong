@@ -1,6 +1,5 @@
 #include "physics.h"
 #include "config.hpp"
-#include "context/entity.h"
 #include "util/rand.hpp"
 #include <box2d/box2d.h>
 #include <spdlog/spdlog.h>
@@ -65,6 +64,15 @@ bool Physics::contactCheck(b2ShapeId *shapeId) {
 void Physics::update(float dt) {
 
 	bg->hit = false;
+
+	float x = d.entity->gamepadX;
+	float y = d.entity->gamepadY;
+	auto gravity = std::sqrt(x * x + y * y);
+	if (gravity > 1.0f) {
+		x /= gravity;
+		y /= gravity;
+	}
+	b2World_SetGravity(world, b2Vec2(x * config::gravity, y * config::gravity));
 
 	float speed = d.entity->speed;
 	if (speed < 1.0f) {

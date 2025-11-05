@@ -39,6 +39,18 @@ static void handleInput(SDL_Event *e, std::shared_ptr<Input> input) {
 	}
 }
 
+static float gamepadConvert(int v) {
+	float r = static_cast<float>(v) / 32768.0f;
+	if (r > -0.1f && r < 0.1f) {
+		r = 0.0f;
+	} else if (r > 0.9f) {
+		r = 1.0f;
+	} else if (r < -0.9f) {
+		r = -1.0f;
+	}
+	return r;
+}
+
 Game::Game(GameDep dep) : d(std::move(dep)), input(std::make_shared<Input>()) {
 }
 
@@ -93,9 +105,33 @@ bool Game::parse() {
 	}
 
 	// fullscreen toggle
+
 	if (input->fullscreen) {
 		spdlog::info("toggling fullscreen");
 		d.window->toggleFullscreen = true;
+	}
+
+	// gamepad
+
+	bool gamepad = false;
+	auto &x = d.entity->gamepadX;
+	auto &y = d.entity->gamepadY;
+	if (input->hasGamepadX) {
+		gamepad = true;
+		x = gamepadConvert(input->gamepadX);
+	}
+	if (input->hasGamepadY) {
+		gamepad = true;
+		y = gamepadConvert(input->gamepadY);
+	}
+	if (gamepad) {
+		float speed = std::sqrt(x * x + y * y);
+		if (speed > 1.0f) {
+			x /= speed;
+			y /= speed;
+			// spdlog::info(
+			// "speed: {:.3f} {:.3f}", speed, std::sqrt(x * x + y * y));
+		}
 	}
 
 	return true;

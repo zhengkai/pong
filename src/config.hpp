@@ -25,6 +25,7 @@ const float speed = 30.0f;
 const float speedMax = speed * 1.2f;
 const float speedMin = speed / 1.2f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
+const float gravity = speed * 10.0f;
 
 inline const char *winTitle = "Pong Test";
 

@@ -45,4 +45,5 @@ private:
 	void initWinSize();
 	void calcRegionSize();
 	bool toggleFullscreen();
+	void renderGamepad();
 };

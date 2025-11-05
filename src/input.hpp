@@ -16,6 +16,10 @@ public:
 	int winH = 0;
 	int speed = 0;
 	bool fullscreen = false;
+	int gamepadX = 0;
+	int gamepadY = 0;
+	bool hasGamepadX = false;
+	bool hasGamepadY = false;
 
 	void Reset() {
 		*this = {};
@@ -58,7 +62,16 @@ public:
 	};
 
 	void gamepadAxis(const SDL_GamepadAxisEvent &e) {
-		spdlog::info("gamepad axis {} value {}", e.axis, e.value);
+		switch (e.axis) {
+		case 0:
+			hasGamepadX = true;
+			gamepadX = e.value;
+			break;
+		case 1:
+			hasGamepadY = true;
+			gamepadY = e.value;
+			break;
+		}
 	}
 
 	void gamepadButton(const SDL_GamepadButtonEvent &e, bool down) {
