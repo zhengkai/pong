@@ -67,7 +67,7 @@ void Physics::update(float dt) {
 
 	float x = d.entity->gamepadX;
 	float y = d.entity->gamepadY;
-	auto gravity = std::sqrt(x * x + y * y);
+	float gravity = std::sqrt(x * x + y * y);
 	if (gravity > 1.0f) {
 		x /= gravity;
 		y /= gravity;
@@ -76,10 +76,10 @@ void Physics::update(float dt) {
 
 	float speed = d.entity->speed;
 	if (speed < 1.0f) {
-		_update(cfgFPSDeltaTime * speed);
+		_update(dt * speed);
 	} else {
 		for (int cnt = static_cast<int>(d.entity->speed); cnt > 0; cnt--) {
-			_update(cfgFPSDeltaTime);
+			_update(dt);
 		}
 	}
 }

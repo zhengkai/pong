@@ -83,7 +83,7 @@ bool Game::parse() {
 			m = "1/" + m;
 		}
 		cm->msg = speedMsg + m;
-		cm->expireSerial = d.window->serial + cfgFPS * 2;
+		cm->expireSerial = d.window->serial + config::fps * 2;
 	}
 
 	// window resize

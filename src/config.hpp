@@ -27,6 +27,9 @@ const float speedMin = speed / 1.2f;
 const float speedClassic = 30.0f * std::numbers::sqrt2_v<float> / 2.0f;
 const float gravity = speed * 10.0f;
 
+const int fps = 60;
+const float fpsDeltaTime = 1.0f / static_cast<float>(fps);
+
 inline const char *winTitle = "Pong Test";
 
 const SDL_Color colorBg = {16, 64, 128, 255};
@@ -84,10 +87,6 @@ constexpr bool cfgWASM = true;
 #else
 constexpr bool cfgWASM = false;
 #endif
-
-constexpr int cfgFPS = 60;
-constexpr float cfgFPSF = static_cast<float>(cfgFPS);
-constexpr float cfgFPSDeltaTime = 1.0f / cfgFPSF;
 
 constexpr int cfgPhyLoop = 1;
 

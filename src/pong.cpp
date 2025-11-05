@@ -89,10 +89,11 @@ void Pong::loop() {
 
 #ifdef __EMSCRIPTEN__
 	auto now = steady_clock::now();
-	auto dt = duration<float>(now - prev).count();
+	float dt =
+		std::min(duration<float>(now - prev).count(), config::fpsDeltaTime);
 	prev = now;
 #else
-	float dt = cfgFPSDeltaTime;
+	float dt = config::fpsDeltaTime;
 	t->tick();
 #endif
 

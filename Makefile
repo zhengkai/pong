@@ -10,6 +10,9 @@ run:
 	# PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2 --fullscreen
 	PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2
 
+v2:
+	PONG_DIR=$(PONG_DIR) ./build/pong -W 38 -H 18 -r 2,3,3
+
 classic:
 	PONG_DIR=$(PONG_DIR) ./build/pong -W 25 -H 26 -r 2 -c
 
