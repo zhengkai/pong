@@ -77,7 +77,7 @@ jobs:
         run: |
           cd main && \
           COMMIT=$(git rev-parse --short=8 HEAD) && \
-          TIME=$(date '+%Y-%m-%d %H:%M:%S') && \
+          TIME=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S') && \
           sed -i "s#^// build:.*#// build: $TIME / $COMMIT#" web/index.html && \
           cd gh-pages && \
           cp ../web/index.html . && \
