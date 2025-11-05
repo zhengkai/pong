@@ -1,6 +1,7 @@
 #include "game.h"
 #include "config.hpp"
 #include "input.hpp"
+#include "util/event.hpp"
 #include <algorithm>
 
 static std::string speedMsg = "Speed Level: ";
@@ -11,14 +12,29 @@ static void handleInput(SDL_Event *e, std::shared_ptr<Input> input) {
 
 	switch (e->type) {
 	case SDL_EVENT_KEY_DOWN:
-		input->key(&e->key);
+		input->key(e->key);
 		break;
-	case SDL_EVENT_WINDOW_RESIZED: {
-		input->winResize(&e->window);
+	case SDL_EVENT_WINDOW_RESIZED:
+		input->winResize(e->window);
 		break;
-	}
-
+	case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+		input->gamepadAxis(e->gaxis);
+		break;
+	case SDL_EVENT_GAMEPAD_ADDED:
+		SDL_OpenGamepad(e->gdevice.which);
+		break;
+	case SDL_EVENT_GAMEPAD_REMOVED:
+		SDL_CloseGamepad(SDL_GetGamepadFromID(e->gdevice.which));
+		break;
+	case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+		input->gamepadButton(e->gbutton, true);
+		break;
+	case SDL_EVENT_GAMEPAD_BUTTON_UP:
+		input->gamepadButton(e->gbutton, false);
+		break;
 	default:
+		// spdlog::info(
+		// "unhandled event type: {}", util::getSDLEventName(e->type));
 		break;
 	}
 }

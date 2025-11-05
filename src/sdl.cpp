@@ -39,7 +39,7 @@ void sdl::initWinSize() {
 
 bool sdl::init() {
 
-	if (!SDL_Init(SDL_INIT_VIDEO)) {
+	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
 		SDL_Fail();
 		return false;
 	}

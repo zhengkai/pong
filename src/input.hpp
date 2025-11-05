@@ -21,13 +21,13 @@ public:
 		*this = {};
 	};
 
-	void winResize(SDL_WindowEvent *w) {
-		winW = w->data1;
-		winH = w->data2;
+	void winResize(const SDL_WindowEvent &w) {
+		winW = w.data1;
+		winH = w.data2;
 	}
 
-	void key(SDL_KeyboardEvent *e) {
-		switch (e->key) {
+	void key(const SDL_KeyboardEvent &e) {
+		switch (e.key) {
 		case SDLK_ESCAPE:
 			if (!cfgWASM) {
 				quit = true;
@@ -50,19 +50,24 @@ public:
 		case SDLK_RETURN:
 		case SDLK_RETURN2:
 		case SDLK_KP_ENTER:
-			if (e->mod & SDL_KMOD_ALT) {
+			if (e.mod & SDL_KMOD_ALT) {
 				fullscreen = true;
 			}
 			break;
 		}
 	};
-	void gamepadButton(SDL_GamepadButtonEvent *e, bool down) {
-		switch (e->button) {
+
+	void gamepadAxis(const SDL_GamepadAxisEvent &e) {
+		spdlog::info("gamepad axis {} value {}", e.axis, e.value);
+	}
+
+	void gamepadButton(const SDL_GamepadButtonEvent &e, bool down) {
+		switch (e.button) {
 		case SDL_GAMEPAD_BUTTON_START:
 			quit = true;
 			break;
 		default:
-			std::string s = util::getSDLGamepadBtnName(e->button);
+			std::string s = util::getSDLGamepadBtnName(e.button);
 			spdlog::info("gamepad button {}", s);
 			break;
 		}
