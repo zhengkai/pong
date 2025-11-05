@@ -11,7 +11,7 @@ run:
 	PONG_DIR=$(PONG_DIR) ./build/pong -r 2,2,3,4,2,2
 
 classic:
-	PONG_DIR=$(PONG_DIR) ./build/pong -W 25 -H 25 -r 2 -c
+	PONG_DIR=$(PONG_DIR) ./build/pong -W 25 -H 26 -r 2 -c
 
 debug:
 	PONG_DIR=$(PONG_DIR) CMAKE_BUILD_TYPE=debug ./run.sh

@@ -34,4 +34,7 @@ private:
 	void createWall();
 	void createBrick();
 	bool contactCheck(b2ShapeId *shapeId);
+
+	bool ballSpeed(b2Vec2 &v);
+	bool ballSpeedClassic(b2Vec2 &v);
 };

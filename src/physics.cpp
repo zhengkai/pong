@@ -18,7 +18,7 @@ Physics::Physics(PhysicsDep dep, std::shared_ptr<context::BallGroup> bg)
 	: d(std::move(dep)), region(bg->region), bg(bg) {
 
 	b2WorldDef worldDef = b2DefaultWorldDef();
-	worldDef.gravity = b2Vec2{ 0.0f, 0.0f };
+	worldDef.gravity = b2Vec2{0.0f, 0.0f};
 	world = b2CreateWorld(&worldDef);
 
 	createBrick();
@@ -121,35 +121,43 @@ void Physics::_updateBall(int idx) {
 		v.y *= 100.0f;
 	}
 
+	bool speedModify = false;
 	if (config::classic) {
-
-		if (v.x < 0.0f) {
-			v.x = -config::speedClassic;
-		} else if (v.x == 0.0f) {
-			v.x =
-				util::randBool() ? config::speedClassic : -config::speedClassic;
-		} else {
-			v.x = config::speedClassic;
-		}
-		if (v.y < 0.0f) {
-			v.y = -config::speedClassic;
-		} else if (v.y == 0.0f) {
-			v.y =
-				util::randBool() ? config::speedClassic : -config::speedClassic;
-		} else {
-			v.y = config::speedClassic;
-		}
-		b2Body_SetLinearVelocity(ballBody, v);
+		speedModify = ballSpeedClassic(v);
 	} else {
-		float speed = std::sqrt(v.x * v.x + v.y * v.y);
-		if (speed != config::speed) {
-			b2Body_SetLinearVelocity(ballBody,
-				b2Vec2{
-					v.x / speed * config::speed, v.y / speed * config::speed });
-		}
-		// spdlog::trace("ball {} pos = ({:10.6f},{:10.6f}), speed = {:10.6f}",
-		// region, p.x, p.y, speed);
+		speedModify = ballSpeed(v);
 	}
+	if (speedModify) {
+		b2Body_SetLinearVelocity(ballBody, v);
+	}
+}
+
+bool Physics::ballSpeed(b2Vec2 &v) {
+	float speed = std::sqrt(v.x * v.x + v.y * v.y);
+	if (speed > config::speedMax || speed < config::speedMin) {
+		v.x *= config::speed / speed;
+		v.y *= config::speed / speed;
+		return true;
+	}
+	return false;
+}
+
+bool Physics::ballSpeedClassic(b2Vec2 &v) {
+	if (v.x < 0.0f) {
+		v.x = -config::speedClassic;
+	} else if (v.x == 0.0f) {
+		v.x = util::randBool() ? config::speedClassic : -config::speedClassic;
+	} else {
+		v.x = config::speedClassic;
+	}
+	if (v.y < 0.0f) {
+		v.y = -config::speedClassic;
+	} else if (v.y == 0.0f) {
+		v.y = util::randBool() ? config::speedClassic : -config::speedClassic;
+	} else {
+		v.y = config::speedClassic;
+	}
+	return true;
 }
 
 b2BodyId Physics::createBall(std::shared_ptr<context::Ball> ball) {
@@ -160,7 +168,7 @@ b2BodyId Physics::createBall(std::shared_ptr<context::Ball> ball) {
 	b2BodyId bb = b2CreateBody(world, &ballBodyDef);
 
 	b2Circle circle = {
-		.center = { 0.0f, 0.0f },
+		.center = {0.0f, 0.0f},
 		.radius = config::ballRadius,
 	};
 	b2ShapeId ballShape = b2CreateCircleShape(bb, &dsd, &circle);
@@ -188,26 +196,26 @@ void Physics::createWall() {
 	b2Segment seg;
 
 	// 上边界
-	seg.point1 = b2Vec2{ left, top };
-	seg.point2 = b2Vec2{ right, top };
+	seg.point1 = b2Vec2{left, top};
+	seg.point2 = b2Vec2{right, top};
 	b2ShapeId wallTop = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallTop, 1.0f);
 
 	// 下边界
-	seg.point1 = b2Vec2{ left, bottom };
-	seg.point2 = b2Vec2{ right, bottom };
+	seg.point1 = b2Vec2{left, bottom};
+	seg.point2 = b2Vec2{right, bottom};
 	b2ShapeId wallBottom = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallBottom, 1.0f);
 
 	// 左边界
-	seg.point1 = b2Vec2{ left, bottom };
-	seg.point2 = b2Vec2{ left, top };
+	seg.point1 = b2Vec2{left, bottom};
+	seg.point2 = b2Vec2{left, top};
 	b2ShapeId wallLeft = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallLeft, 1.0f);
 
 	// 右边界
-	seg.point1 = b2Vec2{ right, bottom };
-	seg.point2 = b2Vec2{ right, top };
+	seg.point1 = b2Vec2{right, bottom};
+	seg.point2 = b2Vec2{right, top};
 	b2ShapeId wallRight = b2CreateSegmentShape(wall, &dsd, &seg);
 	b2Shape_SetRestitution(wallRight, 1.0f);
 }
@@ -219,7 +227,7 @@ void Physics::createBrick() {
 	for (const auto &b : d.entity->brick) {
 
 		b2BodyDef bd = b2DefaultBodyDef();
-		bd.position = b2Vec2{ b.x + 0.5f, b.y + 0.5f };
+		bd.position = b2Vec2{b.x + 0.5f, b.y + 0.5f};
 		bd.type = b2_staticBody;
 
 		b2BodyId bb = b2CreateBody(world, &bd);
