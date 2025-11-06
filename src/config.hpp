@@ -90,7 +90,4 @@ constexpr bool cfgWASM = false;
 
 constexpr int cfgPhyLoop = 1;
 
-constexpr int cfgWinW = 1600;
-constexpr int cfgWinH = 960;
-
 constexpr float cfgPaddingTop = 0.8f;

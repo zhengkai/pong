@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../config.hpp"
-
 namespace context {
 
 struct WinResize {
@@ -17,8 +15,8 @@ struct ControlMsg {
 class Window {
 
 public:
-	int w = cfgWinW;
-	int h = cfgWinH;
+	int w = 800;
+	int h = 800;
 	float scale = 1.0f;
 	float cellSize = 0.0f;
 	float startX = 0.0f;

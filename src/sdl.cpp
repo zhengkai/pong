@@ -33,8 +33,10 @@ void sdl::initWinSize() {
 
 	spdlog::info("desktop get size {}x{}", mode->w, mode->h);
 
-	d.window->w = std::min(cfgWinW, mode->w);
-	d.window->h = std::min(cfgWinH, mode->h);
+	d.window->w =
+		static_cast<int>(std::floor(static_cast<float>(mode->w) * 0.8f));
+	d.window->h =
+		static_cast<int>(std::floor(static_cast<float>(mode->h) * 0.8f));
 }
 
 bool sdl::init() {
@@ -114,7 +116,7 @@ bool sdl::init() {
 	// SDL_GetCurrentRenderOutputSize(r, &drawableWidth, &drawableHeight);
 	// spdlog::error("output size {} {}", drawableWidth, drawableHeight);
 
-	calcGrid(cfgWinW, cfgWinH);
+	calcGrid(d.window->w, d.window->h);
 
 	text = new Text();
 	if (text->init(r)) {
